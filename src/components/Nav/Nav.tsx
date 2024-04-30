@@ -1,7 +1,7 @@
 import './Nav.css'
 const Nav = () => {
   return (
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top py-lg-0 nav" >
+      <nav className="shadow navbar navbar-expand-lg navbar-light bg-light fixed-top py-lg-0 nav" >
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
             <img src="src/assets/hometownhoopslogo.png" alt="Logo" width="120" className="d-inline-block align-text-top" />
