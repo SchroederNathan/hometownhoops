@@ -3,5 +3,16 @@
 }
 
 .row .featurette {
-    padding: 10px;
+    max-width: 800px ;
+}
+
+@media (max-width: 990px) {
+    .feature { 
+        width: 90% !important;
+    }
+
+    .cards {
+        max-width: 100% !important;
+        width: 90% !important;
+    }
 }

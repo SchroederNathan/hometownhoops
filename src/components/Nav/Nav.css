@@ -1,3 +1,14 @@
 .loginLogoutButton {
     margin-left: 10px;
 }
+
+.navbar {
+    max-width: 80%;
+    margin: auto;
+}
+
+@media (max-width: 990px) {
+    .navbar{ 
+        max-width: 100%;
+    }
+}
