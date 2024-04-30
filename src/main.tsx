@@ -6,7 +6,8 @@ import './index.css'
 import './custom.scss'
 
 import { createBrowserRouter, Router, RouterProvider } from 'react-router-dom'
-import Nav from './components/Nav/Nav.tsx'
+import Nav from './components/header/Nav.tsx'
+import Footer from './components/footer/Footer.tsx'
 
 const router = createBrowserRouter([
   {
@@ -19,5 +20,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Nav/>
     <RouterProvider router={router} />
+    <Footer/>
   </React.StrictMode>,
 )
