@@ -49,7 +49,7 @@ const Home = () => {
           </Carousel.Item>
         </Carousel>
       </div>
-      <Row xs={1} md={3} className="g-3 cards" style={{ margin: 'auto', maxWidth: '80%', height: 'fit', paddingTop: '20px' }}>
+      <Row xs={1} md={3}className="g-3 cards" style={{ margin: 'auto', maxWidth: '80%', height: 'fit', paddingTop: '20px' }}>
         {featureCards &&
           featureCards.map((card) => {
             const { title, description, imageURL, routerURL } =

@@ -5,6 +5,8 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Auth from './pages/Auth'
 import SingUp from './auth/SingUp'
+import Login from './auth/Login'
+import RecLeagues from './pages/RecLeagues'
 
 const App = () => {
   return (
@@ -12,8 +14,9 @@ const App = () => {
       <Nav />
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Auth />} />
+        <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SingUp />} />
+        <Route path='/rec-leagues' element={<RecLeagues />} />
 
       </Routes>
       <Footer />
