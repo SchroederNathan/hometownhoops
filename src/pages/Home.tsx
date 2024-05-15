@@ -1,7 +1,7 @@
-import React from 'react'
-import { Button, Card, CardGroup, Carousel, Col, Row } from 'react-bootstrap'
-import './Home.css'
-import CarosoulComponent from '../components/Carosoul/Carosoul'
+import React from 'react';
+import { Button, Card, CardGroup, Carousel, Col, Row } from 'react-bootstrap';
+import './Home.css';
+import { Link } from 'react-router-dom';
 
 interface Features {
   title: string;
@@ -10,7 +10,7 @@ interface Features {
   routerURL: string;
 }
 
-const home = () => {
+const Home = () => {
 
   const featureCards: Features[] = [{
     title: 'Tournaments',
@@ -109,4 +109,4 @@ const home = () => {
   )
 }
 
-export default home
+export default Home

@@ -1,0 +1,9 @@
+.opaque1 {
+    width: 1px; 
+    --bs-bg-opacity: .1;
+}
+
+.opaque2 {
+    height: 1px; 
+    --bs-bg-opacity: .1;
+}
