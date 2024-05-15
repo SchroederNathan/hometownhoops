@@ -1,0 +1,19 @@
+.opaque1 {
+    width: 1px; 
+    --bs-bg-opacity: .1;
+}
+
+.opaque2 {
+    height: 1px; 
+    --bs-bg-opacity: .1;
+}
+
+section {
+    margin-top: 120px;
+}
+
+@media (max-width: 990px) {
+    section {
+        margin-top: 135px;
+    }
+}
