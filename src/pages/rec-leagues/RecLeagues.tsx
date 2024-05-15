@@ -1,4 +1,5 @@
 import React from 'react'
+import './RecLeagues.css'
 
 const RecLeagues = () => {
   return (

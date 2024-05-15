@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, CardGroup, Carousel, Col, Row } from 'react-bootstrap';
+import { Button, Card, Carousel, Col, Row } from 'react-bootstrap';
 import './Home.css';
 import { Link } from 'react-router-dom';
 
@@ -16,19 +16,19 @@ const Home = () => {
     title: 'Tournaments',
     description: 'Discover all the details about our upcoming basketball tournaments',
     imageURL: 'src/assets/tournaments.jpg',
-    routerURL: ''
+    routerURL: '/tournaments'
   },
   {
-    title: 'Camps',
-    description: 'Discover how our camps can help your child develop their basketball skills and grow as a player and a person!',
+    title: 'Travel Teams',
+    description: 'Discover how our travel teams can help develop your basketball skills and grow as a player',
     imageURL: 'src/assets/camps.jpg',
-    routerURL: ''
+    routerURL: '/travel-teams'
   },
   {
     title: 'Rec Leagues',
-    description: 'Explore the fun and competitive world of our adult rec basketball leagues!',
+    description: 'Explore the fun and competitive world of our adult rec basketball leagues',
     imageURL: 'src/assets/recleague.jpg',
-    routerURL: ''
+    routerURL: '/rec-leagues'
   }]
 
 
@@ -49,27 +49,29 @@ const Home = () => {
           </Carousel.Item>
         </Carousel>
       </div>
-      <Row xs={1} md={3}className="g-3 cards" style={{ margin: 'auto', maxWidth: '80%', height: 'fit', paddingTop: '20px' }}>
+      <Row xs={1} md={3} className="g-3 cards" style={{ margin: 'auto', maxWidth: '80%', height: 'fit', paddingTop: '20px' }}>
         {featureCards &&
           featureCards.map((card) => {
             const { title, description, imageURL, routerURL } =
               card;
             return (
               <Col>
-                <Card className="flex-fill shadow" style={{ width: '100%', height: '25rem', textAlign: 'center', margin: 'auto' }}>
-                  <Card.Img variant="top" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} src={imageURL} />
-                  <Card.Body style={{ overflowY: 'hidden' }}>
-                    <Card.Title>{title}</Card.Title>
-                    <Card.Text>{description}</Card.Text>
-                  </Card.Body>
-                  <Button variant="primary" style={{ margin: '10px' }}>Find {title}</Button>
+                <Link to={routerURL} style={{textDecoration: 'none'}}>
+                  <Card className="flex-fill shadow" style={{ width: '100%', height: '25rem', textAlign: 'center', margin: 'auto' }}>
+                    <Card.Img variant="top" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} src={imageURL} />
+                    <Card.Body style={{ overflowY: 'hidden' }}>
+                      <Card.Title>{title}</Card.Title>
+                      <Card.Text>{description}</Card.Text>
+                    </Card.Body>
+                    <Button variant="primary" style={{ margin: '10px' }}>Find {title}</Button>
 
-                </Card>
+                  </Card>
+                </Link>
               </Col>
             );
           })}
       </Row>
-      <div style={{ maxWidth: '80%', margin: 'auto', padding: '20px' }}>
+      <div id='about-us' style={{ maxWidth: '80%', margin: 'auto', padding: '20px' }}>
         <hr className="featurette-divider" />
       </div>
       <div className="row featurette feature" style={{ width: '70%', maxWidth: '1200px', margin: 'auto', display: 'flex', alignItems: 'center' }}>
@@ -95,15 +97,15 @@ const Home = () => {
         <hr className="featurette-divider" />
       </div>
 
-      <h2 style={{width: '70%', margin: 'auto', textAlign: 'center' }}>Our Sponsor's</h2>
-      <p className="text-body-secondary" style={{width: '70%', margin: 'auto', textAlign: 'center' }}>We are incredibly grateful for the support of our sponsor's that help make Hometown Hoops a success.</p>
+      <h2 style={{ width: '70%', margin: 'auto', textAlign: 'center' }}>Our Sponsor's</h2>
+      <p className="text-body-secondary" style={{ width: '70%', margin: 'auto', textAlign: 'center' }}>We are incredibly grateful for the support of our sponsor's that help make Hometown Hoops a success.</p>
 
-      <div style={{width: '70%', margin: 'auto', textAlign: 'center'}}>
-        <img src='src/assets/sponsor1.png' width={200} height={200} style={{padding: '10px'}}/>
-        <img src='src/assets/sponsor2.png' width={200} height={200} style={{padding: '10px'}}/>
-        <img src='src/assets/sponsor3.png' width={200} height={200} style={{padding: '10px'}}/>
-        <img src='src/assets/sponsor4.png' width={200} height={200} style={{padding: '10px'}}/>
-        <img src='src/assets/sponsor5.png' width={200} height={200} style={{padding: '10px'}} />
+      <div style={{ width: '70%', margin: 'auto', textAlign: 'center' }}>
+        <img src='src/assets/sponsor1.png' width={200} height={200} style={{ padding: '10px' }} />
+        <img src='src/assets/sponsor2.png' width={200} height={200} style={{ padding: '10px' }} />
+        <img src='src/assets/sponsor3.png' width={200} height={200} style={{ padding: '10px' }} />
+        <img src='src/assets/sponsor4.png' width={200} height={200} style={{ padding: '10px' }} />
+        <img src='src/assets/sponsor5.png' width={200} height={200} style={{ padding: '10px' }} />
       </div>
     </div>
   )

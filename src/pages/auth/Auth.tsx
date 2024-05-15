@@ -1,5 +1,5 @@
 import React from 'react'
-import Login from '../auth/Login'
+import Login from '../../auth/Login'
 import './Auth.css'
 
 const Auth = () => {
