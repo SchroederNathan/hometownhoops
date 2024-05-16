@@ -33,7 +33,7 @@ const Home = () => {
 
 
   return (
-    <div >
+    <div className='main-div'>
       <div className='carosel' style={{ display: 'block', maxWidth: '100%' }}>
         <Carousel>
           <Carousel.Item className='item' interval={3000}>

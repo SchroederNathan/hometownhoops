@@ -3,7 +3,7 @@ import './TravelTeams.css'
 
 const TravelTeams = () => {
   return (
-    <div>TravelTeams</div>
+    <div className='main-div'>TravelTeams</div>
   )
 }
 

@@ -13,7 +13,7 @@ import TravelTeams from './pages/travel-teams/TravelTeams'
 
 const App = () => {
   return (
-    <div>
+    <div >
       <Nav />
       <Routes>
         <Route path='/' element={<Home />} errorElement={<NotFound/>} />

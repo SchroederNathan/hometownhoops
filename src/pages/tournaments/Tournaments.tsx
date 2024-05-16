@@ -3,7 +3,7 @@ import './Tournaments.css'
 
 const Tournaments = () => {
   return (
-    <div>Tournaments</div>
+    <div className='main-div'>Tournaments</div>
   )
 }
 

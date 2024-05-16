@@ -3,7 +3,7 @@ import './RecLeagues.css'
 
 const RecLeagues = () => {
   return (
-    <div>RecLeagues</div>
+    <div className='main-div'>RecLeagues</div>
   )
 }
 
