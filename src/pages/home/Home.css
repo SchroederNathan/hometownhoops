@@ -2,6 +2,15 @@
     max-width: 800px ;
 }
 
+.card {
+    transition: 0.3s;
+}
+
+.card:hover {
+    scale: 1.05;
+    transition: 0.3s;
+}
+
 .item {
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
 }

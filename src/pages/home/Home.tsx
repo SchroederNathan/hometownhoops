@@ -57,7 +57,7 @@ const Home = () => {
             return (
               <Col>
                 <Link to={routerURL} style={{textDecoration: 'none'}}>
-                  <Card className="flex-fill shadow" style={{ width: '100%', height: '25rem', textAlign: 'center', margin: 'auto' }}>
+                  <Card className="flex-fill shadow card" style={{ width: '100%', height: '25rem', textAlign: 'center', margin: 'auto' }}>
                     <Card.Img variant="top" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} src={imageURL} />
                     <Card.Body style={{ overflowY: 'hidden' }}>
                       <Card.Title>{title}</Card.Title>
