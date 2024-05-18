@@ -10,6 +10,8 @@ import RecLeagues from './pages/rec-leagues/RecLeagues'
 import NotFound from './components/error/NotFound'
 import Tournaments from './pages/tournaments/Tournaments'
 import TravelTeams from './pages/travel-teams/TravelTeams'
+import Dashboard from './pages/dashboard/Dashboard'
+
 
 const App = () => {
   return (
@@ -22,6 +24,8 @@ const App = () => {
         <Route path='/tournaments' element={<Tournaments />} errorElement={<NotFound/>}/>
         <Route path='/travel-teams' element={<TravelTeams />} errorElement={<NotFound/>}/>
         <Route path='/rec-leagues' element={<RecLeagues />} errorElement={<NotFound/>}/>
+        <Route path='/admin' element={<Dashboard />} errorElement={<NotFound/>}/>
+
 
       </Routes>
       <Footer />
