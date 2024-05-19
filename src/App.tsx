@@ -24,7 +24,7 @@ const App = () => {
         <Route path='/tournaments' element={<Tournaments />} errorElement={<NotFound/>}/>
         <Route path='/travel-teams' element={<TravelTeams />} errorElement={<NotFound/>}/>
         <Route path='/rec-leagues' element={<RecLeagues />} errorElement={<NotFound/>}/>
-        <Route path='/admin' element={<Dashboard />} errorElement={<NotFound/>}/>
+        <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound/>}/>
 
 
       </Routes>

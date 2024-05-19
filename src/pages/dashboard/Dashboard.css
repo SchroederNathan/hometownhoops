@@ -1,0 +1,26 @@
+.main-div {
+    overflow-x: hidden;
+    margin-top: 120px;
+}
+
+.active {
+    background-color: #f25929 !important;
+}
+
+.nav-pills li a {
+    transition: 0.3s;
+    color: black;
+}
+
+.nav-pills li a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #f25929;
+    scale: 1.05;
+    transition: 0.3s;
+}
+
+@media (max-width: 990px) {
+    .main-div {
+        margin-top: 135px;
+    }
+}

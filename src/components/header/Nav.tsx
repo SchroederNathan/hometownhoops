@@ -55,16 +55,16 @@ const Nav = () => {
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link active" to='/tournaments'><strong>Tournaments</strong></Link>
+              <Link className="nav-link text-black" to='/tournaments'><strong>Tournaments</strong></Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" to='/travel-teams'><strong>Travel Teams</strong></Link>
+              <Link className="nav-link text-black" to='/travel-teams'><strong>Travel Teams</strong></Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" to='/rec-leagues'><strong>Rec Leagues</strong></Link>
+              <Link className="nav-link text-black" to='/rec-leagues'><strong>Rec Leagues</strong></Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link active" href='#about-us'><strong>About Us</strong></a>
+              <a className="nav-link text-black" href='#about-us'><strong>About Us</strong></a>
             </li>
             <li className="nav-item">
                 <button type="button" onClick={handleLoginLogout} className="btn btn-primary loginLogoutButton"><strong>{loginStatus}</strong></button>
