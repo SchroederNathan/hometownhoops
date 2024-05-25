@@ -1,5 +1,5 @@
 import './Footer.css'
-
+import  logo  from '../../assets/hometownhoopslogo.png'
 import React from 'react'
 
 const Footer = () => {
@@ -9,7 +9,7 @@ const Footer = () => {
             <footer className="row bg-light row-cols-1 row-cols-sm-2 row-cols-md-5 py-5  border-top footer">
                 <div className="col mb-3" >
                     <a href="/" className="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-                        <img src='src/assets/hometownhoopslogo.png' style={{ width: '150px' }} />
+                        <img src={logo} style={{ width: '150px' }} />
                     </a>
                     <p className="text-body-secondary" style={{marginLeft:'40px'}}>&copy; 2024</p>
                 </div>

@@ -3,6 +3,7 @@ import './Nav.css'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../config/firebase'
 import { useState, useEffect  } from 'react'
+import  logo  from '../../assets/hometownhoopslogo.png'
 
 const Nav = () => {
   const [loginStatus, setLoginStatus] = useState("");
@@ -47,7 +48,7 @@ const Nav = () => {
     <nav className="shadow navbar navbar-expand-lg navbar-light bg-light fixed-top py-lg-0 nav" >
       <div className="container-fluid">
         <Link className="navbar-brand" to='/'>
-          <img src="src/assets/hometownhoopslogo.png" alt="Logo" width="120" className="d-inline-block align-text-top" />
+          <img src={logo} alt="Logo" width="120" className="d-inline-block align-text-top" />
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>

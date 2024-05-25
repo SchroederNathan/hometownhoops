@@ -18,14 +18,19 @@ const App = () => {
     <div >
       <Nav />
       <Routes>
-        <Route path='/' element={<Home />} errorElement={<NotFound/>} />
-        <Route path='/login' element={<Login />}  errorElement={<NotFound/>}/>
-        <Route path='/signup' element={<SingUp />} errorElement={<NotFound/>}/>
-        <Route path='/tournaments' element={<Tournaments />} errorElement={<NotFound/>}/>
-        <Route path='/travel-teams' element={<TravelTeams />} errorElement={<NotFound/>}/>
-        <Route path='/rec-leagues' element={<RecLeagues />} errorElement={<NotFound/>}/>
-        <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound/>}/>
+        <Route path='/' element={<Home />} errorElement={<NotFound />} />
+        <Route path='/login' element={<Login />} errorElement={<NotFound />} />
+        <Route path='/signup' element={<SingUp />} errorElement={<NotFound />} />
+        <Route path='/tournaments' element={<Tournaments />} errorElement={<NotFound />} />
+        <Route path='/travel-teams' element={<TravelTeams />} errorElement={<NotFound />} />
+        <Route path='/rec-leagues' element={<RecLeagues />} errorElement={<NotFound />} />
 
+        <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound />}>
+          <Route path="travel-teams" element={<NotFound />} />
+          <Route path="rec-leagues" element={<NotFound />} />
+          <Route path="tournaments" element={<NotFound />} />
+          <Route path="users" element={<NotFound />} />
+        </Route>
 
       </Routes>
       <Footer />
