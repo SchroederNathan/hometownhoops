@@ -2,33 +2,35 @@ import { Link, useNavigate } from 'react-router-dom'
 import './Nav.css'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../config/firebase'
-import { useState, useEffect  } from 'react'
-import  logo  from '../../assets/hometownhoopslogo.png'
+import { useState, useEffect } from 'react'
+import logo from '../../assets/hometownhoopslogo.png'
 
 const Nav = () => {
   const [loginStatus, setLoginStatus] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        setLoginStatus("Log Out")
-        console.log(user)
-      } else {
-        // User is signed out
-        setLoginStatus("Login")
+  function isAuthenticated() {
+    useEffect(() => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          setLoginStatus("Log Out")
+          console.log(user)
+        } else {
+          // User is signed out
+          setLoginStatus("Login")
 
-      }
-    });
+        }
+      });
 
-  }, [])
+    }, [])
+  }
 
-  
+  isAuthenticated();
 
   const handleLoginLogout = () => {
-    if(loginStatus === 'Log Out') {
+    if (loginStatus === 'Log Out') {
       signOut(auth).then(() => {
         // Sign-out successful.
         navigate("/");
@@ -67,8 +69,16 @@ const Nav = () => {
             <li className="nav-item">
               <a className="nav-link text-black" href='#about-us'><strong>About Us</strong></a>
             </li>
+
+            {loginStatus === 'Log Out' ?
+              <li className="nav-item">
+                <Link to='dashboard' className="nav-link text-black" ><strong>Dashboard</strong></Link>
+              </li>
+              :
+              ''}
+
             <li className="nav-item">
-                <button type="button" onClick={handleLoginLogout} className="btn btn-primary loginLogoutButton"><strong>{loginStatus}</strong></button>
+              <button type="button" onClick={handleLoginLogout} className="btn btn-primary loginLogoutButton"><strong>{loginStatus}</strong></button>
             </li>
           </ul>
         </div>
