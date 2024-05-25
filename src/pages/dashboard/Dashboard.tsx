@@ -31,7 +31,7 @@ const Dashboard = () => {
     return (
         <div className='main-div container-fluid'>
             <div className='row'>
-                <div className='bg-light col-3 col-md-3 min-vh-100 pt-3'>
+                <div className='bg-light col-2 min-vh-100 col-md-3 pt-3'>
                     <a className='text-decoration-none text-black d-none d-sm-inline d-flex align-itemcenter'>
                         <span className='ms-1 fs-4'>Dashboard</span>
                     </a>

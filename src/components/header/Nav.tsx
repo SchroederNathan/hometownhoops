@@ -44,7 +44,7 @@ const Nav = () => {
 
   return (
     <nav className="shadow navbar navbar-expand-lg navbar-light bg-light fixed-top py-lg-0 nav" >
-      <div className="container-fluid">
+      <div className="container-fluid" >
         <Link className="navbar-brand" to='/'>
           <img src={logo} alt="Logo" width="120" className="d-inline-block align-text-top" />
         </Link>
