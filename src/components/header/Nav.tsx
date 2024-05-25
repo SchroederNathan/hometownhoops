@@ -9,25 +9,21 @@ const Nav = () => {
   const [loginStatus, setLoginStatus] = useState("");
   const navigate = useNavigate();
 
-  function isAuthenticated() {
-    useEffect(() => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          setLoginStatus("Log Out")
-          console.log(user)
-        } else {
-          // User is signed out
-          setLoginStatus("Login")
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        setLoginStatus("Log Out")
+        console.log(user)
+      } else {
+        // User is signed out
+        setLoginStatus("Login")
 
-        }
-      });
+      }
+    });
 
-    }, [])
-  }
-
-  isAuthenticated();
+  }, [])
 
   const handleLoginLogout = () => {
     if (loginStatus === 'Log Out') {

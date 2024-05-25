@@ -63,7 +63,7 @@ const Dashboard = () => {
                         </li>
                     </ul>
                 </div>
-                <div className='col-9'>
+                <div className='col-9 pt-3'>
                     <Outlet />
                 </div>
             </div>

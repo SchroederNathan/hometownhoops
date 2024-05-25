@@ -1,7 +1,7 @@
 import React from 'react'
 import Nav from './components/header/Nav'
 import Footer from './components/footer/Footer'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, redirect } from 'react-router-dom'
 import Home from './pages/home/Home'
 import Auth from './pages/auth/Auth'
 import SingUp from './auth/SingUp'
@@ -11,6 +11,7 @@ import NotFound from './components/error/NotFound'
 import Tournaments from './pages/tournaments/Tournaments'
 import TravelTeams from './pages/travel-teams/TravelTeams'
 import Dashboard from './pages/dashboard/Dashboard'
+import TravelTeamsDashboard from './pages/dashboard/travel-teams-dashboard/TravelTeamsDashboard'
 
 
 const App = () => {
@@ -26,10 +27,12 @@ const App = () => {
         <Route path='/rec-leagues' element={<RecLeagues />} errorElement={<NotFound />} />
 
         <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound />}>
-          <Route path="travel-teams" element={<NotFound />} />
+          <Route index element={<NotFound />} />
+          <Route path="travel-teams" element={<TravelTeamsDashboard />} />
           <Route path="rec-leagues" element={<NotFound />} />
           <Route path="tournaments" element={<NotFound />} />
           <Route path="users" element={<NotFound />} />
+
         </Route>
 
       </Routes>
