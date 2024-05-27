@@ -7,6 +7,15 @@
 	border-radius: 3px 0 0 3px;
 }
 
+.create-button {
+    transition: 0.3s;
+}
+
+.create-button:hover {
+    scale: 1.03;
+    transition: 0.3s;
+}
+
 .btn-labeled {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -14,4 +23,9 @@
 
 .btn {
 	margin-bottom: 10px;
+}
+
+.card:hover {
+    scale: 1.0;
+    
 }
