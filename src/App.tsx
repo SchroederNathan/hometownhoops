@@ -12,6 +12,7 @@ import Tournaments from './pages/tournaments/Tournaments'
 import TravelTeams from './pages/travel-teams/TravelTeams'
 import Dashboard from './pages/dashboard/Dashboard'
 import TravelTeamsDashboard from './pages/dashboard/travel-teams-dashboard/TravelTeamsDashboard'
+import CreateTravelTeam from './pages/dashboard/travel-teams-dashboard/create-travel-team/CreateTravelTeam'
 
 
 const App = () => {
@@ -29,9 +30,11 @@ const App = () => {
         <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound />}>
           <Route index element={<TravelTeamsDashboard />} />
           <Route path="travel-teams" element={<TravelTeamsDashboard />} />
+          <Route path="travel-teams/create" element={<CreateTravelTeam />} />
           <Route path="rec-leagues" element={<NotFound />} />
           <Route path="tournaments" element={<NotFound />} />
           <Route path="users" element={<NotFound />} />
+
 
         </Route>
 
