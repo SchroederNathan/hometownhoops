@@ -16,6 +16,7 @@ import StarterKit from '@tiptap/starter-kit'
 import React, { useCallback, useState } from 'react'
 import * as Icons from "../../Icons";
 import classNames from 'classnames'
+import { Link } from 'react-router-dom'
 const content = `
 <h2>
   Hi there,
@@ -97,57 +98,65 @@ const CreateTravelTeam = () => {
     }
 
     return (
-        <div className="editor">
-            <div className="menu">
-                <button
-                    className="menu-button"
-                    onClick={() => editor.chain().focus().undo().run()}
-                    disabled={!editor.can().undo()}
-                >
-                    <Icons.RotateLeft />
+        <div>
+            <Link to='../travel-teams'>
+                <button type="button" className="btn btn-labeled btn-danger">
+                    <span className="btn-label"><i className="bi bi-x"></i></span>
+                    Cancel
                 </button>
-                <button
-                    className="menu-button"
-                    onClick={() => editor.chain().focus().redo().run()}
-                    disabled={!editor.can().redo()}
-                >
-                    <Icons.RotateRight />
-                </button>
-                <button
-                    className={classNames("menu-button", {
-                        "is-active": editor.isActive("bold")
-                    })}
-                    onClick={toggleBold}
-                >
-                    <Icons.Bold />
-                </button>
-                <button
-                    className={classNames("menu-button", {
-                        "is-active": editor.isActive("underline")
-                    })}
-                    onClick={toggleUnderline}
-                >
-                    <Icons.Underline />
-                </button>
-                <button
-                    className={classNames("menu-button", {
-                        "is-active": editor.isActive("intalic")
-                    })}
-                    onClick={toggleItalic}
-                >
-                    <Icons.Italic />
-                </button>
-                <button
-                    className={classNames("menu-button", {
-                        "is-active": editor.isActive("strike")
-                    })}
-                    onClick={toggleStrike}
-                >
-                    <Icons.Strikethrough />
-                </button>
-                
+            </Link>
+            <div className="editor">
+                <div className="menu">
+                    <button
+                        className="menu-button"
+                        onClick={() => editor.chain().focus().undo().run()}
+                        disabled={!editor.can().undo()}
+                    >
+                        <Icons.RotateLeft />
+                    </button>
+                    <button
+                        className="menu-button"
+                        onClick={() => editor.chain().focus().redo().run()}
+                        disabled={!editor.can().redo()}
+                    >
+                        <Icons.RotateRight />
+                    </button>
+                    <button
+                        className={classNames("menu-button", {
+                            "is-active": editor.isActive("bold")
+                        })}
+                        onClick={toggleBold}
+                    >
+                        <Icons.Bold />
+                    </button>
+                    <button
+                        className={classNames("menu-button", {
+                            "is-active": editor.isActive("underline")
+                        })}
+                        onClick={toggleUnderline}
+                    >
+                        <Icons.Underline />
+                    </button>
+                    <button
+                        className={classNames("menu-button", {
+                            "is-active": editor.isActive("intalic")
+                        })}
+                        onClick={toggleItalic}
+                    >
+                        <Icons.Italic />
+                    </button>
+                    <button
+                        className={classNames("menu-button", {
+                            "is-active": editor.isActive("strike")
+                        })}
+                        onClick={toggleStrike}
+                    >
+                        <Icons.Strikethrough />
+                    </button>
+
+                </div>
+                <EditorContent editor={editor} />
             </div>
-            <EditorContent editor={editor} />
         </div>
     )
 }
