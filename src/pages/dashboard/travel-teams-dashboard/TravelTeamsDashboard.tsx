@@ -1,11 +1,16 @@
 import './TravelTeamsDashboard.css'
-
 import React from 'react'
 
 const TravelTeamsDashboard = () => {
     return (
         <div>
-            <div className="card mb-3" style={{ maxWidth: "540px", overflowX: 'hidden' }}>
+            <div className='d-grid gap-2 d-md-flex justify-content-md-end'>
+                <button type="button" className="btn btn-labeled btn-primary float-end">
+                    <span className="btn-label"><i className="bi bi-plus "></i></span>
+                    Create
+                </button>
+            </div>
+            <div className="card d-grid mb-3" style={{ maxWidth: "540px", overflowX: 'hidden' }}>
                 <div className="row g-0">
                     <div className="col-md-4">
                         <img src="/src/assets/hometownhoopslogo.png" className="img-fluid rounded-start" alt="..." />
