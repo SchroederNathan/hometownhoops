@@ -105,6 +105,19 @@ const CreateTravelTeam = () => {
                     Cancel
                 </button>
             </Link>
+            <div className="mb-3">
+                <label htmlFor="name" className="form-label fs-5">Name</label>
+                <input type='name' className="form-control" id="name" />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="location" className="form-label fs-5">Location</label>
+                <input type='name' className="form-control" id="location" />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="date" className="form-label fs-5">Date</label>
+                
+            </div>
+            <p className='form-label fs-5'>Rules</p>
             <div className="editor">
                 <div className="menu">
                     <button
