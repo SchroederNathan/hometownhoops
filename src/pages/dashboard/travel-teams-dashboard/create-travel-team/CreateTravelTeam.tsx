@@ -113,10 +113,20 @@ const CreateTravelTeam = () => {
                 <label htmlFor="location" className="form-label fs-5">Location</label>
                 <input type='name' className="form-control" id="location" />
             </div>
-            <div className="mb-3">
-                <label htmlFor="date" className="form-label fs-5">Date</label>
-                
+            <div className='mb-3 row'>
+                <div className="w-50">
+                    <label htmlFor="date" className="form-label fs-5">Start Date</label>
+                    <input id="startDate" className="form-control" type="date" />
+                </div>
+                <div className="w-50">
+                    <label htmlFor="date" className="form-label fs-5">End Date</label>
+                    <input id="startDate" className="form-control" type="date" />
+
+                </div>
             </div>
+
+
+
             <p className='form-label fs-5'>Rules</p>
             <div className="editor">
                 <div className="menu">
