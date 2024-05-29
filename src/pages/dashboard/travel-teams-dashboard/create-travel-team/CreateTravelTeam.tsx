@@ -59,19 +59,6 @@ const CreateTravelTeam = () => {
         ],
         content
     }) as Editor;
-    const [modalIsOpen, setIsOpen] = useState(false);
-    const [url, setUrl] = useState<string>("");
-
-    const openModal = useCallback(() => {
-        console.log(editor.chain().focus());
-        setUrl(editor.getAttributes("link").href);
-        setIsOpen(true);
-    }, [editor]);
-
-    const closeModal = useCallback(() => {
-        setIsOpen(false);
-        setUrl("");
-    }, []);
 
     const toggleBold = useCallback(() => {
         editor.chain().focus().toggleBold().run();
@@ -89,30 +76,31 @@ const CreateTravelTeam = () => {
         editor.chain().focus().toggleStrike().run();
     }, [editor]);
 
-    const toggleCode = useCallback(() => {
-        editor.chain().focus().toggleCode().run();
-    }, [editor]);
-
     if (!editor) {
         return null;
     }
 
     return (
         <div>
-            <Link to='../travel-teams'>
-                <button type="button" className="btn btn-labeled btn-danger">
-                    <span className="btn-label"><i className="bi bi-x"></i></span>
-                    Cancel
-                </button>
-            </Link>
+            <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mt-2">
+                    <li className="breadcrumb-item active">Information</li>
+                    <li className="breadcrumb-item"><a href="#">Application</a></li>
+                    <li className="breadcrumb-item" aria-current="page"><a href="#">Preview<a/></a></li>
+                </ol>
+            </nav>
             <div className="mb-3">
                 <label htmlFor="name" className="form-label fs-5">Name</label>
                 <input type='name' className="form-control" id="name" />
             </div>
+            <div className="input-group mb-3 ">
+                <label htmlFor='imageUpload' className='form-label fs-5 w-100'>Image</label>
+                <input type="file" className="form-control rounded" id="imageUpload" />
+            </div>
             <div className="mb-3">
                 <label htmlFor="location" className="form-label fs-5">Location</label>
                 <input type='name' className="form-control" id="location" />
-            </div>
+            </div>asdasd
             <div className='mb-3 row'>
                 <div className="w-50">
                     <label htmlFor="date" className="form-label fs-5">Start Date</label>
@@ -124,8 +112,6 @@ const CreateTravelTeam = () => {
 
                 </div>
             </div>
-
-
 
             <p className='form-label fs-5'>Rules</p>
             <div className="editor">
@@ -180,6 +166,13 @@ const CreateTravelTeam = () => {
                 </div>
                 <EditorContent editor={editor} />
             </div>
+
+            <Link to='../travel-teams'>
+                <button type="button" className="btn btn-labeled btn-danger">
+                    <span className="btn-label"><i className="bi bi-x"></i></span>
+                    Cancel
+                </button>
+            </Link>
         </div>
     )
 }
