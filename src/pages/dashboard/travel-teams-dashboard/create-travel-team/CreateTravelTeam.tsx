@@ -16,17 +16,20 @@ import StarterKit from '@tiptap/starter-kit'
 import React, { useCallback, useState } from 'react'
 import * as Icons from "../../Icons";
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const content = ``
 
 
 const CreateTravelTeam = () => {
     const [name, setName] = useState("");
+    // const [image, setImage] = useState(File);
     const [location, setLocation] = useState("");
     const [startDate, setStartDate] = useState(Date);
     const [endDate, setEndDate] = useState(Date);
     const [rules, setRules] = useState("");
+
+    const navigate = useNavigate();
 
     const editor = useEditor({
         extensions: [
@@ -39,6 +42,9 @@ const CreateTravelTeam = () => {
             Italic,
             Strike
         ],
+        onUpdate({ editor }) {
+            setRules(editor.getHTML())
+        },
         content
     }) as Editor;
 
@@ -62,20 +68,23 @@ const CreateTravelTeam = () => {
         return null;
     }
 
+    
 
 
-    function save(event: any) {
+    function preview(event: any) {
         event.preventDefault();
-        console.log('test');
-        let formData = new FormData();
-        const  rules = editor.getHTML()
-        formData.append('name', name);
-        formData.append('location', location);
-        formData.append('startDate', startDate);
-        formData.append('endDate', endDate);
-        formData.append('rules', rules);
-
-        alert(formData.get('rules'));
+        
+        navigate("/dashboard/travel-teams/create/preview",
+            {
+                state: {
+                    name,
+                    location,
+                    startDate,
+                    endDate,
+                    rules
+                }
+            }
+        );
 
     }
 
@@ -92,7 +101,7 @@ const CreateTravelTeam = () => {
                     <a className="nav-link tab" href="#">Preview</a>
                 </li>
             </ul>
-            <form onSubmit={(event) => save(event)}>
+            <form onSubmit={(event) => event.preventDefault()}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label fs-5">Name</label>
                     <input type='name' className="form-control" id="name" autoComplete='true' onChange={(e) => setName(e.target.value)} />
@@ -177,7 +186,7 @@ const CreateTravelTeam = () => {
                         Cancel
                     </button>
                 </Link>
-                <button type="submit" className="btn btn-labeled-1 btn-primary float-end create-button">
+                <button type="button" onClick={(event) => preview(event)} className="btn btn-labeled-1 btn-primary float-end create-button">
                     Next
                     <span className="btn-label-1"><i className="bi bi-arrow-right-short"></i></span>
                 </button>

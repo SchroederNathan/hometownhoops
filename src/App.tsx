@@ -13,6 +13,7 @@ import TravelTeams from './pages/travel-teams/TravelTeams'
 import Dashboard from './pages/dashboard/Dashboard'
 import TravelTeamsDashboard from './pages/dashboard/travel-teams-dashboard/TravelTeamsDashboard'
 import CreateTravelTeam from './pages/dashboard/travel-teams-dashboard/create-travel-team/CreateTravelTeam'
+import PreviewCreateTravelTeam from './pages/dashboard/travel-teams-dashboard/create-travel-team/preview/PreviewCreateTravelTeam'
 
 
 const App = () => {
@@ -31,6 +32,8 @@ const App = () => {
           <Route index element={<TravelTeamsDashboard />} />
           <Route path="travel-teams" element={<TravelTeamsDashboard />} />
           <Route path="travel-teams/create" element={<CreateTravelTeam />} />
+          <Route path="travel-teams/create/preview" element={<PreviewCreateTravelTeam />} />
+
           <Route path="rec-leagues" element={<NotFound />} />
           <Route path="tournaments" element={<NotFound />} />
           <Route path="users" element={<NotFound />} />
