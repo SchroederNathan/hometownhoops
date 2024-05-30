@@ -20,9 +20,7 @@ import * as Icons from "../../Icons";
 import classNames from 'classnames'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-let content = `<h2>Camp Information</h2>
-<p>Info Here</p>
-`
+
 
 
 const CreateTravelTeam = () => {
@@ -34,7 +32,9 @@ const CreateTravelTeam = () => {
     const [location, setLocation] = useState("");
     const [startDate, setStartDate] = useState(Date);
     const [endDate, setEndDate] = useState(Date);
-    const [rules, setRules] = useState("");
+    const [rules, setRules] = useState(`<h1>Camp Information</h1>
+    <ul><li>Information here</li></ul>
+    `);
 
     const navigate = useNavigate();
 
@@ -53,21 +53,33 @@ const CreateTravelTeam = () => {
         onUpdate({ editor }) {
             setRules(editor.getHTML())
         },
-        content
+        content: rules
     }) as Editor;
 
     useEffect(() => {
-        content = state.rules
         try {
             setName(state.name)
             setLocation(state.location)
             setStartDate(state.startDate)
             setEndDate(state.endDate)
-            // editor.commands.setContent(state.rules)
+
+            setRules(state.rules)
+            editor?.commands.setContent(state.rules);
+            
+
+            
+
+            // if (state.rules) {
+            //     setRules(state.rules)
+            // } else {
+            //     setRules(`<h2>Camp Information</h2>
+            //     <p>Info Here</p>
+            //     `)
+            // }
+
         } catch (error) {
-            alert(error)
         }
-    }, []);
+    }, [editor]);
 
     const toggleBold = useCallback(() => {
         editor.chain().focus().toggleBold().run();

@@ -49,7 +49,7 @@ const PreviewCreateTravelTeam = () => {
                     <div className="col-md-8" >
                         <div className="card-body" >
 
-                            <h1 className="card-title">{name}</h1>
+                            <h2 className="card-title mb-3"><strong>{name}</strong></h2>
                             <span >
                                 <i className="bi bi-calendar d-inline" style={{ paddingRight: '10px' }}></i>
                                 <p className='d-inline'>
@@ -61,12 +61,12 @@ const PreviewCreateTravelTeam = () => {
                             <br />
                             <span >
                                 <i className="bi bi-geo-alt-fill d-inline" style={{ paddingRight: '10px' }}></i>
-                                <p className='d-inline'>
+                                <p className='d-inline' >
                                     {location}
                                 </p>
                             </span>
 
-                            <p className="card-text mb-3" dangerouslySetInnerHTML={{ __html: rules }}></p>
+                            <p className="card-text mb-3 mt-3" dangerouslySetInnerHTML={{ __html: rules }}></p>
                             <a href="#" className="btn btn-primary">Register your child here</a>
                         </div>
 
