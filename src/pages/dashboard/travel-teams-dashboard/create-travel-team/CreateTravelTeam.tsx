@@ -2,28 +2,35 @@ import './CreateTravelTeam.css'
 // import { Link } from 'react-router-dom'
 import Color from '@tiptap/extension-text'
 import ListItem from '@tiptap/extension-list-item'
-import TextStyle from '@tiptap/extension-text'
 import { EditorProvider, useCurrentEditor, useEditor, Editor, EditorContent, BubbleMenu } from '@tiptap/react'
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
+import TextStyle from '@tiptap/extension-text-style';
+
 import Bold from "@tiptap/extension-bold";
 import Underline from "@tiptap/extension-underline";
 import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import History from "@tiptap/extension-history";
+import Heading from "@tiptap/extension-heading";
 import StarterKit from '@tiptap/starter-kit'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import * as Icons from "../../Icons";
 import classNames from 'classnames'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-const content = ``
+let content = `<h2>Camp Information</h2>
+<p>Info Here</p>
+`
 
 
 const CreateTravelTeam = () => {
+
+
+    const { state } = useLocation();
+
     const [name, setName] = useState("");
-    // const [image, setImage] = useState(File);
     const [location, setLocation] = useState("");
     const [startDate, setStartDate] = useState(Date);
     const [endDate, setEndDate] = useState(Date);
@@ -40,13 +47,27 @@ const CreateTravelTeam = () => {
             Bold,
             Underline,
             Italic,
-            Strike
+            Strike,
+            Heading
         ],
         onUpdate({ editor }) {
             setRules(editor.getHTML())
         },
         content
     }) as Editor;
+
+    useEffect(() => {
+        content = state.rules
+        try {
+            setName(state.name)
+            setLocation(state.location)
+            setStartDate(state.startDate)
+            setEndDate(state.endDate)
+            // editor.commands.setContent(state.rules)
+        } catch (error) {
+            alert(error)
+        }
+    }, []);
 
     const toggleBold = useCallback(() => {
         editor.chain().focus().toggleBold().run();
@@ -64,16 +85,32 @@ const CreateTravelTeam = () => {
         editor.chain().focus().toggleStrike().run();
     }, [editor]);
 
+    const toggleParagraph = useCallback(() => {
+        editor.chain().focus().setParagraph().run();
+    }, [editor]);
+
+    const toggleH1 = useCallback(() => {
+        editor.chain().focus().toggleHeading({ level: 1 }).run();
+    }, [editor]);
+
+    const toggleH2 = useCallback(() => {
+        editor.chain().focus().toggleHeading({ level: 2 }).run();
+    }, [editor]);
+    const toggleH3 = useCallback(() => {
+        editor.chain().focus().toggleHeading({ level: 3 }).run();
+    }, [editor]);
+
     if (!editor) {
         return null;
     }
 
-    
+
+
 
 
     function preview(event: any) {
         event.preventDefault();
-        
+
         navigate("/dashboard/travel-teams/create/preview",
             {
                 state: {
@@ -91,20 +128,17 @@ const CreateTravelTeam = () => {
     return (
         <div>
             <ul className="nav nav-tabs mb-3 ">
-                <li className="nav-item">
-                    <a className="nav-link tab active" aria-current="page" href="#">Information</a>
+                <li className="nav-item" style={{ marginRight: '2px' }}>
+                    <a className="nav-link tab active activeTab" aria-current="page" href="#">Information</a>
                 </li>
-                {/* <li className="nav-item">
-                    <a className="nav-link tab" href="#">Application</a>
-                </li> */}
                 <li className="nav-item">
-                    <a className="nav-link tab" href="#">Preview</a>
+                    <a className="nav-link tab" onClick={(event) => preview(event)} href="#">Preview</a>
                 </li>
             </ul>
             <form onSubmit={(event) => event.preventDefault()}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label fs-5">Name</label>
-                    <input type='name' className="form-control" id="name" autoComplete='true' onChange={(e) => setName(e.target.value)} />
+                    <input type='name' className="form-control" id="name" autoComplete='true' value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div className="input-group mb-3 ">
                     <label htmlFor='imageUpload' className='form-label fs-5 w-100'>Image</label>
@@ -112,16 +146,16 @@ const CreateTravelTeam = () => {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="location" className="form-label fs-5">Location</label>
-                    <input type='name' className="form-control" id="location" onChange={(e) => setLocation(e.target.value)}/>
+                    <input type='name' className="form-control" id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
                 </div>
                 <div className='mb-3 row'>
                     <div className="w-50">
                         <label htmlFor="startDate" className="form-label fs-5">Start Date</label>
-                        <input id="startDate" className="form-control" type="date" onChange={(e) => setStartDate(e.target.value)} />
+                        <input id="startDate" className="form-control" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                     </div>
                     <div className="w-50">
                         <label htmlFor="endDate" className="form-label fs-5">End Date</label>
-                        <input id="endDate" className="form-control" type="date"  onChange={(e) => setEndDate(e.target.value)}/>
+                        <input id="endDate" className="form-control" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
 
                     </div>
                 </div>
@@ -142,6 +176,38 @@ const CreateTravelTeam = () => {
                             disabled={!editor.can().redo()}
                         >
                             <Icons.RotateRight />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("parapgraph")
+                            })}
+                            onClick={toggleParagraph}
+                        >
+                            <Icons.Paragraph />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("H1")
+                            })}
+                            onClick={toggleH1}
+                        >
+                            <Icons.H1 />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("H2")
+                            })}
+                            onClick={toggleH2}
+                        >
+                            <Icons.H2 />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("H3")
+                            })}
+                            onClick={toggleH3}
+                        >
+                            <Icons.H3 />
                         </button>
                         <button
                             className={classNames("menu-button", {
@@ -177,7 +243,7 @@ const CreateTravelTeam = () => {
                         </button>
 
                     </div>
-                    <EditorContent editor={editor}  />
+                    <EditorContent editor={editor} />
 
                 </div>
                 <Link to='../travel-teams'>
@@ -186,9 +252,9 @@ const CreateTravelTeam = () => {
                         Cancel
                     </button>
                 </Link>
-                <button type="button" onClick={(event) => preview(event)} className="btn btn-labeled-1 btn-primary float-end create-button">
-                    Next
-                    <span className="btn-label-1"><i className="bi bi-arrow-right-short"></i></span>
+                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+                    Done
+                    <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
             </form>
         </div>

@@ -25,7 +25,7 @@
 .btn-label-1 {
 	position: relative;
   
-	right: -23px;
+	right: -20px;
 	display: inline-block;
 	padding: 6px 12px;
 	background: rgba(0, 0, 0, 0.15);
@@ -58,9 +58,16 @@ span > i {
   color: black ;
 }
 
-.tab::selection {
-  color: black !important;
+
+.tab:hover {
+  color: #f25929 !important;
 }
+
+.active:hover {
+  color: white !important;
+
+}
+
 :root {
   --color-pink: #ee415f;
   --color-green: #58ce97;
