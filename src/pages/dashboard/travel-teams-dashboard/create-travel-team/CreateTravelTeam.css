@@ -20,12 +20,13 @@
 .btn-labeled:hover {
   scale: 1.03;
   transition: 0.3s;
+  
 }
 
 .btn-label-1 {
 	position: relative;
   
-	right: -20px;
+	right: -15px;
 	display: inline-block;
 	padding: 6px 12px;
 	background: rgba(0, 0, 0, 0.15);
@@ -33,9 +34,15 @@
 }
 
 .btn-labeled-1 {
+  
   width: 120px;
+  border-color: #f25929;
 	padding-top: 0;
 	padding-bottom: 0;
+}
+
+.btn-labeled-1:hover {
+  color: white;
 }
 
 .active {

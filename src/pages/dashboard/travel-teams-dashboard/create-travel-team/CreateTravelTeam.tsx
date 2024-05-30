@@ -265,7 +265,7 @@ const CreateTravelTeam = () => {
                     </button>
                 </Link>
                 <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
-                    Done
+                    Create
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
             </form>

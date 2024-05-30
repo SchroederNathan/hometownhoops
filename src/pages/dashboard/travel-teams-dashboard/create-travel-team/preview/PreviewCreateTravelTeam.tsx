@@ -1,6 +1,6 @@
 import React from 'react'
 import './PreviewCreateTravelTeam.css'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 
 
@@ -17,7 +17,7 @@ const PreviewCreateTravelTeam = () => {
 
     function preview(event: any) {
         event.preventDefault();
-        
+
         navigate("/dashboard/travel-teams/create",
             {
                 state: {
@@ -29,7 +29,7 @@ const PreviewCreateTravelTeam = () => {
                 }
             }
         );
-        
+
     }
 
 
@@ -50,7 +50,7 @@ const PreviewCreateTravelTeam = () => {
                         <div className="card-body" >
 
                             <h2 className="card-title mb-1"><strong>{name}</strong></h2>
-                            <span style={{lineHeight: '40px'}} >
+                            <span style={{ lineHeight: '40px' }} >
                                 <i className="bi bi-calendar d-inline " style={{ paddingRight: '10px' }}></i>
                                 <p className='d-inline '>
                                     {startDate}
@@ -78,6 +78,16 @@ const PreviewCreateTravelTeam = () => {
                     </div>
                 </div>
             </div>
+            <Link to='../travel-teams'>
+                <button type="button" className="btn btn-labeled btn-danger ">
+                    <span className="btn-label"><i className="bi bi-x"></i></span>
+                    Cancel
+                </button>
+            </Link>
+            <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+                Create
+                <span className="btn-label-1"><i className="bi bi-check"></i></span>
+            </button>
 
         </div>
     )
