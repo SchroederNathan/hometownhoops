@@ -17,9 +17,17 @@ import React, { useCallback, useState } from 'react'
 import * as Icons from "../../Icons";
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
+
 const content = ``
 
+
 const CreateTravelTeam = () => {
+    const [name, setName] = useState("");
+    const [location, setLocation] = useState("");
+    const [startDate, setStartDate] = useState(Date);
+    const [endDate, setEndDate] = useState(Date);
+    const [rules, setRules] = useState("");
+
     const editor = useEditor({
         extensions: [
             Document,
@@ -54,105 +62,126 @@ const CreateTravelTeam = () => {
         return null;
     }
 
+
+
+    function save(event: any) {
+        event.preventDefault();
+        console.log('test');
+        let formData = new FormData();
+        const  rules = editor.getHTML()
+        formData.append('name', name);
+        formData.append('location', location);
+        formData.append('startDate', startDate);
+        formData.append('endDate', endDate);
+        formData.append('rules', rules);
+
+        alert(formData.get('rules'));
+
+    }
+
     return (
         <div>
-            <nav aria-label="breadcrumb">
-                <ol className="breadcrumb mt-2">
-                    <li className="breadcrumb-item active">Information</li>
-                    <li className="breadcrumb-item"><a href="#">Application</a></li>
-                    <li className="breadcrumb-item" aria-current="page"><a href="#">Preview<a /></a></li>
-                </ol>
-            </nav>
-            <div className="mb-3">
-                <label htmlFor="name" className="form-label fs-5">Name</label>
-                <input type='name' className="form-control" id="name" />
-            </div>
-            <div className="input-group mb-3 ">
-                <label htmlFor='imageUpload' className='form-label fs-5 w-100'>Image</label>
-                <input type="file" className="form-control rounded" id="imageUpload" />
-            </div>
-            <div className="mb-3">
-                <label htmlFor="location" className="form-label fs-5">Location</label>
-                <input type='name' className="form-control" id="location" />
-            </div>asdasd
-            <div className='mb-3 row'>
-                <div className="w-50">
-                    <label htmlFor="date" className="form-label fs-5">Start Date</label>
-                    <input id="startDate" className="form-control" type="date" />
+            <ul className="nav nav-tabs mb-3 ">
+                <li className="nav-item">
+                    <a className="nav-link tab active" aria-current="page" href="#">Information</a>
+                </li>
+                {/* <li className="nav-item">
+                    <a className="nav-link tab" href="#">Application</a>
+                </li> */}
+                <li className="nav-item">
+                    <a className="nav-link tab" href="#">Preview</a>
+                </li>
+            </ul>
+            <form onSubmit={(event) => save(event)}>
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label fs-5">Name</label>
+                    <input type='name' className="form-control" id="name" autoComplete='true' onChange={(e) => setName(e.target.value)} />
                 </div>
-                <div className="w-50">
-                    <label htmlFor="date" className="form-label fs-5">End Date</label>
-                    <input id="startDate" className="form-control" type="date" />
+                <div className="input-group mb-3 ">
+                    <label htmlFor='imageUpload' className='form-label fs-5 w-100'>Image</label>
+                    <input type="file" className="form-control rounded" id="imageUpload" />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="location" className="form-label fs-5">Location</label>
+                    <input type='name' className="form-control" id="location" onChange={(e) => setLocation(e.target.value)}/>
+                </div>
+                <div className='mb-3 row'>
+                    <div className="w-50">
+                        <label htmlFor="startDate" className="form-label fs-5">Start Date</label>
+                        <input id="startDate" className="form-control" type="date" onChange={(e) => setStartDate(e.target.value)} />
+                    </div>
+                    <div className="w-50">
+                        <label htmlFor="endDate" className="form-label fs-5">End Date</label>
+                        <input id="endDate" className="form-control" type="date"  onChange={(e) => setEndDate(e.target.value)}/>
+
+                    </div>
+                </div>
+
+                <p className='form-label fs-5'>Rules</p>
+                <div className="editor mb-4">
+                    <div className="menu">
+                        <button
+                            className="menu-button"
+                            onClick={() => editor.chain().focus().undo().run()}
+                            disabled={!editor.can().undo()}
+                        >
+                            <Icons.RotateLeft />
+                        </button>
+                        <button
+                            className="menu-button"
+                            onClick={() => editor.chain().focus().redo().run()}
+                            disabled={!editor.can().redo()}
+                        >
+                            <Icons.RotateRight />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("bold")
+                            })}
+                            onClick={toggleBold}
+                        >
+                            <Icons.Bold />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("underline")
+                            })}
+                            onClick={toggleUnderline}
+                        >
+                            <Icons.Underline />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("intalic")
+                            })}
+                            onClick={toggleItalic}
+                        >
+                            <Icons.Italic />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("strike")
+                            })}
+                            onClick={toggleStrike}
+                        >
+                            <Icons.Strikethrough />
+                        </button>
+
+                    </div>
+                    <EditorContent editor={editor}  />
 
                 </div>
-            </div>
-
-            <p className='form-label fs-5'>Rules</p>
-            <div className="editor mb-4">
-                <div className="menu">
-                    <button
-                        className="menu-button"
-                        onClick={() => editor.chain().focus().undo().run()}
-                        disabled={!editor.can().undo()}
-                    >
-                        <Icons.RotateLeft />
+                <Link to='../travel-teams'>
+                    <button type="button" className="btn btn-labeled btn-danger ">
+                        <span className="btn-label"><i className="bi bi-x"></i></span>
+                        Cancel
                     </button>
-                    <button
-                        className="menu-button"
-                        onClick={() => editor.chain().focus().redo().run()}
-                        disabled={!editor.can().redo()}
-                    >
-                        <Icons.RotateRight />
-                    </button>
-                    <button
-                        className={classNames("menu-button", {
-                            "is-active": editor.isActive("bold")
-                        })}
-                        onClick={toggleBold}
-                    >
-                        <Icons.Bold />
-                    </button>
-                    <button
-                        className={classNames("menu-button", {
-                            "is-active": editor.isActive("underline")
-                        })}
-                        onClick={toggleUnderline}
-                    >
-                        <Icons.Underline />
-                    </button>
-                    <button
-                        className={classNames("menu-button", {
-                            "is-active": editor.isActive("intalic")
-                        })}
-                        onClick={toggleItalic}
-                    >
-                        <Icons.Italic />
-                    </button>
-                    <button
-                        className={classNames("menu-button", {
-                            "is-active": editor.isActive("strike")
-                        })}
-                        onClick={toggleStrike}
-                    >
-                        <Icons.Strikethrough />
-                    </button>
-
-                </div>
-                <EditorContent editor={editor} />
-            </div>
-
-            <Link to='../travel-teams'>
-                <button type="button" className="btn btn-labeled btn-danger ">
-                    <span className="btn-label"><i className="bi bi-x"></i></span>
-                    Cancel
-                </button>
-            </Link>
-            <Link to='#'>
-                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+                </Link>
+                <button type="submit" className="btn btn-labeled-1 btn-primary float-end create-button">
                     Next
                     <span className="btn-label-1"><i className="bi bi-arrow-right-short"></i></span>
                 </button>
-            </Link>
+            </form>
         </div>
     )
 }

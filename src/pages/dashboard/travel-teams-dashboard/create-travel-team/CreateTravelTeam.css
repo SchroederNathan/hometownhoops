@@ -5,10 +5,12 @@
 	padding: 6px 12px;
 	background: rgba(0, 0, 0, 0.15);
 	border-radius: 5px 0 0 5px;
+  
 }
 
 .btn-labeled {
   scale: 1.00;
+  
   transition: 0.3s;
   width: 120px;
 	padding-top: 0;
@@ -22,6 +24,7 @@
 
 .btn-label-1 {
 	position: relative;
+  
 	right: -23px;
 	display: inline-block;
 	padding: 6px 12px;
@@ -33,6 +36,10 @@
   width: 120px;
 	padding-top: 0;
 	padding-bottom: 0;
+}
+
+.active {
+  color: white !important;
 }
 
 span > i {
@@ -47,9 +54,12 @@ span > i {
   background-color: white !important;
 }
 
-a {
-  color: #f25929;
-  text-decoration: none;
+.tab {
+  color: black ;
+}
+
+.tab::selection {
+  color: black !important;
 }
 :root {
   --color-pink: #ee415f;
