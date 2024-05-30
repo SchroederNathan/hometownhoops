@@ -29,7 +29,7 @@ const App = () => {
         <Route path='/rec-leagues' element={<RecLeagues />} errorElement={<NotFound />} />
 
         <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound />}>
-          <Route index element={<TravelTeamsDashboard />} />
+          <Route index element={<Navigate to="travel-teams" replace />} />
           <Route path="travel-teams" element={<TravelTeamsDashboard />} />
           <Route path="travel-teams/create" element={<CreateTravelTeam />} />
           <Route path="travel-teams/create/preview" element={<PreviewCreateTravelTeam />} />
