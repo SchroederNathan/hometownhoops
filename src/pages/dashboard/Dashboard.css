@@ -6,7 +6,8 @@
 .active {
     background-color: #f25929 !important;
     scale: 1.05;
-    transition: 0.3s;
+    transition: 0.3s; 
+    
 }
 
 .nav-pills li a {

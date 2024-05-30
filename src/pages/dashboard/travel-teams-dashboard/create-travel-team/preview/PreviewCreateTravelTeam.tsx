@@ -34,7 +34,6 @@ const PreviewCreateTravelTeam = () => {
 
     }
 
-
     return (
         <div>
             <ul className="nav nav-tabs mb-3 ">
@@ -47,7 +46,7 @@ const PreviewCreateTravelTeam = () => {
             </ul>
 
             <TravelTeamCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} />
-            
+
             <Link to='../travel-teams'>
                 <button type="button" className="btn btn-labeled btn-danger ">
                     <span className="btn-label"><i className="bi bi-x"></i></span>
