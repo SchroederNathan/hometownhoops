@@ -19,6 +19,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import * as Icons from "../../Icons";
 import classNames from 'classnames'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
 
 
 
@@ -48,7 +50,11 @@ const CreateTravelTeam = () => {
             Underline,
             Italic,
             Strike,
-            Heading
+            Heading,
+            ListItem,
+            BulletList,
+            OrderedList
+
         ],
         onUpdate({ editor }) {
             setRules(editor.getHTML())
@@ -66,17 +72,6 @@ const CreateTravelTeam = () => {
             setRules(state.rules)
             editor?.commands.setContent(state.rules);
             
-
-            
-
-            // if (state.rules) {
-            //     setRules(state.rules)
-            // } else {
-            //     setRules(`<h2>Camp Information</h2>
-            //     <p>Info Here</p>
-            //     `)
-            // }
-
         } catch (error) {
         }
     }, [editor]);
@@ -99,6 +94,14 @@ const CreateTravelTeam = () => {
 
     const toggleParagraph = useCallback(() => {
         editor.chain().focus().setParagraph().run();
+    }, [editor]);
+
+    const toggleBulletList = useCallback(() => {
+        editor.chain().focus().toggleBulletList().run();
+    }, [editor]);
+
+    const toggleOrderedList = useCallback(() => {
+        editor.chain().focus().toggleOrderedList().run();
     }, [editor]);
 
     const toggleH1 = useCallback(() => {
@@ -220,6 +223,22 @@ const CreateTravelTeam = () => {
                             onClick={toggleH3}
                         >
                             <Icons.H3 />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("ul")
+                            })}
+                            onClick={toggleBulletList}
+                        >
+                            <Icons.BulletList />
+                        </button>
+                        <button
+                            className={classNames("menu-button", {
+                                "is-active": editor.isActive("ol")
+                            })}
+                            onClick={toggleOrderedList}
+                        >
+                            <Icons.OrderedList />
                         </button>
                         <button
                             className={classNames("menu-button", {
