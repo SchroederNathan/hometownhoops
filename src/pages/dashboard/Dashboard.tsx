@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import './Dashboard.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const Dashboard = () => {
 
-        let location = useLocation();
-        const [current, setCurrent] = useState(
-            location.pathname === "/" || location.pathname === ""
-                ? "/dashboard"
-                : location.pathname,
-        );
-        //or simply use const [current, setCurrent] = useState(location.pathname)        
+    let location = useLocation();
+    const [current, setCurrent] = useState(
+        location.pathname === "/" || location.pathname === ""
+            ? "/dashboard"
+            : location.pathname,
+    );
+    //or simply use const [current, setCurrent] = useState(location.pathname)        
 
-        useEffect(() => {
-            // console.log(location)
-            if (location) {
-                if (current !== location.pathname) {
-                    setCurrent(location.pathname);
-                }
+    useEffect(() => {
+        // console.log(location)
+        if (location) {
+            if (current !== location.pathname) {
+                setCurrent(location.pathname);
             }
-        }, [location, current]);
-
-        function handleClick(e: any) {
-            console.log(e)
-            setCurrent(e.key);
         }
-    
+    }, [location, current]);
+
+    function handleClick(e: any) {
+        console.log(e)
+        setCurrent(e.key);
+    }
+    // make sure to type the parameters of this function! isActive is a boolean 
+    const navLinkCssClasses = ({ isActive }: { isActive: boolean }): string => {
+        return ` ${isActive ? "nav-link fs-5 dashboard my-1 py-2 py-sm-2" : "nav-link fs-5 dashboard my-1 py-2 py-sm-2"
+            }`;
+    };
 
     return (
         <div className='main-div container-fluid'>
@@ -38,28 +42,30 @@ const Dashboard = () => {
                     <hr className='text-secondary d-none d-sm-block'></hr>
                     <ul className='nav nav-pills flex-column'>
                         <li className='nav-item fs-4' >
-                            <Link to='/dashboard/travel-teams' onClick={handleClick} className='nav-link active dashboard fs-5 my-1 py-2 py-sm-2' aria-current='page'>
+                            <NavLink to='/dashboard/travel-teams'
+                            className="nav-link fs-5 dashboard my-1 py-2 py-sm-2"
+                                onClick={handleClick}  aria-current='page'>
                                 <i className='bi bi-backpack'></i>
                                 <span className='ms-3 d-none d-sm-inline'>Travel Teams</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li className='nav-item fs-4'>
-                            <Link to='/dashboard/rec-leagues' onClick={handleClick} className='nav-link fs-5 dashboard my-1 py-2 py-sm-2' aria-current='page'>
+                            <NavLink to='/dashboard/rec-leagues' onClick={handleClick} className='nav-link fs-5 dashboard my-1 py-2 py-sm-2' aria-current='page'>
                                 <i className='bi bi-award'></i>
                                 <span className='ms-3 d-none d-sm-inline'>Rec Leagues</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li className='nav-item fs-4'>
-                            <Link to='/dashboard/tournaments' onClick={handleClick} className='nav-link fs-5 dashboard my-1 py-2 py-sm-2' aria-current='page'>
+                            <NavLink to='/dashboard/tournaments' onClick={handleClick} className='nav-link fs-5 dashboard my-1 py-2 py-sm-2' aria-current='page'>
                                 <i className='bi bi-trophy'></i>
                                 <span className='ms-3 d-none d-sm-inline'>Tournaments</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li className='nav-item fs-4'>
-                            <Link to='/dashboard/users' onClick={handleClick} className='nav-link fs-5 dashboard my-1 py-2 py-sm-2' aria-current='page'>
+                            <NavLink to='/dashboard/users' onClick={handleClick} className='nav-link fs-5 dashboard my-1 py-2 py-sm-2' aria-current='page'>
                                 <i className='bi bi-people'></i>
                                 <span className='ms-3 d-none d-sm-inline'>Users</span>
-                            </Link>
+                            </NavLink>
                         </li>
                     </ul>
                 </div>
