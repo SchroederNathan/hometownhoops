@@ -16,12 +16,12 @@ import History from "@tiptap/extension-history";
 import Heading from "@tiptap/extension-heading";
 import StarterKit from '@tiptap/starter-kit'
 import React, { useCallback, useEffect, useState } from 'react'
-import * as Icons from "../../Icons";
+import * as Icons from "../../../../components/helpers/Icons";
 import classNames from 'classnames'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
-import EditorComponent from './EditorComponent';
+import EditorComponent from '../../../../components/helpers/EditorComponent';
 
 
 

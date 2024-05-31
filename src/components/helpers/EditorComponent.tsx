@@ -1,7 +1,7 @@
 import { EditorContent, Editor } from '@tiptap/react'
 import classNames from 'classnames'
 import React, { useCallback } from 'react'
-import * as Icons from "../../Icons";
+import * as Icons from "./Icons";
 
 type EditorProps = {
     editor: Editor;

@@ -1,7 +1,7 @@
 import React from 'react'
 import './PreviewCreateTravelTeam.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import TravelTeamCard from './TravelTeamCard';
+import TravelTeamCard from '../../../../../components/helpers/TravelTeamCard';
 
 
 
@@ -31,7 +31,6 @@ const PreviewCreateTravelTeam = () => {
                 }
             }
         );
-
     }
 
     return (

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import './TravelTeamsDashboard.css'
 import React from 'react'
-import TravelTeamCard from './create-travel-team/preview/TravelTeamCard'
+import TravelTeamCard from '../../../components/helpers/TravelTeamCard'
 
 const TravelTeamsDashboard = () => {
     return (
@@ -15,9 +15,9 @@ const TravelTeamsDashboard = () => {
                 </Link>
             </div>
             <div className='card-view overflow-auto'>
+                {/* <TravelTeamCard />
                 <TravelTeamCard />
-                <TravelTeamCard />
-                <TravelTeamCard />
+                <TravelTeamCard /> */}
 
             </div>
         </div>
