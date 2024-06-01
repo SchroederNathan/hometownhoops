@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import './TravelTeamsDashboard.css'
 import React from 'react'
-import TravelTeamCard from '../../../components/helpers/TravelTeamCard'
+import TravelTeamCard from '../../../components/helpers/travel-teams/TravelTeamCard'
 
 const TravelTeamsDashboard = () => {
     return (

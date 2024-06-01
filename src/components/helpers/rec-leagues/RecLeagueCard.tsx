@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
-import { TravelTeamModal } from './TravelTeamModal';
+
 // const [parentFirstName, setParentFirstName] = useState("");
 // const [parentLastName, setParentLastName] = useState("");
 // const [email, setEmail] = useState("");
 // const [phone, setPhone] = useState("");
 
-function TravelTeamCard(props: any) {
+function RecLeagueCard(props: any) {
 
     function MyVerticallyCenteredModal(props: any) {
         return (
@@ -16,10 +16,10 @@ function TravelTeamCard(props: any) {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
-                    <Modal.Title className='mt-4 fs-4' style={{paddingLeft: '15px', marginBottom: '0px'}}>
-                        <strong>Register Your Children Here</strong>
-                    </Modal.Title>
-                    <hr className="featurette-divider" style={{marginBottom: '0px'}} />
+                <Modal.Title className='mt-4 fs-4' style={{ paddingLeft: '15px', marginBottom: '0px' }}>
+                    <strong>Register Your Children Here</strong>
+                </Modal.Title>
+                <hr className="featurette-divider" style={{ marginBottom: '0px' }} />
 
                 <Modal.Body>
                     <form onSubmit={(event) => event.preventDefault()}>
@@ -53,7 +53,7 @@ function TravelTeamCard(props: any) {
 
     const [modalShow, setModalShow] = React.useState(false);
 
-
+    alert(props.selectedImage)
 
     return (
         <div>
@@ -81,13 +81,13 @@ function TravelTeamCard(props: any) {
                             </span>
 
                             <p className="card-text mb-3 mt-1" dangerouslySetInnerHTML={{ __html: props.rules }}></p>
-                            <a onClick={() => setModalShow(true)} className="btn btn-primary w-100">Register your child here</a>
+                            <a onClick={() => setModalShow(true)} className="btn btn-primary w-100">Register Your Team</a>
                         </div>
 
 
                     </div>
                     <div className="col-md-4">
-                        <img src="/src/assets/tournaments.jpg" className="img-fluid h-100 object-fit-cover  " alt="..." />
+                        <img ref={props.selectedImage} className="img-fluid h-100 object-fit-cover  " alt="..." />
                         {/* <p className="card-text"><small className="text-body-secondary position-absolute bottom-0 end-0">Posted 3 mins ago</small></p> */}
 
                     </div>
@@ -103,4 +103,4 @@ function TravelTeamCard(props: any) {
 
 }
 
-export default TravelTeamCard
+export default RecLeagueCard

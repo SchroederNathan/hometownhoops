@@ -1,12 +1,13 @@
 import React from 'react'
-import './PreviewCreateTravelTeam.css'
+import './PreviewCreateRecLeague.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import TravelTeamCard from '../../../../../components/helpers/travel-teams/TravelTeamCard';
+import RecLeagueCard from '../../../../../components/helpers/rec-leagues/RecLeagueCard';
 
 
 
 
-const PreviewCreateTravelTeam = () => {
+const PreviewCreateRecLeague= () => {
     const { state } = useLocation();
 
     const name = state.name;
@@ -14,20 +15,23 @@ const PreviewCreateTravelTeam = () => {
     const startDate = state.startDate;
     const endDate = state.endDate;
     const rules = state.rules;
+    const selectedImage = state.selectedImage;
+
 
     const navigate = useNavigate();
 
     function preview(event: any) {
         event.preventDefault();
 
-        navigate("/dashboard/travel-teams/create",
+        navigate("/dashboard/rec-leagues/create",
             {
                 state: {
                     name,
                     location,
                     startDate,
                     endDate,
-                    rules
+                    rules,
+                    selectedImage
                 }
             }
         );
@@ -44,7 +48,7 @@ const PreviewCreateTravelTeam = () => {
                 </li>
             </ul>
 
-            <TravelTeamCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} />
+            <RecLeagueCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} refImage={selectedImage}/>
 
             <Link to='../travel-teams'>
                 <button type="button" className="btn btn-labeled btn-danger ">
@@ -61,4 +65,4 @@ const PreviewCreateTravelTeam = () => {
     )
 }
 
-export default PreviewCreateTravelTeam
+export default PreviewCreateRecLeague
