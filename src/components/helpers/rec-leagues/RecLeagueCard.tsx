@@ -40,6 +40,7 @@ function RecLeagueCard(props: any) {
                             <label htmlFor="location" className="form-label">Cell Phone Number</label>
                             <input type='tel' className="form-control" id="location" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} />
                         </div>
+                        
                     </form>
                 </Modal.Body>
                 <Modal.Footer>

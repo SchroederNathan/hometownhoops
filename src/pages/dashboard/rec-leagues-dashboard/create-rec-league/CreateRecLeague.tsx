@@ -25,6 +25,7 @@ import EditorComponent from '../../../../components/helpers/EditorComponent';
 import { FileInput } from '../../../../components/helpers/FileInput';
 import { useHooks } from '../../../../components/helpers/Hooks';
 import { ScheduleModal } from '../../../../components/helpers/schedule/ScheduleModal';
+import { Scheduler } from '@aldabil/react-scheduler';
 
 
 
@@ -167,6 +168,17 @@ const CreateRecLeague = () => {
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
             </form>
+            <Scheduler view="month"
+                        day={null}
+                        month={{
+                            weekDays: [0, 1, 2, 3, 4, 5],
+                            weekStartOn: 6,
+                            startHour: 16,
+                            endHour: 24
+                        }}
+                        week={null}
+                        
+                         />
             <ScheduleModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}

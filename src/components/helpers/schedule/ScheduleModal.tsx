@@ -19,15 +19,19 @@ export function ScheduleModal(props: any) {
             <hr className="featurette-divider" style={{ marginBottom: '0px' }} />
 
             <Modal.Body>
-                <Scheduler view="week"
-                    day={null}
-                    month={{
-                        weekDays: [0, 1, 2, 3, 4, 5],
-                        weekStartOn: 6,
-                        startHour: 16,
-                        endHour: 24
-                    }}
-                    week={null} />
+                    <Scheduler view="month"
+                        day={null}
+                        
+                        data-overlay="false"
+                        month={{
+                            weekDays: [0, 1, 2, 3, 4, 5],
+                            weekStartOn: 6,
+                            startHour: 16,
+                            endHour: 24
+                        }}
+                        week={null}
+                        
+                         />
             </Modal.Body>
             <Modal.Footer>
                 <button type="button" onClick={props.onHide} style={{ width: '108px' }} className="btn btn-labeled-1 btn-primary float-end create-button">
