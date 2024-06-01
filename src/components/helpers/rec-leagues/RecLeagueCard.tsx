@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 
+
 // const [parentFirstName, setParentFirstName] = useState("");
 // const [parentLastName, setParentLastName] = useState("");
 // const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ function RecLeagueCard(props: any) {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" onClick={props.onHide} className="btn btn-labeled-1 btn-primary float-end create-button">
+                    <button type="button" onClick={props.onHide}  className="btn btn-labeled-1 btn-primary float-end create-button">
                         Submit
                         <span className="btn-label-1"><i className="bi bi-check"></i></span>
                     </button>
@@ -52,8 +53,6 @@ function RecLeagueCard(props: any) {
     }
 
     const [modalShow, setModalShow] = React.useState(false);
-
-    alert(props.selectedImage)
 
     return (
         <div>
@@ -87,7 +86,7 @@ function RecLeagueCard(props: any) {
 
                     </div>
                     <div className="col-md-4">
-                        <img ref={props.selectedImage} className="img-fluid h-100 object-fit-cover  " alt="..." />
+                        <img src="../../../assets/tournaments.jpg" className="img-fluid h-100 object-fit-cover  " alt="..." />
                         {/* <p className="card-text"><small className="text-body-secondary position-absolute bottom-0 end-0">Posted 3 mins ago</small></p> */}
 
                     </div>

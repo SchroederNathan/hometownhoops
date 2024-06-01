@@ -24,6 +24,7 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import EditorComponent from '../../../../components/helpers/EditorComponent';
 import { FileInput } from '../../../../components/helpers/FileInput';
 import { useHooks } from '../../../../components/helpers/Hooks';
+import { ScheduleModal } from '../../../../components/helpers/schedule/ScheduleModal';
 
 
 
@@ -41,8 +42,9 @@ const CreateRecLeague = () => {
     const [selectedImage, setSelectedImage] = useState(useRef<HTMLDivElement>(null));
 
     const { handleFiles, imageContainerRef } = useHooks();
+    const [modalShow, setModalShow] = React.useState(false);
 
-    
+
 
     const navigate = useNavigate();
 
@@ -56,8 +58,7 @@ const CreateRecLeague = () => {
                     location,
                     startDate,
                     endDate,
-                    rules,
-                    selectedImage
+                    rules
                 }
             }
         );
@@ -88,7 +89,7 @@ const CreateRecLeague = () => {
 
     function onImageChange(event: any) {
         handleFiles(event)
-        setSelectedImage(imageContainerRef)
+        // setSelectedImage(imageContainerRef)
     }
 
     useEffect(() => {
@@ -97,8 +98,8 @@ const CreateRecLeague = () => {
             setLocation(state.location)
             setStartDate(state.startDate)
             setEndDate(state.endDate)
-            setSelectedImage(state.selectedImage)
             setRules(state.rules)
+            // setSelectedImage(state.selectedImage)
 
             editor?.commands.setContent(state.rules);
 
@@ -110,9 +111,6 @@ const CreateRecLeague = () => {
     if (!editor) {
         return null;
     }
-
-
-    
 
     return (
         <div>
@@ -126,6 +124,10 @@ const CreateRecLeague = () => {
             </ul>
 
             <form onSubmit={(event) => event.preventDefault()}>
+                <button type="button" onClick={() => setModalShow(true)} style={{width: '170px'}} className="btn btn-labeled-1 btn-primary create-button">
+                    Edit Schedule
+                    <span className="btn-label-1"><i className="bi bi-calendar-event"></i></span>
+                </button>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label fs-5">Name</label>
                     <input type='name' className="form-control" id="name" autoComplete='true' value={name} onChange={(e) => setName(e.target.value)} />
@@ -165,6 +167,10 @@ const CreateRecLeague = () => {
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
             </form>
+            <ScheduleModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+            />
         </div>
     )
 }

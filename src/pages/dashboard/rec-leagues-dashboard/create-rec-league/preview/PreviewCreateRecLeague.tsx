@@ -15,7 +15,7 @@ const PreviewCreateRecLeague= () => {
     const startDate = state.startDate;
     const endDate = state.endDate;
     const rules = state.rules;
-    const selectedImage = state.selectedImage;
+    // const selectedImage = state.selectedImage;
 
 
     const navigate = useNavigate();
@@ -30,8 +30,7 @@ const PreviewCreateRecLeague= () => {
                     location,
                     startDate,
                     endDate,
-                    rules,
-                    selectedImage
+                    rules
                 }
             }
         );
@@ -48,7 +47,7 @@ const PreviewCreateRecLeague= () => {
                 </li>
             </ul>
 
-            <RecLeagueCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} refImage={selectedImage}/>
+            <RecLeagueCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} />
 
             <Link to='../travel-teams'>
                 <button type="button" className="btn btn-labeled btn-danger ">
