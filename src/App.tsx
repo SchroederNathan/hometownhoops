@@ -14,6 +14,7 @@ import Dashboard from './pages/dashboard/Dashboard'
 import TravelTeamsDashboard from './pages/dashboard/travel-teams-dashboard/TravelTeamsDashboard'
 import CreateTravelTeam from './pages/dashboard/travel-teams-dashboard/create-travel-team/CreateTravelTeam'
 import PreviewCreateTravelTeam from './pages/dashboard/travel-teams-dashboard/create-travel-team/preview/PreviewCreateTravelTeam'
+import RecLeaguesDashboard from './pages/dashboard/rec-leagues-dashboard/RecLeaguesDashboard'
 
 
 const App = () => {
@@ -30,12 +31,20 @@ const App = () => {
 
         <Route path='/dashboard' element={<Dashboard />} errorElement={<NotFound />}>
           <Route index element={<Navigate to="travel-teams" replace />} />
+
           <Route path="travel-teams" element={<TravelTeamsDashboard />} />
           <Route path="travel-teams/create" element={<CreateTravelTeam />} />
           <Route path="travel-teams/create/preview" element={<PreviewCreateTravelTeam />} />
 
-          <Route path="rec-leagues" element={<NotFound />} />
+          <Route path="rec-leagues" element={<RecLeaguesDashboard />} />
+          <Route path="rec-leagues/create" element={<NotFound />} />
+          <Route path="rec-leagues/create/preview" element={<NotFound />} />
+
           <Route path="tournaments" element={<NotFound />} />
+          <Route path="tournaments/create" element={<NotFound />} />
+          <Route path="tournaments/create/preview" element={<NotFound />} />
+
+
           <Route path="users" element={<NotFound />} />
 
 
