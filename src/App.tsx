@@ -17,6 +17,9 @@ import PreviewCreateTravelTeam from './pages/dashboard/travel-teams-dashboard/cr
 import RecLeaguesDashboard from './pages/dashboard/rec-leagues-dashboard/RecLeaguesDashboard'
 import CreateRecLeague from './pages/dashboard/rec-leagues-dashboard/create-rec-league/CreateRecLeague'
 import PreviewCreateRecLeague from './pages/dashboard/rec-leagues-dashboard/create-rec-league/preview/PreviewCreateRecLeague'
+import TournamentsDashboard from './pages/dashboard/tournaments-dashboard/TournamentsDashboard'
+import CreateTournament from './pages/dashboard/tournaments-dashboard/create-tournament/CreateTournaments'
+import PreviewCreateTournament from './pages/dashboard/tournaments-dashboard/preview-tournament/PreviewCreateTournament'
 
 
 
@@ -43,9 +46,9 @@ const App = () => {
           <Route path="rec-leagues/create" element={<CreateRecLeague />} />
           <Route path="rec-leagues/create/preview" element={<PreviewCreateRecLeague />} />
 
-          <Route path="tournaments" element={<NotFound />} />
-          <Route path="tournaments/create" element={<NotFound />} />
-          <Route path="tournaments/create/preview" element={<NotFound />} />
+          <Route path="tournaments" element={<TournamentsDashboard />} />
+          <Route path="tournaments/create" element={<CreateTournament />} />
+          <Route path="tournaments/create/preview" element={<PreviewCreateTournament />} />
 
 
           <Route path="users" element={<NotFound />} />

@@ -7,7 +7,7 @@ import { Button, Modal } from 'react-bootstrap';
 // const [email, setEmail] = useState("");
 // const [phone, setPhone] = useState("");
 
-function RecLeagueCard(props: any) {
+function TournamentCard(props: any) {
 
     function MyVerticallyCenteredModal(props: any) {
         return (
@@ -26,7 +26,7 @@ function RecLeagueCard(props: any) {
                     <form onSubmit={(event) => event.preventDefault()}>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Team Name</label>
-                            <input type='text' className="form-control" id="name" placeholder='Team Name' onChange={(e) => setParentFirstName(e.target.value)} />
+                            <input type='text' className="form-control" id="name" placeholder='First Name' onChange={(e) => setParentFirstName(e.target.value)} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="location" className="form-label" >Captain First Name</label>
@@ -36,16 +36,16 @@ function RecLeagueCard(props: any) {
                             <label htmlFor="location" className="form-label" >Captain Last Name</label>
                             <input type='text' className="form-control" id="location" placeholder='Last Name' onChange={(e) => setParentLastName(e.target.value)} />
                         </div>
-
+                        
                         <div className="mb-3">
                             <label htmlFor="location" className="form-label">Cell Phone Number</label>
                             <input type='tel' className="form-control" id="location" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} />
                         </div>
-
+                        
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" onClick={props.onHide} className="btn btn-labeled-1 btn-primary float-end create-button">
+                    <button type="button" onClick={props.onHide}  className="btn btn-labeled-1 btn-primary float-end create-button">
                         Submit
                         <span className="btn-label-1"><i className="bi bi-check"></i></span>
                     </button>
@@ -104,4 +104,4 @@ function RecLeagueCard(props: any) {
 
 }
 
-export default RecLeagueCard
+export default TournamentCard
