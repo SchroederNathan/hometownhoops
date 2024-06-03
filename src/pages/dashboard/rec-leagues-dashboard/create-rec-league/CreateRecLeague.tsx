@@ -125,7 +125,7 @@ const CreateRecLeague = () => {
             </ul>
 
             <form onSubmit={(event) => event.preventDefault()}>
-                <button type="button" onClick={() => setModalShow(true)} style={{width: '170px'}} className="btn btn-labeled-1 btn-primary create-button">
+                <button type="button" onClick={() => setModalShow(true)} style={{ width: '170px' }} className="btn btn-labeled-1 btn-primary create-button">
                     Edit Schedule
                     <span className="btn-label-1"><i className="bi bi-calendar-event"></i></span>
                 </button>
@@ -157,28 +157,31 @@ const CreateRecLeague = () => {
                 <p className='form-label fs-5'>Rules</p>
                 <EditorComponent editor={editor} />
 
+                <p className='form-label fs-5'>Schedule</p>
+
+                <Scheduler view="month"
+                    day={null}
+                    month={{
+                        weekDays: [0, 1, 2, 3, 4, 5],
+                        weekStartOn: 6,
+                        startHour: 16,
+                        endHour: 24
+                    }}
+                    week={null}
+
+                />
                 <Link to='../travel-teams'>
-                    <button type="button" className="btn btn-labeled btn-danger ">
+                    <button type="button" className="btn btn-labeled btn-danger mt-3">
                         <span className="btn-label"><i className="bi bi-x"></i></span>
                         Cancel
                     </button>
                 </Link>
-                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button mt-3">
                     Create
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
             </form>
-            <Scheduler view="month"
-                        day={null}
-                        month={{
-                            weekDays: [0, 1, 2, 3, 4, 5],
-                            weekStartOn: 6,
-                            startHour: 16,
-                            endHour: 24
-                        }}
-                        week={null}
-                        
-                         />
+
             <ScheduleModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}

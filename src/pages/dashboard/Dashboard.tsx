@@ -43,7 +43,7 @@ const Dashboard = () => {
 
                         {/* <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu"> */}
                         <ul className='nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start' id="menu">
-                            <li className='nav-item' >
+                            <li className='nav-item  w-100' >
                                 <NavLink to='/dashboard/travel-teams'
                                     className="nav-link fs-6 dashboard my-1 py-2 py-sm-2"
                                     onClick={handleClick} aria-current='page'>
@@ -52,22 +52,22 @@ const Dashboard = () => {
                                 </NavLink>
                                 
                             </li>
-                            <li className='nav-item'>
+                            <li className='nav-item  w-100'>
                             <NavLink to='/dashboard/rec-leagues' onClick={handleClick} className='nav-link  fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
                                 <i className='fs-5 bi bi-award'></i>
                                 <span className='ms-1 d-none d-sm-inline ps-1'><strong>Rec Leagues</strong></span>
                             </NavLink>
                         </li>
-                        <li className='nav-item'>
+                        <li className='nav-item  w-100'>
                             <NavLink to='/dashboard/tournaments' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
                                 <i className='fs-5 bi bi-trophy'></i>
                                 <span className='ms-1 d-none d-sm-inline ps-1'><strong>Tournaments</strong></span>
                             </NavLink>
                         </li>
-                        <li className='nav-item'>
-                            <NavLink to='/dashboard/users' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
+                        <li className='nav-item  w-100'>
+                            <NavLink to='/dashboard/users' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2 ' aria-current='page'>
                                 <i className='fs-5 bi bi-people'></i>
-                                <span className='ms-1 d-none d-sm-inline ps-1'><strong>Users</strong></span>
+                                <span className='ms-1 d-none d-sm-inline ps-1  '><strong>Users</strong></span>
                             </NavLink>
                         </li>
                         </ul>

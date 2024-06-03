@@ -22,6 +22,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import EditorComponent from '../../../../components/helpers/EditorComponent';
+import { Scheduler } from '@aldabil/react-scheduler';
 
 
 
@@ -136,13 +137,26 @@ const CreateTravelTeam = () => {
 
                 <p className='form-label fs-5'>Rules</p>
                 <EditorComponent editor={editor}/>
+                <p className='form-label fs-5'>Schedule</p>
+
+                <Scheduler view="month"
+                    day={null}
+                    month={{
+                        weekDays: [0, 1, 2, 3, 4, 5],
+                        weekStartOn: 6,
+                        startHour: 16,
+                        endHour: 24
+                    }}
+                    week={null}
+
+                />
                 <Link to='../travel-teams'>
-                    <button type="button" className="btn btn-labeled btn-danger ">
+                    <button type="button" className="btn btn-labeled btn-danger mt-3">
                         <span className="btn-label"><i className="bi bi-x"></i></span>
                         Cancel
                     </button>
                 </Link>
-                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button mt-3">
                     Create
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
