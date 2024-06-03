@@ -47,47 +47,30 @@ const Dashboard = () => {
                                 <NavLink to='/dashboard/travel-teams'
                                     className="nav-link fs-6 dashboard my-1 py-2 py-sm-2"
                                     onClick={handleClick} aria-current='page'>
-                                        <i className=' fs-5 bi bi-backpack d-sm-inline'></i>
+                                    <i className=' fs-5 bi bi-backpack d-sm-inline'></i>
                                     <span className='ms-1 d-none d-sm-inline ps-1' ><strong>Travel Teams</strong></span>
                                 </NavLink>
-                                
+
                             </li>
                             <li className='nav-item  w-100'>
-                            <NavLink to='/dashboard/rec-leagues' onClick={handleClick} className='nav-link  fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
-                                <i className='fs-5 bi bi-award'></i>
-                                <span className='ms-1 d-none d-sm-inline ps-1'><strong>Rec Leagues</strong></span>
-                            </NavLink>
-                        </li>
-                        <li className='nav-item  w-100'>
-                            <NavLink to='/dashboard/tournaments' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
-                                <i className='fs-5 bi bi-trophy'></i>
-                                <span className='ms-1 d-none d-sm-inline ps-1'><strong>Tournaments</strong></span>
-                            </NavLink>
-                        </li>
-                        <li className='nav-item  w-100'>
-                            <NavLink to='/dashboard/users' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2 ' aria-current='page'>
-                                <i className='fs-5 bi bi-people'></i>
-                                <span className='ms-1 d-none d-sm-inline ps-1  '><strong>Users</strong></span>
-                            </NavLink>
-                        </li>
+                                <NavLink to='/dashboard/rec-leagues' onClick={handleClick} className='nav-link  fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
+                                    <i className='fs-5 bi bi-award'></i>
+                                    <span className='ms-1 d-none d-sm-inline ps-1'><strong>Rec Leagues</strong></span>
+                                </NavLink>
+                            </li>
+                            <li className='nav-item  w-100'>
+                                <NavLink to='/dashboard/tournaments' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2' aria-current='page'>
+                                    <i className='fs-5 bi bi-trophy'></i>
+                                    <span className='ms-1 d-none d-sm-inline ps-1'><strong>Tournaments</strong></span>
+                                </NavLink>
+                            </li>
+                            <li className='nav-item  w-100'>
+                                <NavLink to='/dashboard/users' onClick={handleClick} className='nav-link fs-6 dashboard my-1 py-2 py-sm-2 ' aria-current='page'>
+                                    <i className='fs-5 bi bi-people'></i>
+                                    <span className='ms-1 d-none d-sm-inline ps-1  '><strong>Users</strong></span>
+                                </NavLink>
+                            </li>
                         </ul>
-                        
-                        <hr />
-                        <div className="dropdown pb-4">
-                            <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" className="rounded-circle" />
-                                <span className="d-none d-sm-inline mx-1">loser</span>
-                            </a>
-                            <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                                <li><a className="dropdown-item" href="#">New project...</a></li>
-                                <li><a className="dropdown-item" href="#">Settings</a></li>
-                                <li><a className="dropdown-item" href="#">Profile</a></li>
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-                                <li><a className="dropdown-item" href="#">Sign out</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
                 <div className="col py-3">
