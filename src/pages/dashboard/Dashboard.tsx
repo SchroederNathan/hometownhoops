@@ -27,26 +27,26 @@ const Dashboard = () => {
         setCurrent(e.key);
     }
     // make sure to type the parameters of this function! isActive is a boolean 
-    const navLinkCssClasses = ({ isActive }: { isActive: boolean }): string => {
-        return ` ${isActive ? "nav-link fs-5 dashboard my-1 py-2 py-sm-2" : "nav-link fs-5 dashboard my-1 py-2 py-sm-2"
-            }`;
-    };
+    // const navLinkCssClasses = ({ isActive }: { isActive: boolean }): string => {
+    //     return ` ${isActive ? "nav-link fs-5 dashboard my-1 py-2 py-sm-2" : "nav-link fs-5 dashboard my-1 py-2 py-sm-2"
+    //         }`;
+    // };
 
     return (
         <div className='main-div container-fluid'>
-            <div className='row'>
-                <div className='bg-light col-2 min-vh-100 col-md-3 pt-3'>
+            <div className='row flex-nowrap'>
+                <div className='bg-light col-2 min-vh-100 col-auto col-md-3 col-xl-2 px-sm-2 px-0  pt-3'>
                     <a className='text-decoration-none text-black d-none d-sm-inline d-flex align-itemcenter'>
                         <span className='ms-1 fs-4'>Dashboard</span>
                     </a>
                     <hr className='text-secondary d-none d-sm-block'></hr>
-                    <ul className='nav nav-pills flex-column'>
+                    <ul className='nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start'>
                         <li className='nav-item fs-4' >
                             <NavLink to='/dashboard/travel-teams'
-                            className="nav-link fs-5 dashboard my-1 py-2 py-sm-2"
+                            className="nav-link fs-5 dashboard "
                                 onClick={handleClick}  aria-current='page'>
-                                <i className='bi bi-backpack'></i>
-                                <span className='ms-3 d-none d-sm-inline'>Travel Teams</span>
+                                <i className=' fs-4 bi bi-backpack'></i>
+                                <span className='ms-2 d-none d-sm-inline'>Travel Teams</span>
                             </NavLink>
                         </li>
                         <li className='nav-item fs-4'>
