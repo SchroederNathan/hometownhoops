@@ -31,10 +31,6 @@ const RecLeagues = () => {
 
   }, [])
 
-  const [wasSuccess, setWasSuccess] = React.useState(false);
-
-
-
   const showEvents = () => {
     return (
 

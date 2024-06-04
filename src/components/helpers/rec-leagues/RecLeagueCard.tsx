@@ -93,10 +93,9 @@ function MyVerticallyCenteredModal(props: any) {
 
 function RecLeagueCard(props: any) {
 
-
-
     const [modalShow, setModalShow] = React.useState(false);
     const [wasSuccess, setWasSuccess] = React.useState(false);
+
 
 
     // Callback function to handle data received from the
@@ -105,14 +104,17 @@ function RecLeagueCard(props: any) {
         // Update the name in the component's state
         setWasSuccess(childData);
         if (wasSuccess) {
-            
+
             toast.success('Successfully Registered!')
             setWasSuccess(false);
-
         }
     };
 
 
+    function checkIfOpen(time1: string, time2: Date) {
+        // alert(new Date(time1) < new Date(time2))
+        return new Date(time1) < new Date(time2); // true if time2 is later
+    }
 
 
 
@@ -123,8 +125,10 @@ function RecLeagueCard(props: any) {
 
                     <div className="col-md-8" >
                         <div className="card-body" >
-
-                            <h2 className="card-title mb-1"><strong>{props.name}</strong> <span className="badge text-bg-primary fs-6 align-middle">Open</span></h2>
+                            {checkIfOpen(props.endDate, new Date()) ?
+                                <h2 className="card-title mb-1"><strong>{props.name}</strong> <span className="badge text-bg-primary fs-6 align-middle">Closed</span></h2> :
+                                <h2 className="card-title mb-1"><strong>{props.name}</strong> <span className="badge text-bg-primary fs-6 align-middle">Open</span></h2>
+                            }
                             <span style={{ lineHeight: '40px' }} >
                                 <i className="bi bi-calendar d-inline " style={{ paddingRight: '10px' }}></i>
                                 <p className='d-inline '>

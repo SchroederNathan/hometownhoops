@@ -83,7 +83,7 @@ const CreateRecLeague = () => {
             }
         );
     }
-
+    
     const editor = useEditor({
         extensions: [
             Document,
