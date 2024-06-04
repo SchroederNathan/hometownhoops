@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import '../../../assets/tournaments.jpg'
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../config/firebase';
+import { Navigate } from 'react-router-dom';
 
 
 // const [parentFirstName, setParentFirstName] = useState("");
@@ -17,6 +20,24 @@ function MyVerticallyCenteredModal(props: any) {
     const [captainFirstName, setCaptainFirstName] = React.useState('');
     const [captainLastName, setCaptainLastName] = React.useState('');
     const [phoneNumber, setPhoneNumber] = React.useState('');
+
+    const eventsCollectionRef = collection(db, `rec-leagues/${props.eventID}/registrar`)
+
+    const onCreate = async () => {
+        try {
+            await addDoc(eventsCollectionRef, {
+                teamName: teamName,
+                captainFirstName: captainFirstName,
+                captainLastName: captainLastName,
+                phoneNumber: phoneNumber
+            })
+            props.onHide()
+            // SHOW CONFIRMATIOn
+        } catch (err) {
+            alert(err)
+        }
+
+    }
 
     return (
         <Modal
@@ -53,7 +74,7 @@ function MyVerticallyCenteredModal(props: any) {
                 </form>
             </Modal.Body>
             <Modal.Footer>
-                <button type="button" onClick={props.onHide} className="btn btn-labeled-1 btn-primary float-end create-button">
+                <button type="button" onClick={onCreate} className="btn btn-labeled-1 btn-primary float-end create-button">
                     Submit
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
@@ -108,6 +129,7 @@ function RecLeagueCard(props: any) {
                 </div>
             </div>
             <MyVerticallyCenteredModal
+                eventID={props.eventID}
                 show={modalShow}
                 onHide={() => setModalShow(false)}
             />
