@@ -8,52 +8,63 @@ import '../../../assets/tournaments.jpg'
 // const [email, setEmail] = useState("");
 // const [phone, setPhone] = useState("");
 
+
+
+
+function MyVerticallyCenteredModal(props: any) {
+
+    const [teamName, setTeamName] = React.useState('');
+    const [captainFirstName, setCaptainFirstName] = React.useState('');
+    const [captainLastName, setCaptainLastName] = React.useState('');
+    const [phoneNumber, setPhoneNumber] = React.useState('');
+
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Title className='mt-4 fs-4' style={{ paddingLeft: '15px', marginBottom: '0px' }}>
+                <strong>Register Your Team</strong>
+            </Modal.Title>
+            <hr className="featurette-divider" style={{ marginBottom: '0px' }} />
+
+            <Modal.Body>
+                <form onSubmit={(event) => event.preventDefault()}>
+                    <div className="mb-3">
+                        <label htmlFor="teamName" className="form-label">Team Name</label>
+                        <input type='text' className="form-control" id="teamName" placeholder='Team Name' onChange={(e) => setTeamName(e.target.value)} />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="firstName" className="form-label" >Captain First Name</label>
+                        <input type='text' className="form-control" id="firstName" placeholder='First Name' onChange={(e) => setCaptainFirstName(e.target.value)} />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="lastName" className="form-label" >Captain Last Name</label>
+                        <input type='text' className="form-control" id="lastName" placeholder='Last Name' onChange={(e) => setCaptainLastName(e.target.value)} />
+                    </div>
+
+                    <div className="mb-3">
+                        <label htmlFor="phone" className="form-label">Cell Phone Number</label>
+                        <input type='tel' className="form-control" id="phone" placeholder='Phone Number' onChange={(e) => setPhoneNumber(e.target.value)} />
+                    </div>
+
+                </form>
+            </Modal.Body>
+            <Modal.Footer>
+                <button type="button" onClick={props.onHide} className="btn btn-labeled-1 btn-primary float-end create-button">
+                    Submit
+                    <span className="btn-label-1"><i className="bi bi-check"></i></span>
+                </button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
 function RecLeagueCard(props: any) {
 
-    function MyVerticallyCenteredModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Title className='mt-4 fs-4' style={{ paddingLeft: '15px', marginBottom: '0px' }}>
-                    <strong>Register Your Team</strong>
-                </Modal.Title>
-                <hr className="featurette-divider" style={{ marginBottom: '0px' }} />
 
-                <Modal.Body>
-                    <form onSubmit={(event) => event.preventDefault()}>
-                        <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Team Name</label>
-                            <input type='text' className="form-control" id="name" placeholder='Team Name' onChange={(e) => setParentFirstName(e.target.value)} />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="location" className="form-label" >Captain First Name</label>
-                            <input type='text' className="form-control" id="location" placeholder='First Name' onChange={(e) => setParentLastName(e.target.value)} />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="location" className="form-label" >Captain Last Name</label>
-                            <input type='text' className="form-control" id="location" placeholder='Last Name' onChange={(e) => setParentLastName(e.target.value)} />
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="location" className="form-label">Cell Phone Number</label>
-                            <input type='tel' className="form-control" id="location" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} />
-                        </div>
-
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <button type="button" onClick={props.onHide} className="btn btn-labeled-1 btn-primary float-end create-button">
-                        Submit
-                        <span className="btn-label-1"><i className="bi bi-check"></i></span>
-                    </button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
 
     const [modalShow, setModalShow] = React.useState(false);
 
