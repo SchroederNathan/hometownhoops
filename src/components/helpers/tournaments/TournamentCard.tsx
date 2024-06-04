@@ -36,16 +36,16 @@ function TournamentCard(props: any) {
                             <label htmlFor="location" className="form-label" >Captain Last Name</label>
                             <input type='text' className="form-control" id="location" placeholder='Last Name' onChange={(e) => setParentLastName(e.target.value)} />
                         </div>
-                        
+
                         <div className="mb-3">
                             <label htmlFor="location" className="form-label">Cell Phone Number</label>
                             <input type='tel' className="form-control" id="location" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} />
                         </div>
-                        
+
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" onClick={props.onHide}  className="btn btn-labeled-1 btn-primary float-end create-button">
+                    <button type="button" onClick={props.onHide} className="btn btn-labeled-1 btn-primary float-end create-button">
                         Submit
                         <span className="btn-label-1"><i className="bi bi-check"></i></span>
                     </button>
@@ -56,6 +56,11 @@ function TournamentCard(props: any) {
 
     const [modalShow, setModalShow] = React.useState(false);
 
+    function checkIfOpen(time1: string, time2: Date) {
+        // alert(new Date(time1) < new Date(time2))
+        return new Date(time1) < new Date(time2); // true if time2 is later
+    }
+
     return (
         <div>
             <div className="card d-grid mb-3 overflow-hidden shadow-sm" >
@@ -64,8 +69,10 @@ function TournamentCard(props: any) {
                     <div className="col-md-8" >
                         <div className="card-body" >
 
-                            <h2 className="card-title mb-1"><strong>{props.name}</strong> <span className="badge text-bg-primary fs-6 align-middle">Open</span></h2>
-                            <span style={{ lineHeight: '40px' }} >
+                            {checkIfOpen(props.endDate, new Date()) ?
+                                <h2 className="card-title mb-1"><strong>{props.name}</strong> <span className="badge text-bg-primary fs-6 align-middle">Closed</span></h2> :
+                                <h2 className="card-title mb-1"><strong>{props.name}</strong> <span className="badge text-bg-primary fs-6 align-middle">Open</span></h2>
+                            }                                     <span style={{ lineHeight: '40px' }} >
                                 <i className="bi bi-calendar d-inline " style={{ paddingRight: '10px' }}></i>
                                 <p className='d-inline '>
                                     {props.startDate}

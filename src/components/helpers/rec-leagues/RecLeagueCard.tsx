@@ -92,11 +92,8 @@ function MyVerticallyCenteredModal(props: any) {
 }
 
 function RecLeagueCard(props: any) {
-
     const [modalShow, setModalShow] = React.useState(false);
     const [wasSuccess, setWasSuccess] = React.useState(false);
-
-
 
     // Callback function to handle data received from the
     //child component
@@ -110,13 +107,10 @@ function RecLeagueCard(props: any) {
         }
     };
 
-
     function checkIfOpen(time1: string, time2: Date) {
         // alert(new Date(time1) < new Date(time2))
         return new Date(time1) < new Date(time2); // true if time2 is later
     }
-
-
 
     return (
         <div>
