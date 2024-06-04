@@ -26,6 +26,8 @@ import { FileInput } from '../../../../components/helpers/FileInput';
 import { useHooks } from '../../../../components/helpers/Hooks';
 import { ScheduleModal } from '../../../../components/helpers/schedule/ScheduleModal';
 import { Scheduler } from '@aldabil/react-scheduler';
+import { db } from '../../../../config/firebase';
+import { addDoc, collection } from 'firebase/firestore';
 
 
 
@@ -45,7 +47,24 @@ const CreateTournament = () => {
     const { handleFiles, imageContainerRef } = useHooks();
     const [modalShow, setModalShow] = React.useState(false);
 
+    const eventsCollectionRef = collection(db, 'tournaments')
 
+    const onCreate = async () => {
+        try {
+            await addDoc(eventsCollectionRef, {
+                name: name,
+                location: location,
+                startDate: startDate,
+                endDate: endDate,
+                imgUrl: 'none',
+                rules: rules
+            })
+            navigate("/dashboard/rec-leagues/")
+        } catch (err) {
+            alert(err)
+        }
+
+    }
 
     const navigate = useNavigate();
 
@@ -176,7 +195,7 @@ const CreateTournament = () => {
                         Cancel
                     </button>
                 </Link>
-                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button mt-3">
+                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button mt-3" onClick={onCreate}>
                     Create
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>

@@ -17,7 +17,7 @@ const PreviewCreateTravelTeam = () => {
     const endDate = state.endDate;
     const rules = state.rules;
 
-    const eventsCollectionRef = collection(db, 'rec-leagues')
+    const eventsCollectionRef = collection(db, 'travel-teams')
 
     const onCreate = async () => {
         try {

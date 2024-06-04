@@ -1,8 +1,9 @@
 import React from 'react'
 import './PreviewCreateTournament.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import TournamentCard from '../../../../../components/helpers/travel-teams/TournamentCard';
-import RecLeagueCard from '../../../../components/helpers/rec-leagues/RecLeagueCard';
+import TournamentCard from '../../../../components/helpers/tournaments/TournamentCard';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../config/firebase';
 
 
 
@@ -16,6 +17,25 @@ const PreviewCreateTournament= () => {
     const endDate = state.endDate;
     const rules = state.rules;
     // const selectedImage = state.selectedImage;
+
+    const eventsCollectionRef = collection(db, 'tournaments')
+
+    const onCreate = async () => {
+        try {
+            await addDoc(eventsCollectionRef, {
+                name: name,
+                location: location,
+                startDate: startDate,
+                endDate: endDate,
+                imgUrl: 'none',
+                rules: rules
+            })
+            navigate("/dashboard/rec-leagues/")
+        } catch (err) {
+            alert(err)
+        }
+
+    }
 
 
     const navigate = useNavigate();
@@ -47,7 +67,7 @@ const PreviewCreateTournament= () => {
                 </li>
             </ul>
 
-            <RecLeagueCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} />
+            <TournamentCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} />
 
             <Link to='../travel-teams'>
                 <button type="button" className="btn btn-labeled btn-danger ">
@@ -55,7 +75,7 @@ const PreviewCreateTournament= () => {
                     Cancel
                 </button>
             </Link>
-            <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+            <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button" onClick={onCreate}>
                 Create
                 <span className="btn-label-1"><i className="bi bi-check"></i></span>
             </button>
