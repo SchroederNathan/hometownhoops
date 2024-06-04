@@ -146,7 +146,11 @@ function RecLeagueCard(props: any) {
                             </span>
 
                             <p className="card-text mb-3 mt-1" dangerouslySetInnerHTML={{ __html: props.rules }}></p>
-                            <a onClick={() => setModalShow(true)} className="btn btn-primary w-100">Register Your Team</a>
+                            {checkIfOpen(props.endDate, new Date()) ?
+                            // Make it navigate to seperate page
+                                <a onClick={() => setModalShow(true)} className="btn btn-primary w-100">View Details</a> :
+                                <a onClick={() => setModalShow(true)} className="btn btn-primary w-100">Register Your Team</a>
+                            }
                         </div>
 
 
