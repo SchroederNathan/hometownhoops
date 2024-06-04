@@ -143,10 +143,6 @@ const CreateRecLeague = () => {
             </ul>
 
             <form onSubmit={(event) => event.preventDefault()}>
-                <button type="button" onClick={() => setModalShow(true)} style={{ width: '170px' }} className="btn btn-labeled-1 btn-primary create-button">
-                    Edit Schedule
-                    <span className="btn-label-1"><i className="bi bi-calendar-event"></i></span>
-                </button>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label fs-5">Name</label>
                     <input type='name' className="form-control" id="name" autoComplete='true' value={name} onChange={(e) => setName(e.target.value)} />
@@ -200,10 +196,6 @@ const CreateRecLeague = () => {
                 </button>
             </form>
 
-            <ScheduleModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-            />
         </div>
     )
 }

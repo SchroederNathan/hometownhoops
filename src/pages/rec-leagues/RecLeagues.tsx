@@ -31,7 +31,9 @@ const RecLeagues = () => {
   const showEvents = () => {
     return (
       <div className='mt-3'>
-        {/* <span className="display-5 d-block m-3 mx-auto">Rec League Events</span> */}
+        <span className="display-5 d-block m-3 mb-4 text-center"><strong>Active Rec Leagues</strong></span>
+
+        <span className="display-5 d-block m-3 mb-4 text-center"><strong>Open Registration</strong></span>
         {eventList.map((event: any) => (
           <RecLeagueCard name={event.name} location={event.location} rules={event.rules} imgSrc={event.imgUrl} startDate={event.startDate} endDate={event.endDate} />
         ))}
