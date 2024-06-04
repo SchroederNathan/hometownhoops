@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import '../../../assets/tournaments.jpg'
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import { Navigate } from 'react-router-dom';
+import { toast } from "react-hot-toast";
 
 
 // const [parentFirstName, setParentFirstName] = useState("");
@@ -21,6 +22,12 @@ function MyVerticallyCenteredModal(props: any) {
     const [captainLastName, setCaptainLastName] = React.useState('');
     const [phoneNumber, setPhoneNumber] = React.useState('');
 
+    // Function triggered when the form is submitted
+    const wasSuccess = () => {
+        // Call the parent callback function
+        props.parentCallback(true);
+    };
+
     const eventsCollectionRef = collection(db, `rec-leagues/${props.eventID}/registrar`)
 
     const onCreate = async () => {
@@ -31,6 +38,7 @@ function MyVerticallyCenteredModal(props: any) {
                 captainLastName: captainLastName,
                 phoneNumber: phoneNumber
             })
+            wasSuccess()
             props.onHide()
             // SHOW CONFIRMATIOn
         } catch (err) {
@@ -88,6 +96,25 @@ function RecLeagueCard(props: any) {
 
 
     const [modalShow, setModalShow] = React.useState(false);
+    const [wasSuccess, setWasSuccess] = React.useState(false);
+
+
+    // Callback function to handle data received from the
+    //child component
+    const handleCallback = (childData: any) => {
+        // Update the name in the component's state
+        setWasSuccess(childData);
+        if (wasSuccess) {
+            
+            toast.success('Successfully Registered!')
+            setWasSuccess(false);
+
+        }
+    };
+
+
+
+
 
     return (
         <div>
@@ -131,6 +158,7 @@ function RecLeagueCard(props: any) {
             <MyVerticallyCenteredModal
                 eventID={props.eventID}
                 show={modalShow}
+                parentCallback={handleCallback}
                 onHide={() => setModalShow(false)}
             />
         </div>
