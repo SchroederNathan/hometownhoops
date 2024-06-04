@@ -33,7 +33,7 @@ const RecLeagues = () => {
       <div className='mt-3'>
         {/* <span className="display-5 d-block m-3 mx-auto">Rec League Events</span> */}
         {eventList.map((event: any) => (
-          <RecLeagueCard name={event.name} location={event.location} rules={event.rules} imgSrc={event.imgUrl} />
+          <RecLeagueCard name={event.name} location={event.location} rules={event.rules} imgSrc={event.imgUrl} startDate={event.startDate} endDate={event.endDate} />
         ))}
       </div>
     )
@@ -44,7 +44,7 @@ const RecLeagues = () => {
 
       <div>
         {eventList ? showEvents()
- : <NoEvents title='Rec Leagues' />}
+          : <NoEvents title='Rec Leagues' />}
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
+import '../../../assets/tournaments.jpg'
 
 
 // const [parentFirstName, setParentFirstName] = useState("");
@@ -88,7 +89,7 @@ function RecLeagueCard(props: any) {
 
                     </div>
                     <div className="col-md-4">
-                        <img src="../../../assets/tournaments.jpg" className="img-fluid h-100 object-fit-cover  " alt="..." />
+                        <img src="/src/assets/tournaments.jpg" className="img-fluid h-100 object-fit-cover  " alt="..." />
                         {/* <p className="card-text"><small className="text-body-secondary position-absolute bottom-0 end-0">Posted 3 mins ago</small></p> */}
 
                     </div>

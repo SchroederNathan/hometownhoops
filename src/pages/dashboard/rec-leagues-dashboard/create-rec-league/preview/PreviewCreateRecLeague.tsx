@@ -3,6 +3,8 @@ import './PreviewCreateRecLeague.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import TravelTeamCard from '../../../../../components/helpers/travel-teams/TravelTeamCard';
 import RecLeagueCard from '../../../../../components/helpers/rec-leagues/RecLeagueCard';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../../config/firebase';
 
 
 
@@ -16,6 +18,25 @@ const PreviewCreateRecLeague= () => {
     const endDate = state.endDate;
     const rules = state.rules;
     // const selectedImage = state.selectedImage;
+
+    const eventsCollectionRef = collection(db, 'rec-leagues')
+
+    const onCreate = async () => {
+        try {
+            await addDoc(eventsCollectionRef, {
+                name: name,
+                location: location,
+                startDate: startDate,
+                endDate: endDate,
+                imgUrl: 'none',
+                rules: rules
+            })
+            navigate("/dashboard/rec-leagues/")
+        } catch (err) {
+            alert(err)
+        }
+
+    }
 
 
     const navigate = useNavigate();
@@ -55,7 +76,7 @@ const PreviewCreateRecLeague= () => {
                     Cancel
                 </button>
             </Link>
-            <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button">
+            <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button" onClick={onCreate}>
                 Create
                 <span className="btn-label-1"><i className="bi bi-check"></i></span>
             </button>
