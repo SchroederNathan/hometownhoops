@@ -23,6 +23,8 @@ import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import EditorComponent from '../../../../components/helpers/EditorComponent';
 import { Scheduler } from '@aldabil/react-scheduler';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../config/firebase';
 
 
 
@@ -39,6 +41,25 @@ const CreateTravelTeam = () => {
     const [rules, setRules] = useState(`<h1>Camp Information</h1>
     <ul><li>Information here</li></ul>
     `);
+
+    const eventsCollectionRef = collection(db, 'travel-teams')
+
+    const onCreate = async () => {
+        try {
+            await addDoc(eventsCollectionRef, {
+                name: name,
+                location: location,
+                startDate: startDate,
+                endDate: endDate,
+                imgUrl: 'none',
+                rules: rules
+            })
+            navigate("/dashboard/travel-teams/")
+        } catch (err) {
+            alert(err)
+        }
+
+    }
 
     const navigate = useNavigate();
 
@@ -156,7 +177,7 @@ const CreateTravelTeam = () => {
                         Cancel
                     </button>
                 </Link>
-                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button mt-3">
+                <button type="button" className="btn btn-labeled-1 btn-primary float-end create-button mt-3" onClick={onCreate}>
                     Create
                     <span className="btn-label-1"><i className="bi bi-check"></i></span>
                 </button>
