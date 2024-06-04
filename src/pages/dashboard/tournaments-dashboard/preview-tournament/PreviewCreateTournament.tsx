@@ -30,7 +30,7 @@ const PreviewCreateTournament= () => {
                 imgUrl: 'none',
                 rules: rules
             })
-            navigate("/dashboard/rec-leagues/")
+            navigate("/dashboard/tournaments/")
         } catch (err) {
             alert(err)
         }

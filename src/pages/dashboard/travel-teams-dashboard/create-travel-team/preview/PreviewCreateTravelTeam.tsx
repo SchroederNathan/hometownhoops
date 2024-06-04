@@ -29,7 +29,7 @@ const PreviewCreateTravelTeam = () => {
                 imgUrl: 'none',
                 rules: rules
             })
-            navigate("/dashboard/rec-leagues/")
+            navigate("/dashboard/travel-teams/")
         } catch (err) {
             alert(err)
         }
