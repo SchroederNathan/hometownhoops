@@ -50,6 +50,14 @@ const CreateRecLeague = () => {
     const { handleFiles, imageContainerRef } = useHooks();
     const [modalShow, setModalShow] = React.useState(false);
 
+    const [scheduledEvents, setScheduledEvents] = React.useState([{
+        event_id: '',
+        title: '',
+        start: new Date(),
+        end: new Date()
+    }]);
+
+
     const eventsCollectionRef = collection(db, 'rec-leagues')
 
     const onCreate = async () => {
@@ -138,33 +146,36 @@ const CreateRecLeague = () => {
         event: ProcessedEvent,
         action: EventActions
     ): Promise<ProcessedEvent> => {
-        console.log("handleConfirm =", action, event.title);
-
-        /**
-         * Make sure to return 4 mandatory fields:
-         * event_id: string|number
-         * title: string
-         * start: Date|string
-         * end: Date|string
-         * ....extra other fields depend on your custom fields/editor properties
-         */
-        // Simulate http request: return added/edited event
         return new Promise((res, rej) => {
+
+            /**
+             * Make sure to return 4 mandatory fields:
+             * event_id: string|number
+             * title: string
+             * start: Date|string
+             * end: Date|string
+             * ....extra other fields depend on your custom fields/editor properties
+             */
+            try {
+                console.log(event.event_id)
+
+                scheduledEvents.push({
+                    event_id: 'n/a',
+                    title: event.title,
+                    start: event.start,
+                    end: event.end
+                })
+                console.log(scheduledEvents)
+            } catch (err) {
+                console.log(err)
+            }
+
             if (action === "edit") {
                 /** PUT event to remote DB */
             } else if (action === "create") {
                 /**POST event to remote DB */
             }
 
-            const isFail = Math.random() > 0.6;
-                if (isFail) {
-                    rej("Ops... Faild");
-                } else {
-                    res({
-                        ...event,
-                        event_id: event.event_id || Math.random()
-                    });
-                }
         });
     };
 
@@ -219,20 +230,7 @@ const CreateRecLeague = () => {
                         startHour: 16,
                         endHour: 24
                     }}
-                    events={[
-                        {
-                            event_id: 1,
-                            title: "Event 1",
-                            start: new Date("2024/17/2 07:30"),
-                            end: new Date("2024/17/2 8:30"),
-                        },
-                        {
-                            event_id: 2,
-                            title: "Event 2",
-                            start: new Date("2024/6/2 07:30"),
-                            end: new Date("2024/6/2 8:30"),
-                        },
-                    ]}
+                    events={scheduledEvents}
                     week={null}
 
                 />
