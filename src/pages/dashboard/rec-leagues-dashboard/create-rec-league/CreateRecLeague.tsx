@@ -14,14 +14,16 @@ import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import History from "@tiptap/extension-history";
 import Heading from "@tiptap/extension-heading";
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import EditorComponent from '../../../../components/helpers/EditorComponent';
+
 import StarterKit from '@tiptap/starter-kit'
 import React, { useCallback, ChangeEventHandler, useEffect, useRef, useState } from 'react'
 import * as Icons from "../../../../components/helpers/Icons";
 import classNames from 'classnames'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import BulletList from '@tiptap/extension-bullet-list';
-import OrderedList from '@tiptap/extension-ordered-list';
-import EditorComponent from '../../../../components/helpers/EditorComponent';
+
 import { FileInput } from '../../../../components/helpers/FileInput';
 import { useHooks } from '../../../../components/helpers/Hooks';
 import { ScheduleModal } from '../../../../components/helpers/schedule/ScheduleModal';

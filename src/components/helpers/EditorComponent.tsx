@@ -1,11 +1,10 @@
 import { EditorContent, Editor } from '@tiptap/react'
 import classNames from 'classnames'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import * as Icons from "./Icons";
 
 type EditorProps = {
     editor: Editor;
-    
 }
 
 const EditorComponent = ({ editor }: {editor: Editor}) => {

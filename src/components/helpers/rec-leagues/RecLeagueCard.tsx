@@ -54,7 +54,7 @@ function MyVerticallyCenteredModal(props: any) {
       <Modal.Title
         className="mt-4 fs-4"
         style={{ paddingLeft: "15px", marginBottom: "0px" }}
-      >
+      >9
         <strong>Register Your Team</strong>
       </Modal.Title>
       <hr className="featurette-divider" style={{ marginBottom: "0px" }} />
@@ -193,14 +193,14 @@ function RecLeagueCard(props: any) {
                 className="card-text mb-3 mt-1"
                 dangerouslySetInnerHTML={{ __html: props.rules }}
               ></p>
-              {checkIfOpen(props.endDate, new Date()) ? (
+              {props.isDashboard ? (
+                <Link to={props.eventID}>
+                  <a className="btn btn-primary w-100">Edit League</a>
+                </Link>
+              ) : checkIfOpen(props.endDate, new Date()) ? (
                 // Make it navigate to seperate page
                 <Link to={`/rec-leagues/${props.eventID}`}>
-                  <a
-                    className="btn btn-primary w-100"
-                  >
-                    View Details
-                  </a>
+                  <a className="btn btn-primary w-100">View Details</a>
                 </Link>
               ) : (
                 <a
