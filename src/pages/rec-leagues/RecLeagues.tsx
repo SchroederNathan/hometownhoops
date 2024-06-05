@@ -10,6 +10,7 @@ const RecLeagues = () => {
   const [eventList, setEventList] = useState([{}]);
 
   const eventCollectionRef = collection(db, "rec-leagues");
+//db.collection('books').where(firebase.firestore.FieldPath.documentId(), '==', 'fK3ddutEpD2qQqRMXNW5').get()
 
   useEffect(() => {
     const getEventList = async () => {
@@ -36,7 +37,7 @@ const RecLeagues = () => {
         <span className="h1 d-block m-3 mb-2 text-center">
           <strong>Rec Leagues</strong>
         </span>
-        <p className="w-75 text-center mx-auto mb-5 lead">
+        <p className="w-75 text-center mx-auto mb-2 lead">
           Hometown Hoops Rec Basketball Leagues offer a unique opportunity for
           basketball lovers of all skill levels to stay active, connect with
           others, and have fun on the court. Our leagues provide a competitive
@@ -44,6 +45,15 @@ const RecLeagues = () => {
           sportsmanship. Join us for a season of fun and competition with
           Hometown Hoops Rec Basketball Leagues!
         </p>
+        <div
+          className="mb-3"
+          style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+        >
+          <hr className="featurette-divider" />
+        </div>
+        <span className="h1 d-block mb-3">
+          Open Registration
+        </span>
         {eventList.map((event: any) => (
           <RecLeagueCard
             name={event.name}
