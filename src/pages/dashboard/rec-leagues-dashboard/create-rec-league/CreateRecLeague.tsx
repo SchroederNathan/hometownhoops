@@ -30,6 +30,7 @@ import { ScheduleModal } from '../../../../components/helpers/schedule/ScheduleM
 import { Scheduler } from '@aldabil/react-scheduler';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../../config/firebase';
+import { EventActions, ProcessedEvent } from '@aldabil/react-scheduler/types';
 
 
 
@@ -85,7 +86,7 @@ const CreateRecLeague = () => {
             }
         );
     }
-    
+
     const editor = useEditor({
         extensions: [
             Document,
@@ -133,6 +134,40 @@ const CreateRecLeague = () => {
         return null;
     }
 
+    const handleConfirm = async (
+        event: ProcessedEvent,
+        action: EventActions
+    ): Promise<ProcessedEvent> => {
+        console.log("handleConfirm =", action, event.title);
+
+        /**
+         * Make sure to return 4 mandatory fields:
+         * event_id: string|number
+         * title: string
+         * start: Date|string
+         * end: Date|string
+         * ....extra other fields depend on your custom fields/editor properties
+         */
+        // Simulate http request: return added/edited event
+        return new Promise((res, rej) => {
+            if (action === "edit") {
+                /** PUT event to remote DB */
+            } else if (action === "create") {
+                /**POST event to remote DB */
+            }
+
+            const isFail = Math.random() > 0.6;
+                if (isFail) {
+                    rej("Ops... Faild");
+                } else {
+                    res({
+                        ...event,
+                        event_id: event.event_id || Math.random()
+                    });
+                }
+        });
+    };
+
     return (
         <div>
             <ul className="nav nav-tabs mb-3 ">
@@ -177,12 +212,27 @@ const CreateRecLeague = () => {
 
                 <Scheduler view="month"
                     day={null}
+                    onConfirm={handleConfirm}
                     month={{
                         weekDays: [0, 1, 2, 3, 4, 5],
                         weekStartOn: 6,
                         startHour: 16,
                         endHour: 24
                     }}
+                    events={[
+                        {
+                            event_id: 1,
+                            title: "Event 1",
+                            start: new Date("2024/17/2 07:30"),
+                            end: new Date("2024/17/2 8:30"),
+                        },
+                        {
+                            event_id: 2,
+                            title: "Event 2",
+                            start: new Date("2024/6/2 07:30"),
+                            end: new Date("2024/6/2 8:30"),
+                        },
+                    ]}
                     week={null}
 
                 />

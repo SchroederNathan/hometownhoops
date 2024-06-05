@@ -104,6 +104,7 @@ function TournamentCard(props: any) {
             </div>
             <MyVerticallyCenteredModal
                 show={modalShow}
+                
                 onHide={() => setModalShow(false)}
             />
         </div>
