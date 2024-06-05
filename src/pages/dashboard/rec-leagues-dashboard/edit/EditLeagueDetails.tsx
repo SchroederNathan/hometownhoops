@@ -42,8 +42,7 @@ const EditLeagueDetails = () => {
         imgUrl: "none",
         rules: rules,
       });
-      navigate("/dashboard/rec-leagues/")
-
+      navigate("/dashboard/rec-leagues/");
     } catch (err) {
       alert(err);
     }
@@ -52,6 +51,27 @@ const EditLeagueDetails = () => {
   const [event, setEvent] = useState({});
 
   //db.collection('books').where(firebase.firestore.FieldPath.documentId(), '==', 'fK3ddutEpD2qQqRMXNW5').get()
+
+  const editor = useEditor({
+    extensions: [
+      Document,
+      History,
+      Paragraph,
+      Text,
+      Bold,
+      Underline,
+      Italic,
+      Strike,
+      Heading,
+      ListItem,
+      BulletList,
+      OrderedList,
+    ],
+    onUpdate({ editor }) {
+      setRules(editor.getHTML());
+    },
+    content: rules,
+  }) as Editor;
 
   useEffect(() => {
     const getEvent = async () => {
@@ -77,27 +97,6 @@ const EditLeagueDetails = () => {
     };
     getEvent();
   }, [eventID]);
-
-  const editor = useEditor({
-    extensions: [
-      Document,
-      History,
-      Paragraph,
-      Text,
-      Bold,
-      Underline,
-      Italic,
-      Strike,
-      Heading,
-      ListItem,
-      BulletList,
-      OrderedList,
-    ],
-    onUpdate({ editor }) {
-      setRules(editor.getHTML());
-    },
-    content: rules,
-  }) as Editor;
 
   if (!editor) {
     return null;

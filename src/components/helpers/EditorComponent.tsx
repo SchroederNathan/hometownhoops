@@ -1,6 +1,6 @@
 import { EditorContent, Editor } from '@tiptap/react'
 import classNames from 'classnames'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import * as Icons from "./Icons";
 
 type EditorProps = {
@@ -149,6 +149,7 @@ const EditorComponent = ({ editor }: {editor: Editor}) => {
                         </button>
 
                     </div>
+
                     <EditorContent editor={editor} />
 
                 </div>
