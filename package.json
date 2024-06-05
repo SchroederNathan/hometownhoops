@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ag-grid-community/client-side-row-model": "^31.3.2",
+    "@ag-grid-community/react": "^31.3.2",
+    "@ag-grid-community/styles": "^31.3.2",
     "@aldabil/react-scheduler": "^2.9.3",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -22,7 +25,7 @@
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
-    "ag-grid-react": "^31.3.1",
+    "ag-grid-react": "^31.3.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "classnames": "^2.5.1",

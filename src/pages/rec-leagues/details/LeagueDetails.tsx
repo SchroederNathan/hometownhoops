@@ -1,10 +1,60 @@
 import { useParams } from "react-router-dom";
 import "./LeagueDetails.css";
 import { useEffect, useState } from "react";
-import { collection, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { League } from "../RecLeagueModel";
+import { AgGridReact } from "@ag-grid-community/react"; // React Grid Logic
+import "@ag-grid-community/styles/ag-grid.css"; // Core CSS
+import "@ag-grid-community/styles/ag-theme-quartz.css"; // Theme
+
+import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+
 import { checkIfOpen } from "../../../components/helpers/Functions";
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// Row Data Interface
+interface Team {
+  teamName: string;
+  wins: number;
+  losses: number;
+}
+
+// Create new GridExample component
+const GridExample = () => {
+  // Row Data: The data to be displayed.
+  const [rowData, setRowData] = useState<Team[]>([
+    { teamName: "Tesla", wins: 1, losses: 2 },
+    { teamName: "Monstars", wins: 1, losses: 2 },
+    { teamName: "Test Data", wins: 3, losses: 2 },
+    { teamName: "Anotha", wins: 1, losses: 2 },
+  ]);
+
+  // Column Definitions: Defines & controls grid columns.
+  const [colDefs, setColDefs] = useState<ColDef<Team>[]>([
+    { field: "teamName", flex: 2 },
+    { field: "wins" , flex: 1},
+    { field: "losses", flex: 1 },
+  ]);
+
+  const defaultColDef: ColDef = {
+    flex: 1,
+  };
+
+  // Container: Defines the grid's theme & dimensions.
+  return (
+    <div
+      className={"ag-theme-quartz"}
+      style={{ width: "100%", height: "200px" }}
+    >
+      <AgGridReact
+        rowData={rowData}
+        columnDefs={colDefs}
+        defaultColDef={defaultColDef}
+      />
+    </div>
+  );
+};
 
 const LeagueDetails = () => {
   const { eventID } = useParams();
@@ -71,6 +121,7 @@ const LeagueDetails = () => {
         className="card-text mb-3 mt-1"
         dangerouslySetInnerHTML={{ __html: event.rules }}
       ></p>
+      <GridExample />
     </div>
   );
 };
