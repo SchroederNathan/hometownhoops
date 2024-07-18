@@ -27,6 +27,7 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
+import TeamsModal from "./TeamsModal";
 
 const CreateRecLeague = () => {
   const { state } = useLocation();
@@ -74,18 +75,27 @@ const CreateRecLeague = () => {
 
   const navigate = useNavigate();
 
-  function preview(event: any) {
+  function preview(event: any, tabName: string) {
     event.preventDefault();
 
-    navigate("/dashboard/rec-leagues/create/preview", {
-      state: {
-        name,
-        location,
-        startDate,
-        endDate,
-        rules,
-      },
-    });
+    if (tabName === 'teams') {
+      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location, startDate, endDate, rules } });
+    } else if (tabName === 'preview') {
+      navigate("/dashboard/rec-leagues/create/preview", {
+        state: {
+          name,
+          location,
+          startDate,
+          endDate,
+          rules,
+        },
+      });
+    }
+
+  }
+
+  function handleTeams(event: any) {
+    navigate("/dashboard/rec-leagues/create/teams", { state: { name, location, startDate, endDate, rules } });
   }
 
   const editor = useEditor({
@@ -124,7 +134,7 @@ const CreateRecLeague = () => {
       // setSelectedImage(state.selectedImage)
 
       editor?.commands.setContent(state.rules);
-    } catch (error) {}
+    } catch (error) { }
   }, [editor]);
 
   if (!editor) {
@@ -181,7 +191,16 @@ const CreateRecLeague = () => {
         <li className="nav-item">
           <a
             className="nav-link tab"
-            onClick={(event) => preview(event)}
+            onClick={(event) => preview(event, 'teams')}
+            href="#"
+          >
+            Teams
+          </a>
+        </li>
+        <li className="nav-item">
+          <a
+            className="nav-link tab"
+            onClick={(event) => preview(event, 'preview')}
             href="#"
           >
             Preview
@@ -275,6 +294,15 @@ const CreateRecLeague = () => {
           week={null}
         /> */}
 
+        <button type="button" className="btn btn-teams mt-3" onClick={() => setModalShow(true)}>
+          <span className="btn-label-teams">
+            <i className="bi bi-people-fill"></i>
+          </span>
+          Edit Teams
+        </button>
+
+        <br />
+
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
             <span className="btn-label">
@@ -294,7 +322,12 @@ const CreateRecLeague = () => {
           </span>
         </button>
       </form>
-
+      <TeamsModal
+        // eventID={props.eventID}
+        show={modalShow}
+        // parentCallback={handleCallback}
+        onHide={() => setModalShow(false)}
+      />
     </div>
   );
 };

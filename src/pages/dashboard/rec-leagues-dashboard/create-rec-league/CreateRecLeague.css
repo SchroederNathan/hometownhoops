@@ -1,0 +1,29 @@
+.btn-label-teams {
+    position: relative;
+    left: -14px;
+    display: inline-block;
+    padding: 6px 15px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 5px 0 0 5px;
+
+}
+
+.btn-teams {
+    scale: 1.00;
+
+    transition: 0.3s;
+    width: 165px;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: #f25929;
+    color: white;
+}
+
+.btn-teams:hover {
+    scale: 1.03;
+    transition: 0.3s;
+    color: white;
+    background-color: #f25929;
+
+
+}
