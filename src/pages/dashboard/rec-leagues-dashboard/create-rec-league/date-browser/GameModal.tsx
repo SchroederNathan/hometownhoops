@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 interface GameModalProps {
@@ -6,15 +6,32 @@ interface GameModalProps {
     onHide: () => void;
     selectedDate: Date;
     addGame: (awayTeam: string, homeTeam: string) => void;
+    editGame: (awayTeam: string, homeTeam: string) => void;
+    isEditing: boolean;
+    gameToEdit?: { awayTeam: string; homeTeam: string };
 }
 
-const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, addGame }) => {
+const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, addGame, editGame, isEditing, gameToEdit }) => {
     const [awayTeam, setAwayTeam] = useState('');
     const [homeTeam, setHomeTeam] = useState('');
 
-    const handleAddGame = () => {
+    useEffect(() => {
+        if (isEditing && gameToEdit) {
+            setAwayTeam(gameToEdit.awayTeam);
+            setHomeTeam(gameToEdit.homeTeam);
+        } else {
+            setAwayTeam('');
+            setHomeTeam('');
+        }
+    }, [isEditing, gameToEdit]);
+
+    const handleSave = () => {
         if (awayTeam && homeTeam) {
-            addGame(awayTeam, homeTeam);
+            if (isEditing) {
+                editGame(awayTeam, homeTeam);
+            } else {
+                addGame(awayTeam, homeTeam);
+            }
             setAwayTeam('');
             setHomeTeam('');
             onHide();
@@ -24,13 +41,10 @@ const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, addGa
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Add Game</Modal.Title>
+                <Modal.Title>{isEditing ? 'Edit Game' : 'Add Game'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div className="mb-3">
-                    <label className="form-label">Selected Date</label>
-                    <input type="text" className="form-control" value={selectedDate.toDateString()} readOnly />
-                </div>
+                <label className="form-label mb-3 fw-bold">{selectedDate.toDateString()}</label>
                 <div className="mb-3">
                     <label className="form-label">Away Team</label>
                     <input
@@ -54,8 +68,8 @@ const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, addGa
                 <Button variant="secondary" onClick={onHide}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleAddGame}>
-                    Add Game
+                <Button variant="primary" onClick={handleSave}>
+                    {isEditing ? 'Save Changes' : 'Add Game'}
                 </Button>
             </Modal.Footer>
         </Modal>

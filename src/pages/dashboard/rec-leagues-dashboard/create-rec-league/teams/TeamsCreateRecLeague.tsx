@@ -26,6 +26,7 @@ const TeamsCreateRecLeague: React.FC = () => {
   const startDate = state.startDate;
   const endDate = state.endDate;
   const rules = state.rules;
+  const games = state.games || [];
 
   const [modalShow, setModalShow] = useState(false);
   const [teams, setTeams] = useState<Team[]>(state.teams || []);
@@ -34,7 +35,7 @@ const TeamsCreateRecLeague: React.FC = () => {
   const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, tabName: string) => {
     event.preventDefault();
     if (tabName === 'info') {
-      navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams } });
+      navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams, games } });
     } else if (tabName === 'preview') {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {
@@ -43,7 +44,8 @@ const TeamsCreateRecLeague: React.FC = () => {
           startDate,
           endDate,
           rules,
-          teams
+          teams,
+          games,
         },
       });
     }

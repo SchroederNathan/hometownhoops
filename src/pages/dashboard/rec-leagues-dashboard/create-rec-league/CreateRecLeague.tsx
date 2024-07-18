@@ -46,7 +46,7 @@ const CreateRecLeague = () => {
   const [rules, setRules] = useState(state.rules || `<h1>League Information</h1><ul><li>Information here</li></ul>`);
   const [teams, setTeams] = useState(state.teams || []);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Game[]>(state.games || []);
   const selectedImage = useRef<HTMLDivElement>(null);
 
   const { handleFiles, imageContainerRef } = useHooks();
@@ -87,7 +87,7 @@ const CreateRecLeague = () => {
     event.preventDefault();
 
     if (tabName === 'teams') {
-      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location: locationName, startDate, endDate, rules, teams } });
+      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location: locationName, startDate, endDate, rules, teams, games } });
     } else if (tabName === 'preview') {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {

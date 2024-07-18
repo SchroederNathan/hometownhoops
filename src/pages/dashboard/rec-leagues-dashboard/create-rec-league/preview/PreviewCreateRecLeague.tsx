@@ -1,6 +1,6 @@
-import React from 'react'
-import './PreviewCreateRecLeague.css'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import React from 'react';
+import './PreviewCreateRecLeague.css';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import RecLeagueCard from '../../../../../components/helpers/rec-leagues/RecLeagueCard';
 import { addDoc, collection, doc, writeBatch } from 'firebase/firestore';
 import { db } from '../../../../../config/firebase';
@@ -17,6 +17,11 @@ interface Team {
     playerCount: number;
 }
 
+interface Game {
+    date: Date;
+    awayTeam: string;
+    homeTeam: string;
+}
 
 const PreviewCreateRecLeague: React.FC = () => {
     const { state } = useLocation();
@@ -27,12 +32,11 @@ const PreviewCreateRecLeague: React.FC = () => {
     const endDate = state.endDate;
     const rules = state.rules;
     const teams = state.teams || [];
+    const games = state.games || [];
 
     const eventsCollectionRef = collection(db, 'rec-leagues');
 
-
     const navigate = useNavigate();
-
 
     const onCreate = async () => {
         try {
@@ -67,6 +71,16 @@ const PreviewCreateRecLeague: React.FC = () => {
                 });
             });
 
+            // Add games as subcollections
+            games.forEach((game: Game, index: number) => {
+                const gameRef = doc(collection(recLeagueRef, 'games'), `game${index + 1}`);
+                batch.set(gameRef, {
+                    date: game.date,
+                    awayTeam: game.awayTeam,
+                    homeTeam: game.homeTeam,
+                });
+            });
+
             // Commit the batch
             await batch.commit();
 
@@ -81,7 +95,7 @@ const PreviewCreateRecLeague: React.FC = () => {
         event.preventDefault();
 
         if (tabName === 'info') {
-            navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams } });
+            navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams, games } });
         } else if (tabName === 'teams') {
             navigate("/dashboard/rec-leagues/create/teams", {
                 state: {
@@ -90,7 +104,8 @@ const PreviewCreateRecLeague: React.FC = () => {
                     startDate,
                     endDate,
                     rules,
-                    teams
+                    teams,
+                    games,
                 },
             });
         }

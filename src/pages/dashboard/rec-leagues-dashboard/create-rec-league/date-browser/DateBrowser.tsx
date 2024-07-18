@@ -20,6 +20,8 @@ interface DateBrowserProps {
 const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate, games, setGames }) => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [modalShow, setModalShow] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [gameToEdit, setGameToEdit] = useState<Game | undefined>(undefined);
 
   const startOfCurrentWeek = startOfWeek(currentWeek, { weekStartsOn: 0 }); // Sunday as the start of the week
   const endOfCurrentWeek = endOfWeek(currentWeek, { weekStartsOn: 0 });
@@ -46,7 +48,27 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setGames([...games, newGame]);
   };
 
+  const editGame = (awayTeam: string, homeTeam: string) => {
+    setGames(games.map(game =>
+      isSameDay(game.date, selectedDate) && game.awayTeam === gameToEdit?.awayTeam && game.homeTeam === gameToEdit?.homeTeam
+        ? { ...game, awayTeam, homeTeam }
+        : game
+    ));
+  };
+
   const gamesOnSelectedDate = games.filter(game => isSameDay(game.date, selectedDate));
+
+  const openEditModal = (game: Game) => {
+    setIsEditing(true);
+    setGameToEdit(game);
+    setModalShow(true);
+  };
+
+  const closeModal = () => {
+    setIsEditing(false);
+    setGameToEdit(undefined);
+    setModalShow(false);
+  };
 
   return (
     <div className="container">
@@ -75,12 +97,17 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
       </div>
 
       <div className="mt-4">
-        <h5>Games Scheduled on {format(selectedDate, 'yyyy-MM-dd')}</h5>
         <ul className="list-group">
           {gamesOnSelectedDate.map((game, index) => (
-            <li key={index} className="list-group-item">
-              <div><strong>Away Team:</strong> {game.awayTeam}</div>
-              <div><strong>Home Team:</strong> {game.homeTeam}</div>
+            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <div><strong>Away Team:</strong> {game.awayTeam}</div>
+                <div><strong>Home Team:</strong> {game.homeTeam}</div>
+              </div>
+              <button className="btn btn-sm btn-primary" onClick={() => openEditModal(game)}>
+              <span className=""><i className="bi bi-pencil"></i></span>
+
+              </button>
             </li>
           ))}
         </ul>
@@ -94,9 +121,12 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
 
       <GameModal
         show={modalShow}
-        onHide={() => setModalShow(false)}
+        onHide={closeModal}
         selectedDate={selectedDate}
         addGame={addGame}
+        editGame={editGame}
+        isEditing={isEditing}
+        gameToEdit={gameToEdit}
       />
     </div>
   );
