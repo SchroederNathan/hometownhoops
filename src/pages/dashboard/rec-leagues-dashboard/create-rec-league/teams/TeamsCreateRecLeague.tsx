@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TeamsModal from './TeamsModal';
 import { v4 as uuidv4 } from 'uuid';
 
-const TeamsCreateRecLeague = () => {
+interface Player {
+  name: string;
+}
+
+interface Team {
+  id: string;
+  teamName: string;
+  captainFirstName: string;
+  captainLastName: string;
+  phoneNumber: string;
+  players: Player[];
+  playerCount: number;
+}
+
+const TeamsCreateRecLeague: React.FC = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -14,16 +28,10 @@ const TeamsCreateRecLeague = () => {
   const rules = state.rules;
 
   const [modalShow, setModalShow] = useState(false);
-  const [teams, setTeams] = useState([
-    { id: uuidv4(), name: 'Monstars', playerCount: 7 },
-    { id: uuidv4(), name: 'Tune Squad', playerCount: 7 },
-    { id: uuidv4(), name: 'Tropics', playerCount: 7 },
-  ]);
-  const [editingTeamId, setEditingTeamId] = useState(null);
-  const [editedTeamName, setEditedTeamName] = useState('');
-  const [editedPlayerCount, setEditedPlayerCount] = useState(0);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
 
-  function preview(event, tabName) {
+  const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, tabName: string) => {
     event.preventDefault();
     if (tabName === 'info') {
       navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules } });
@@ -38,71 +46,64 @@ const TeamsCreateRecLeague = () => {
         },
       });
     }
-  }
-
-  const addTeam = () => {
-    const newTeam = { id: uuidv4(), name: 'New Team', playerCount: 0 }; // Add your logic for new team details here
-    setTeams([...teams, newTeam]);
   };
 
-  const removeTeam = (id) => {
+  const addOrEditTeam = (team: Team) => {
+    if (team.id) {
+      // Edit existing team
+      setTeams(teams.map(t => (t.id === team.id ? { ...team, playerCount: team.players.length } : t)));
+    } else {
+      // Add new team
+      const newTeam = { ...team, id: uuidv4(), playerCount: team.players.length };
+      setTeams([...teams, newTeam]);
+    }
+    setTeamToEdit(null);
+  };
+
+  const removeTeam = (id: string) => {
     setTeams(teams.filter(team => team.id !== id));
   };
 
-  const startEditing = (team) => {
-    setEditingTeamId(team.id);
-    setEditedTeamName(team.name);
-    setEditedPlayerCount(team.playerCount);
-  };
-
-  const saveEdits = (id) => {
-    setTeams(teams.map(team => (
-      team.id === id ? { ...team, name: editedTeamName, playerCount: editedPlayerCount } : team
-    )));
-    setEditingTeamId(null);
-  };
-
-  const cancelEdits = () => {
-    setEditingTeamId(null);
+  const editTeam = (team: Team) => {
+    setTeamToEdit(team);
+    setModalShow(true);
   };
 
   return (
     <div>
       <ul className="nav nav-tabs mb-3">
         <li className="nav-item" style={{ marginRight: "2px" }}>
-          <a
-            className="nav-link tab activeTab"
-            onClick={(event) => preview(event, 'info')}
-            href="#"
-          >
+          <a className="nav-link tab activeTab" onClick={(event) => preview(event, 'info')} href="#">
             Information
           </a>
         </li>
         <li className="nav-item">
-          <a
-            className="nav-link active tab"
-            href="#"
-          >
+          <a className="nav-link active tab" href="#">
             Teams
           </a>
         </li>
         <li className="nav-item">
-          <a
-            className="nav-link tab"
-            onClick={(event) => preview(event, 'preview')}
-            href="#"
-          >
+          <a className="nav-link tab" onClick={(event) => preview(event, 'preview')} href="#">
             Preview
           </a>
         </li>
       </ul>
 
-      <button type="button" className="btn btn-teams" onClick={addTeam}>
+      <button type="button" className="btn btn-teams" onClick={() => setModalShow(true)}>
         <span className="btn-label-teams">
           <i className="bi bi-people-fill"></i>
         </span>
-        Add Team
+        Edit Teams
       </button>
+      <TeamsModal
+        show={modalShow}
+        onHide={() => {
+          setModalShow(false);
+          setTeamToEdit(null);
+        }}
+        parentCallback={addOrEditTeam}
+        teamToEdit={teamToEdit}
+      />
       <table className="table table-striped">
         <thead>
           <tr>
@@ -115,38 +116,11 @@ const TeamsCreateRecLeague = () => {
         <tbody>
           {teams.map((team) => (
             <tr key={team.id}>
-              <td>
-                {editingTeamId === team.id ? (
-                  <input
-                    type="text"
-                    value={editedTeamName}
-                    onChange={(e) => setEditedTeamName(e.target.value)}
-                  />
-                ) : (
-                  team.name
-                )}
-              </td>
-              <td className='text-center'>
-                {editingTeamId === team.id ? (
-                  <input
-                    type="number"
-                    value={editedPlayerCount}
-                    onChange={(e) => setEditedPlayerCount(parseInt(e.target.value))}
-                  />
-                ) : (
-                  team.playerCount
-                )}
-              </td>
+              <td>{team.teamName}</td>
+              <td className='text-center'>{team.playerCount}</td>
               <td scope="row" className="text-center">
                 <div className="d-flex justify-content-center">
-                  {editingTeamId === team.id ? (
-                    <>
-                      <button className="btn btn-success" onClick={() => saveEdits(team.id)}>Save</button>
-                      <button className="btn btn-secondary" onClick={cancelEdits}>Cancel</button>
-                    </>
-                  ) : (
-                    <button className="btn btn-primary" onClick={() => startEditing(team)}>Edit Team</button>
-                  )}
+                  <button className="btn btn-primary" onClick={() => editTeam(team)}>Edit Team</button>
                 </div>
               </td>
               <td scope="row" className="text-center">
@@ -162,15 +136,8 @@ const TeamsCreateRecLeague = () => {
           ))}
         </tbody>
       </table>
-
-      <TeamsModal
-        // eventID={props.eventID}
-        show={modalShow}
-        // parentCallback={handleCallback}
-        onHide={() => setModalShow(false)}
-      />
     </div>
   );
-}
+};
 
 export default TeamsCreateRecLeague;
