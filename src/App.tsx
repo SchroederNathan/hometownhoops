@@ -22,6 +22,7 @@ import CreateTournament from './pages/dashboard/tournaments-dashboard/create-tou
 import PreviewCreateTournament from './pages/dashboard/tournaments-dashboard/preview-tournament/PreviewCreateTournament'
 import LeagueDetails from './pages/rec-leagues/details/LeagueDetails'
 import EditLeagueDetails from './pages/dashboard/rec-leagues-dashboard/edit/EditLeagueDetails'
+import TeamsCreateRecLeague from './pages/dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague'
 
 
 
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="rec-leagues/:eventID" element={<EditLeagueDetails />} errorElement={<NotFound/>} />
 
           <Route path="rec-leagues/create" element={<CreateRecLeague />} />
+          <Route path="rec-leagues/create/teams" element={<TeamsCreateRecLeague />} />
           <Route path="rec-leagues/create/preview" element={<PreviewCreateRecLeague />} />
 
           <Route path="tournaments" element={<TournamentsDashboard />} />
