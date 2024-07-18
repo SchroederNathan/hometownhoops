@@ -27,6 +27,7 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
+import DateBrowser from "./DateBrowser";
 
 const CreateRecLeague = () => {
   const location = useLocation();
@@ -226,6 +227,7 @@ const CreateRecLeague = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
         <br />
+        <DateBrowser />
 
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
