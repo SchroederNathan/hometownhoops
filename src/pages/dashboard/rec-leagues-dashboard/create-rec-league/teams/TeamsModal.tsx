@@ -1,6 +1,6 @@
 import { addDoc, collection } from "firebase/firestore";
 import { Modal } from "react-bootstrap";
-import { db } from "../../../../config/firebase";
+import { db } from "../../../../../config/firebase";
 import React from "react";
 
 function TeamsModal(props: any) {

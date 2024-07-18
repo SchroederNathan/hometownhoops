@@ -27,7 +27,7 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
-import TeamsModal from "./TeamsModal";
+import TeamsModal from "./teams/TeamsModal";
 
 const CreateRecLeague = () => {
   const { state } = useLocation();
@@ -131,7 +131,6 @@ const CreateRecLeague = () => {
       setStartDate(state.startDate);
       setEndDate(state.endDate);
       setRules(state.rules);
-      // setSelectedImage(state.selectedImage)
 
       editor?.commands.setContent(state.rules);
     } catch (error) { }
@@ -276,31 +275,6 @@ const CreateRecLeague = () => {
 
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
-
-        {/* <p className="form-label fs-5">Schedule</p> */}
-
-
-        {/* <Scheduler
-          view="month"
-          day={null}
-          onConfirm={handleConfirm}
-          month={{
-            weekDays: [0, 1, 2, 3, 4, 5],
-            weekStartOn: 6,
-            startHour: 16,
-            endHour: 24,
-          }}
-          events={scheduledEvents}
-          week={null}
-        /> */}
-
-        <button type="button" className="btn btn-teams mt-3" onClick={() => setModalShow(true)}>
-          <span className="btn-label-teams">
-            <i className="bi bi-people-fill"></i>
-          </span>
-          Edit Teams
-        </button>
-
         <br />
 
         <Link to="../travel-teams">
@@ -322,12 +296,7 @@ const CreateRecLeague = () => {
           </span>
         </button>
       </form>
-      <TeamsModal
-        // eventID={props.eventID}
-        show={modalShow}
-        // parentCallback={handleCallback}
-        onHide={() => setModalShow(false)}
-      />
+
     </div>
   );
 };
