@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { format, addDays, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay, parse } from 'date-fns';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './DateBrowser.css'; // Ensure this file exists for custom styles
 import GameModal from './GameModal';
+import { Team } from '../teams/TeamsCreateRecLeague';
+import { Timestamp } from 'firebase/firestore';
+import { se } from 'date-fns/locale';
 
-interface Team {
-  id: string;
-  teamName: string;
-}
 
-interface Game {
-  date: Date;
+export interface Game {
+  gameDate: Date;
   awayTeam: string;
   homeTeam: string;
 }
@@ -55,7 +54,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
 
-    const newGame = { date: newDate, awayTeam, homeTeam };
+    const newGame = { gameDate: newDate, awayTeam, homeTeam };
     setGames([...games, newGame]);
   };
 
@@ -65,14 +64,28 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
 
-    setGames(games.map(game =>
-      isSameDay(game.date, selectedDate) && game.awayTeam === gameToEdit?.awayTeam && game.homeTeam === gameToEdit?.homeTeam
-        ? { ...game, date: newDate, awayTeam, homeTeam }
+    const updatedGames = games.map(game =>
+      isSameDay(game.gameDate, selectedDate) && game.awayTeam === gameToEdit?.awayTeam && game.homeTeam === gameToEdit?.homeTeam
+        ? { ...game, awayTeam, homeTeam, gameDate: newDate }
         : game
-    ));
+    );
+    setGames(updatedGames);
+    setIsEditing(false);
+    setGameToEdit(undefined);
   };
 
-  const gamesOnSelectedDate = games.filter(game => isSameDay(game.date, selectedDate));
+  // Convert Firestore Timestamps to JavaScript Dates
+  const convertedGames = games.map(game => ({
+    ...game,
+    gameDate: game.gameDate instanceof Timestamp ? game.gameDate.toDate() : game.gameDate,
+  }));
+
+  const gamesOnSelectedDate = convertedGames.filter(game => isSameDay(game.gameDate, selectedDate));
+
+  console.log(selectedDate);
+  gamesOnSelectedDate.forEach(game => {
+    console.log(game.gameDate);
+  });
 
   const openEditModal = (game: Game) => {
     setIsEditing(true);
@@ -85,6 +98,8 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setGameToEdit(undefined);
     setModalShow(false);
   };
+
+
 
   return (
     <div className="container">
@@ -119,7 +134,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
               <div>
                 <div><strong>Away Team:</strong> {game.awayTeam}</div>
                 <div><strong>Home Team:</strong> {game.homeTeam}</div>
-                <div><strong>Time:</strong> {format(game.date, 'HH:mm')}</div>
               </div>
               <button className="btn btn-sm btn-primary" onClick={() => openEditModal(game)}>
                 <i className="bi bi-pencil"></i>
@@ -139,7 +153,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
         show={modalShow}
         onHide={closeModal}
         selectedDate={selectedDate}
-        teams={teams} // Passing teams prop to GameModal
+        teams={teams}
         addGame={addGame}
         editGame={editGame}
         isEditing={isEditing}

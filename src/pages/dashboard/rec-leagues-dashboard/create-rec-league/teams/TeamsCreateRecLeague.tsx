@@ -7,9 +7,9 @@ interface Player {
   name: string;
 }
 
-interface Team {
+export interface Team {
   id: string;
-  teamName: string;
+  name: string;
   captainFirstName: string;
   captainLastName: string;
   phoneNumber: string;
@@ -72,6 +72,8 @@ const TeamsCreateRecLeague: React.FC = () => {
     setModalShow(true);
   };
 
+  console.log(teams);
+
   return (
     <div>
       <ul className="nav nav-tabs mb-3">
@@ -119,7 +121,7 @@ const TeamsCreateRecLeague: React.FC = () => {
         <tbody>
           {teams.map((team) => (
             <tr key={team.id}>
-              <td>{team.teamName}</td>
+              <td>{team.name}</td>
               <td className='text-center'>{team.playerCount}</td>
               <td scope="row" className="text-center">
                 <div className="d-flex justify-content-center">

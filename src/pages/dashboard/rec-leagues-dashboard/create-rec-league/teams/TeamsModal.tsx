@@ -1,5 +1,6 @@
 import { Modal } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
+import { Team } from "./TeamsCreateRecLeague";
 
 interface TeamsModalProps {
   show: boolean;
@@ -12,17 +13,10 @@ interface Player {
   name: string;
 }
 
-interface Team {
-  id?: string;
-  teamName: string;
-  captainFirstName: string;
-  captainLastName: string;
-  phoneNumber: string;
-  players: Player[];
-}
+
 
 const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, teamToEdit }) => {
-  const [teamName, setTeamName] = useState("");
+  const [name, setName] = useState("");
   const [captainFirstName, setCaptainFirstName] = useState("");
   const [captainLastName, setCaptainLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -30,13 +24,13 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
 
   useEffect(() => {
     if (teamToEdit) {
-      setTeamName(teamToEdit.teamName);
+      setName(teamToEdit.name);
       setCaptainFirstName(teamToEdit.captainFirstName);
       setCaptainLastName(teamToEdit.captainLastName);
       setPhoneNumber(teamToEdit.phoneNumber);
       setPlayers(teamToEdit.players);
     } else {
-      setTeamName("");
+      setName("");
       setCaptainFirstName("");
       setCaptainLastName("");
       setPhoneNumber("");
@@ -47,7 +41,7 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
   const handleSubmit = () => {
     parentCallback({
       id: teamToEdit?.id,
-      teamName,
+      name,
       captainFirstName,
       captainLastName,
       phoneNumber,
@@ -75,14 +69,14 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
       <Modal.Body>
         <form onSubmit={(event) => event.preventDefault()}>
           <div className="mb-3">
-            <label htmlFor="teamName" className="form-label">Team Name</label>
+            <label htmlFor="name" className="form-label">Team Name</label>
             <input
               type="text"
               className="form-control"
-              id="teamName"
+              id="name"
               placeholder="Team Name"
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="mb-3">

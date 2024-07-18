@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-
-interface Team {
-    id: string;
-    teamName: string;
-}
-
-interface Game {
-    date: Date;
-    awayTeam: string;
-    homeTeam: string;
-}
+import React, { useEffect, useState } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { Team } from '../teams/TeamsCreateRecLeague'; // Adjust the import path accordingly
+import { Game } from './DateBrowser';
 
 interface GameModalProps {
     show: boolean;
@@ -23,16 +14,26 @@ interface GameModalProps {
     gameToEdit?: Game;
 }
 
-const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, teams, addGame, editGame, isEditing, gameToEdit }) => {
+const GameModal: React.FC<GameModalProps> = ({
+    show,
+    onHide,
+    selectedDate,
+    teams,
+    addGame,
+    editGame,
+    isEditing,
+    gameToEdit
+}) => {
     const [awayTeam, setAwayTeam] = useState('');
     const [homeTeam, setHomeTeam] = useState('');
+
     const [time, setTime] = useState('');
 
     useEffect(() => {
         if (isEditing && gameToEdit) {
             setAwayTeam(gameToEdit.awayTeam);
             setHomeTeam(gameToEdit.homeTeam);
-            setTime(gameToEdit.date.toTimeString().substring(0, 5)); // Extracting time in HH:MM format
+            setTime(gameToEdit.gameDate.toTimeString().substring(0, 5)); // assuming time is in hh:mm format
         } else {
             setAwayTeam('');
             setHomeTeam('');
@@ -40,7 +41,7 @@ const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, teams
         }
     }, [isEditing, gameToEdit]);
 
-    const handleSave = () => {
+    const handleAddGame = () => {
         if (awayTeam && homeTeam && time) {
             if (isEditing) {
                 editGame(awayTeam, homeTeam, time);
@@ -58,52 +59,45 @@ const GameModal: React.FC<GameModalProps> = ({ show, onHide, selectedDate, teams
             </Modal.Header>
             <Modal.Body>
                 <label className="form-label mb-3 fw-bold">{selectedDate.toDateString()}</label>
-                <div className="mb-3">
-                    <label className="form-label">Away Team</label>
-                    <select
-                        className="form-select"
+                <Form.Group className="mb-3">
+                    <Form.Label>Away Team</Form.Label>
+                    <Form.Select
                         value={awayTeam}
                         onChange={(e) => setAwayTeam(e.target.value)}
                     >
-                        <option value="" disabled>Select Away Team</option>
+                        <option value="">Select Away Team</option>
                         {teams.map((team) => (
-                            <option key={team.id} value={team.teamName}>
-                                {team.teamName}
-                            </option>
+                            <option key={team.id} value={team.name}>{team.name}</option>
                         ))}
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Home Team</label>
-                    <select
-                        className="form-select"
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Home Team</Form.Label>
+                    <Form.Select
                         value={homeTeam}
                         onChange={(e) => setHomeTeam(e.target.value)}
                     >
-                        <option value="" disabled>Select Home Team</option>
+                        <option value="">Select Home Team</option>
                         {teams.map((team) => (
-                            <option key={team.id} value={team.teamName}>
-                                {team.teamName}
-                            </option>
+                            <option key={team.id} value={team.name}>{team.name}</option>
                         ))}
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Time</label>
-                    <input
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Time</Form.Label>
+                    <Form.Control
                         type="time"
-                        className="form-control"
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
                     />
-                </div>
+                </Form.Group>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleSave}>
-                    {isEditing ? 'Save Changes' : 'Add Game'}
+                <Button variant="primary" onClick={handleAddGame}>
+                    {isEditing ? 'Edit Game' : 'Add Game'}
                 </Button>
             </Modal.Footer>
         </Modal>

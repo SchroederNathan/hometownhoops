@@ -29,12 +29,7 @@ import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
 import DateBrowser from "./date-browser/DateBrowser";
 import GameModal from "./date-browser/GameModal";
-
-interface Game {
-  date: Date;
-  awayTeam: string;
-  homeTeam: string;
-}
+import { Team } from "./teams/TeamsCreateRecLeague";
 
 const CreateRecLeague = () => {
   const location = useLocation();
@@ -71,10 +66,10 @@ const CreateRecLeague = () => {
         rules: rules,
       });
 
-      teams.forEach((team) => {
+      teams.forEach((team: Team) => {
         const teamRef = doc(collection(recLeagueRef, "teams"), team.id);
         batch.set(teamRef, {
-          name: team.teamName,
+          name: team.name,
           playerCount: team.players.length,
         });
 
@@ -89,7 +84,7 @@ const CreateRecLeague = () => {
         batch.set(gameRef, {
           awayTeam: game.awayTeam,
           homeTeam: game.homeTeam,
-          gameDate: game.date,
+          gameDate: game.gameDate,
           winner: ""
         });
       });

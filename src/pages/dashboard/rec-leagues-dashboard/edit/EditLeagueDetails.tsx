@@ -1,8 +1,8 @@
+// EditLeagueDetails.tsx
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { db } from "../../../../config/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { Scheduler } from "@aldabil/react-scheduler";
+import { doc, getDoc, updateDoc, writeBatch, collection, getDocs } from "firebase/firestore";
 import ListItem from "@tiptap/extension-list-item";
 import { useEditor, Editor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
@@ -17,7 +17,9 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import EditorComponent from "../../../../components/helpers/EditorComponent";
-
+import DateBrowser, { Game } from "../create-rec-league/date-browser/DateBrowser";
+import GameModal from "../create-rec-league/date-browser/GameModal";
+import { Team } from "../create-rec-league/teams/TeamsCreateRecLeague";
 const EditLeagueDetails = () => {
   const { eventID } = useParams();
 
@@ -25,16 +27,22 @@ const EditLeagueDetails = () => {
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState(Date);
   const [endDate, setEndDate] = useState(Date);
-  const [rules, setRules] = useState(``);
+  const [rules, setRules] = useState("");
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [modalShow, setModalShow] = useState(false);
+  const [editingGame, setEditingGame] = useState<Game | null>(null);
 
-  //   const eventsCollectionRef = doc(db, "rec-leagues", eventID)
   const updateRef = doc(db, "rec-leagues", `${eventID}`);
-
   const navigate = useNavigate();
+  const selectedImage = useRef<HTMLDivElement>(null);
 
   const onUpdate = async () => {
     try {
-      await updateDoc(updateRef, {
+      const batch = writeBatch(db);
+
+      batch.update(updateRef, {
         name: name,
         location: location,
         startDate: startDate,
@@ -42,15 +50,45 @@ const EditLeagueDetails = () => {
         imgUrl: "none",
         rules: rules,
       });
+
+      const gamesRef = collection(updateRef, "games");
+
+      games.forEach((game, index) => {
+        const gameRef = doc(gamesRef, `game${index + 1}`);
+        batch.set(gameRef, {
+          awayTeam: game.awayTeam,
+          homeTeam: game.homeTeam,
+          gameDate: game.gameDate,
+          winner: ""
+        });
+      });
+
+      await batch.commit();
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
       alert(err);
     }
   };
 
-  const [event, setEvent] = useState({});
+  const addGame = (awayTeam: string, homeTeam: string, time: string) => {
+    const [hours, minutes] = time.split(':');
+    const newDate = new Date(selectedDate);
+    newDate.setHours(parseInt(hours));
+    newDate.setMinutes(parseInt(minutes));
 
-  //db.collection('books').where(firebase.firestore.FieldPath.documentId(), '==', 'fK3ddutEpD2qQqRMXNW5').get()
+    const newGame = { date: newDate, awayTeam, homeTeam };
+    if (editingGame) {
+      setGames(games.map(g => (g === editingGame ? newGame : g)));
+      setEditingGame(null);
+    } else {
+      setGames([...games, newGame]);
+    }
+  };
+
+  const editGame = (game: Game) => {
+    setEditingGame(game);
+    setModalShow(true);
+  };
 
   const editor = useEditor({
     extensions: [
@@ -75,20 +113,31 @@ const EditLeagueDetails = () => {
 
   useEffect(() => {
     const getEvent = async () => {
-      // READ DATA
       try {
         const docRef = doc(db, "rec-leagues", eventID!);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setEvent(docSnap.data());
-          setName(docSnap.data().name);
-          setStartDate(docSnap.data().startDate);
-          setEndDate(docSnap.data().endDate);
-          setLocation(docSnap.data().location);
-          setRules(docSnap.data().rules);
+          const data = docSnap.data();
+          setName(data.name);
+          setStartDate(data.startDate);
+          setEndDate(data.endDate);
+          setLocation(data.location);
+          setRules(data.rules);
+
+          // Grab all games from the rec-leagues collection
+          const gamesCollectionRef = collection(docRef, "games");
+          const gamesSnapshot = await getDocs(gamesCollectionRef);
+          const gamesList = gamesSnapshot.docs.map(doc => doc.data() as Game);
+          setGames(gamesList);
+
+          // Grab all teams from the rec-leagues collection
+          const teamsCollectionRef = collection(docRef, "teams");
+          const teamsSnapshot = await getDocs(teamsCollectionRef);
+          const teamsList = teamsSnapshot.docs.map(doc => doc.data() as Team);
+          setTeams(teamsList);
+
         } else {
-          // docSnap.data() will be undefined in this case
           console.log("No such document!");
         }
       } catch (err) {
@@ -171,20 +220,15 @@ const EditLeagueDetails = () => {
 
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
+        <br />
+        <DateBrowser
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          games={games}
+          setGames={setGames}
+          teams={teams}
+        />
 
-        {/* <p className="form-label fs-5">Schedule</p>
-
-        <Scheduler
-          view="month"
-          day={null}
-          month={{
-            weekDays: [0, 1, 2, 3, 4, 5],
-            weekStartOn: 6,
-            startHour: 16,
-            endHour: 24,
-          }}
-          week={null}
-        /> */}
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
             <span className="btn-label">
@@ -204,6 +248,20 @@ const EditLeagueDetails = () => {
           </span>
         </button>
       </form>
+
+      <GameModal
+        show={modalShow}
+        onHide={() => {
+          setModalShow(false);
+          setEditingGame(null);
+        }}
+        selectedDate={selectedDate}
+        teams={teams}
+        addGame={addGame}
+        editGame={addGame}
+        isEditing={!!editingGame}
+        gameToEdit={editingGame ?? undefined}
+      />
     </div>
   );
 };
