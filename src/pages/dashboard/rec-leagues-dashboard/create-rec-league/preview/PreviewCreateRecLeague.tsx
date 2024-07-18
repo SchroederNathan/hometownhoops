@@ -1,15 +1,11 @@
 import React from 'react'
 import './PreviewCreateRecLeague.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import TravelTeamCard from '../../../../../components/helpers/travel-teams/TravelTeamCard';
 import RecLeagueCard from '../../../../../components/helpers/rec-leagues/RecLeagueCard';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../../../config/firebase';
 
-
-
-
-const PreviewCreateRecLeague= () => {
+const PreviewCreateRecLeague: React.FC = () => {
     const { state } = useLocation();
 
     const name = state.name;
@@ -17,9 +13,11 @@ const PreviewCreateRecLeague= () => {
     const startDate = state.startDate;
     const endDate = state.endDate;
     const rules = state.rules;
-    // const selectedImage = state.selectedImage;
+    const teams = state.teams || [];
 
-    const eventsCollectionRef = collection(db, 'rec-leagues')
+    const eventsCollectionRef = collection(db, 'rec-leagues');
+
+    const navigate = useNavigate();
 
     const onCreate = async () => {
         try {
@@ -29,39 +27,44 @@ const PreviewCreateRecLeague= () => {
                 startDate: startDate,
                 endDate: endDate,
                 imgUrl: 'none',
-                rules: rules
-            })
-            navigate("/dashboard/rec-leagues/")
+                rules: rules,
+                teams: teams
+            });
+            navigate("/dashboard/rec-leagues/");
         } catch (err) {
-            alert(err)
+            alert(err);
         }
+    };
 
-    }
-
-
-    const navigate = useNavigate();
-
-    function preview(event: any) {
+    const preview = (event: any, tabName: string) => {
         event.preventDefault();
-
-        navigate("/dashboard/rec-leagues/create",
-            {
-                state: {
-                    name,
-                    location,
-                    startDate,
-                    endDate,
-                    rules
-                }
-            }
-        );
-    }
+    
+        if (tabName === 'info') {
+          navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams } });
+        } else if (tabName === 'teams') {
+          navigate("/dashboard/rec-leagues/create/teams", {
+            state: {
+              name,
+              location,
+              startDate,
+              endDate,
+              rules,
+              teams
+            },
+          });
+        }
+      };
 
     return (
         <div>
-            <ul className="nav nav-tabs mb-3 ">
+            <ul className="nav nav-tabs mb-3">
                 <li className="nav-item">
-                    <a className="nav-link tab" onClick={(event) => preview(event)} aria-current="page" href="#">Information</a>
+                    <a className="nav-link tab" onClick={(event) => preview(event, 'info')} aria-current="page" href="#">Information</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link tab" onClick={(event) => preview(event, 'teams')} href="#">
+                        Teams
+                    </a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link tab active" href="#">Preview</a>
@@ -71,7 +74,7 @@ const PreviewCreateRecLeague= () => {
             <RecLeagueCard name={name} location={location} startDate={startDate} endDate={endDate} rules={rules} />
 
             <Link to='../travel-teams'>
-                <button type="button" className="btn btn-labeled btn-danger ">
+                <button type="button" className="btn btn-labeled btn-danger">
                     <span className="btn-label"><i className="bi bi-x"></i></span>
                     Cancel
                 </button>
@@ -80,9 +83,8 @@ const PreviewCreateRecLeague= () => {
                 Create
                 <span className="btn-label-1"><i className="bi bi-check"></i></span>
             </button>
-
         </div>
-    )
-}
+    );
+};
 
-export default PreviewCreateRecLeague
+export default PreviewCreateRecLeague;

@@ -27,26 +27,22 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
-import TeamsModal from "./teams/TeamsModal";
 
 const CreateRecLeague = () => {
   const { state } = useLocation();
 
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [startDate, setStartDate] = useState(Date);
-  const [endDate, setEndDate] = useState(Date);
-  const [rules, setRules] = useState(`<h1>League Information</h1>
-    <ul><li>Information here</li></ul>
-    `);
-  const [selectedImage, setSelectedImage] = useState(
-    useRef<HTMLDivElement>(null)
-  );
+  const [name, setName] = useState(state.name || "");
+  const [location, setLocation] = useState(state.location || "");
+  const [startDate, setStartDate] = useState(state.startDate || "");
+  const [endDate, setEndDate] = useState(state.endDate || "");
+  const [rules, setRules] = useState(state.rules || `<h1>League Information</h1><ul><li>Information here</li></ul>`);
+  const [teams, setTeams] = useState(state.teams || []);
+  const [selectedImage, setSelectedImage] = useState(useRef<HTMLDivElement>(null));
 
   const { handleFiles, imageContainerRef } = useHooks();
-  const [modalShow, setModalShow] = React.useState(false);
+  const [modalShow, setModalShow] = useState(false);
 
-  const [scheduledEvents, setScheduledEvents] = React.useState([
+  const [scheduledEvents, setScheduledEvents] = useState([
     {
       event_id: "",
       title: "",
@@ -57,6 +53,8 @@ const CreateRecLeague = () => {
 
   const eventsCollectionRef = collection(db, "rec-leagues");
 
+  const navigate = useNavigate();
+
   const onCreate = async () => {
     try {
       await addDoc(eventsCollectionRef, {
@@ -66,6 +64,7 @@ const CreateRecLeague = () => {
         endDate: endDate,
         imgUrl: "none",
         rules: rules,
+        teams: teams
       });
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
@@ -73,13 +72,11 @@ const CreateRecLeague = () => {
     }
   };
 
-  const navigate = useNavigate();
-
-  function preview(event: any, tabName: string) {
+  const preview = (event: any, tabName: string) => {
     event.preventDefault();
 
     if (tabName === 'teams') {
-      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location, startDate, endDate, rules } });
+      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location, startDate, endDate, rules, teams } });
     } else if (tabName === 'preview') {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {
@@ -88,15 +85,11 @@ const CreateRecLeague = () => {
           startDate,
           endDate,
           rules,
+          teams
         },
       });
     }
-
-  }
-
-  function handleTeams(event: any) {
-    navigate("/dashboard/rec-leagues/create/teams", { state: { name, location, startDate, endDate, rules } });
-  }
+  };
 
   const editor = useEditor({
     extensions: [
@@ -119,11 +112,6 @@ const CreateRecLeague = () => {
     content: rules,
   }) as Editor;
 
-  function onImageChange(event: any) {
-    handleFiles(event);
-    // setSelectedImage(imageContainerRef)
-  }
-
   useEffect(() => {
     try {
       setName(state.name);
@@ -131,6 +119,7 @@ const CreateRecLeague = () => {
       setStartDate(state.startDate);
       setEndDate(state.endDate);
       setRules(state.rules);
+      setTeams(state.teams);
 
       editor?.commands.setContent(state.rules);
     } catch (error) { }
@@ -145,24 +134,13 @@ const CreateRecLeague = () => {
     action: EventActions
   ): Promise<ProcessedEvent> => {
     return new Promise((res, rej) => {
-      /**
-       * Make sure to return 4 mandatory fields:
-       * event_id: string|number
-       * title: string
-       * start: Date|string
-       * end: Date|string
-       * ....extra other fields depend on your custom fields/editor properties
-       */
       try {
-        console.log(event.event_id);
-
         scheduledEvents.push({
           event_id: "n/a",
           title: event.title,
           start: event.start,
           end: event.end,
         });
-        console.log(scheduledEvents);
       } catch (err) {
         console.log(err);
       }
@@ -177,31 +155,19 @@ const CreateRecLeague = () => {
 
   return (
     <div>
-      <ul className="nav nav-tabs mb-3 ">
-        <li className="nav-item" style={{ marginRight: "2px" }}>
-          <a
-            className="nav-link tab active activeTab"
-            aria-current="page"
-            href="#"
-          >
+      <ul className="nav nav-tabs mb-3">
+        <li className="nav-item " >
+          <a className="nav-link tab active me-1" aria-current="page" href="#">
             Information
           </a>
         </li>
         <li className="nav-item">
-          <a
-            className="nav-link tab"
-            onClick={(event) => preview(event, 'teams')}
-            href="#"
-          >
+          <a className="nav-link tab" onClick={(event) => preview(event, 'teams')} href="#">
             Teams
           </a>
         </li>
         <li className="nav-item">
-          <a
-            className="nav-link tab"
-            onClick={(event) => preview(event, 'preview')}
-            href="#"
-          >
+          <a className="nav-link tab" onClick={(event) => preview(event, 'preview')} href="#">
             Preview
           </a>
         </li>
@@ -209,9 +175,7 @@ const CreateRecLeague = () => {
 
       <form onSubmit={(event) => event.preventDefault()}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label fs-5">
-            Name
-          </label>
+          <label htmlFor="name" className="form-label fs-5">Name</label>
           <input
             type="name"
             className="form-control"
@@ -222,22 +186,18 @@ const CreateRecLeague = () => {
           />
         </div>
         <div className="input-group mb-3 ">
-          <label htmlFor="imageUpload" className="form-label fs-5 w-100">
-            Image
-          </label>
+          <label htmlFor="imageUpload" className="form-label fs-5 w-100">Image</label>
           <input
             type="file"
             className="form-control rounded"
             accept="image/*"
-            onChange={(event) => onImageChange(event)}
+            onChange={(event) => handleFiles(event)}
             id="imageUpload"
           />
           <div ref={selectedImage} />
         </div>
         <div className="mb-3">
-          <label htmlFor="location" className="form-label fs-5">
-            Location
-          </label>
+          <label htmlFor="location" className="form-label fs-5">Location</label>
           <input
             type="name"
             className="form-control"
@@ -248,9 +208,7 @@ const CreateRecLeague = () => {
         </div>
         <div className="mb-3 row">
           <div className="w-50">
-            <label htmlFor="startDate" className="form-label fs-5">
-              Start Date
-            </label>
+            <label htmlFor="startDate" className="form-label fs-5">Start Date</label>
             <input
               id="startDate"
               className="form-control"
@@ -260,9 +218,7 @@ const CreateRecLeague = () => {
             />
           </div>
           <div className="w-50">
-            <label htmlFor="endDate" className="form-label fs-5">
-              End Date
-            </label>
+            <label htmlFor="endDate" className="form-label fs-5">End Date</label>
             <input
               id="endDate"
               className="form-control"

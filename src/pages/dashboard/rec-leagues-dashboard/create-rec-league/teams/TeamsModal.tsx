@@ -132,7 +132,7 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
               />
             </div>
           ))}
-          <button type="button" className="btn btn-secondary" onClick={addPlayer}>
+          <button type="button" className="btn btn-primary" onClick={addPlayer}>
             Add Player
           </button>
         </form>

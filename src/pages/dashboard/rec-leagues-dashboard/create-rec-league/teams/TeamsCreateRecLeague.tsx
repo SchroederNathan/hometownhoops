@@ -28,13 +28,13 @@ const TeamsCreateRecLeague: React.FC = () => {
   const rules = state.rules;
 
   const [modalShow, setModalShow] = useState(false);
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<Team[]>(state.teams || []);
   const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
 
   const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, tabName: string) => {
     event.preventDefault();
     if (tabName === 'info') {
-      navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules } });
+      navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams } });
     } else if (tabName === 'preview') {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {
@@ -43,6 +43,7 @@ const TeamsCreateRecLeague: React.FC = () => {
           startDate,
           endDate,
           rules,
+          teams
         },
       });
     }
@@ -91,9 +92,9 @@ const TeamsCreateRecLeague: React.FC = () => {
 
       <button type="button" className="btn btn-teams" onClick={() => setModalShow(true)}>
         <span className="btn-label-teams">
-          <i className="bi bi-people-fill"></i>
+          <i className="bi bi-plus"></i>
         </span>
-        Edit Teams
+        Create Team
       </button>
       <TeamsModal
         show={modalShow}
