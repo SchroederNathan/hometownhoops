@@ -1,18 +1,22 @@
 /* custom.scss */    
 
 /* import the necessary Bootstrap files */
-@import "bootstrap";
+// @import "bootstrap";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
 
 /* ------- customize primary buttons -------- */   
-$mynewcolor: #f25929;
+$primary: #f25929;
 
-.btn-primary {
-    @include button-variant($mynewcolor, darken($mynewcolor, 7.5%), darken($mynewcolor, 10%), lighten($mynewcolor,5%), lighten($mynewcolor, 10%), darken($mynewcolor,30%));
-    color: white;
-}
+// .btn-primary {
+//     @include button-variant($primary, darken($primary, 7.5%), darken($primary, 10%), lighten($primary,5%), lighten($primary, 10%), darken($primary,30%));
+//     color: white;
+// }
 
 
 
-.btn-outline-primary {
-    @include button-outline-variant($mynewcolor, #222222, lighten($mynewcolor,5%), $mynewcolor);
-}
+// .btn-outline-primary {
+//     @include button-outline-variant($primary, #222222, lighten($primary,5%), $primary);
+// }
+
+@import "node_modules/bootstrap/scss/bootstrap";

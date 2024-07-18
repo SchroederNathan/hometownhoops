@@ -24,10 +24,11 @@ import React, {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useHooks } from "../../../../components/helpers/Hooks";
 import { Scheduler } from "@aldabil/react-scheduler";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, writeBatch } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
 import DateBrowser from "./date-browser/DateBrowser";
+import GameModal from "./date-browser/GameModal";
 
 interface Game {
   date: Date;
@@ -47,36 +48,53 @@ const CreateRecLeague = () => {
   const [teams, setTeams] = useState(state.teams || []);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [games, setGames] = useState<Game[]>(state.games || []);
+  const [modalShow, setModalShow] = useState(false);
+  const [editingGame, setEditingGame] = useState<Game | null>(null);
+
   const selectedImage = useRef<HTMLDivElement>(null);
 
   const { handleFiles, imageContainerRef } = useHooks();
-  const [modalShow, setModalShow] = useState(false);
-
-  const [scheduledEvents, setScheduledEvents] = useState([
-    {
-      event_id: "",
-      title: "",
-      start: new Date(),
-      end: new Date(),
-    },
-  ]);
-
-  const eventsCollectionRef = collection(db, "rec-leagues");
 
   const navigate = useNavigate();
 
   const onCreate = async () => {
     try {
-      await addDoc(eventsCollectionRef, {
+      const batch = writeBatch(db);
+
+      const recLeagueRef = doc(collection(db, "rec-leagues"));
+      batch.set(recLeagueRef, {
         name: name,
         location: locationName,
         startDate: startDate,
         endDate: endDate,
         imgUrl: "none",
         rules: rules,
-        teams: teams,
-        games: games,
       });
+
+      teams.forEach((team) => {
+        const teamRef = doc(collection(recLeagueRef, "teams"), team.id);
+        batch.set(teamRef, {
+          name: team.teamName,
+          playerCount: team.players.length,
+        });
+
+        team.players.forEach((player, index) => {
+          const playerRef = doc(collection(teamRef, "players"), `player${index + 1}`);
+          batch.set(playerRef, { name: player.name });
+        });
+      });
+
+      games.forEach((game, index) => {
+        const gameRef = doc(collection(recLeagueRef, "games"), `game${index + 1}`);
+        batch.set(gameRef, {
+          awayTeam: game.awayTeam,
+          homeTeam: game.homeTeam,
+          gameDate: game.date,
+          winner: ""
+        });
+      });
+
+      await batch.commit();
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
       alert(err);
@@ -103,6 +121,33 @@ const CreateRecLeague = () => {
     }
   };
 
+  const addGame = (awayTeam: string, homeTeam: string, time: string) => {
+    const [hours, minutes] = time.split(':');
+    const newDate = new Date(selectedDate);
+    newDate.setHours(parseInt(hours));
+    newDate.setMinutes(parseInt(minutes));
+
+    const newGame = { date: newDate, awayTeam, homeTeam };
+    if (editingGame) {
+      setGames(games.map(g => (g === editingGame ? newGame : g)));
+      setEditingGame(null);
+    } else {
+      setGames([...games, newGame]);
+    }
+  };
+
+  const editGame = (awayTeam: string, homeTeam: string, time: string) => {
+    if (editingGame) {
+      const [hours, minutes] = time.split(':');
+      const newDate = new Date(selectedDate);
+      newDate.setHours(parseInt(hours));
+      newDate.setMinutes(parseInt(minutes));
+
+      const updatedGame = { ...editingGame, date: newDate, awayTeam, homeTeam };
+      setGames(games.map(game => game === editingGame ? updatedGame : game));
+      setEditingGame(null);
+    }
+  };
   const editor = useEditor({
     extensions: [
       Document,
@@ -213,7 +258,7 @@ const CreateRecLeague = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
         <br />
-        <DateBrowser selectedDate={selectedDate} setSelectedDate={setSelectedDate} games={games} setGames={setGames} />
+        <DateBrowser selectedDate={selectedDate} setSelectedDate={setSelectedDate} games={games} setGames={setGames} teams={teams} />
 
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
@@ -234,6 +279,21 @@ const CreateRecLeague = () => {
           </span>
         </button>
       </form>
+
+      <GameModal
+        show={modalShow}
+        onHide={() => {
+          setModalShow(false);
+          setEditingGame(null);
+        }}
+        selectedDate={selectedDate}
+        teams={teams}
+        addGame={addGame}
+        editGame={editGame}
+        isEditing={!!editingGame}
+        gameToEdit={editingGame ?? undefined}
+      />
+
     </div>
   );
 };

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { format, addDays, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay } from 'date-fns';
+import { format, addDays, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay, parse } from 'date-fns';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './DateBrowser.css'; // Create and import a CSS file for custom styles
+import './DateBrowser.css'; // Ensure this file exists for custom styles
 import GameModal from './GameModal';
+
+interface Team {
+  id: string;
+  teamName: string;
+}
 
 interface Game {
   date: Date;
@@ -15,15 +20,16 @@ interface DateBrowserProps {
   setSelectedDate: (date: Date) => void;
   games: Game[];
   setGames: (games: Game[]) => void;
+  teams: Team[]; // Added teams prop
 }
 
-const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate, games, setGames }) => {
+const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate, games, setGames, teams }) => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [modalShow, setModalShow] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [gameToEdit, setGameToEdit] = useState<Game | undefined>(undefined);
 
-  const startOfCurrentWeek = startOfWeek(currentWeek, { weekStartsOn: 0 }); // Sunday as the start of the week
+  const startOfCurrentWeek = startOfWeek(currentWeek, { weekStartsOn: 0 });
   const endOfCurrentWeek = endOfWeek(currentWeek, { weekStartsOn: 0 });
 
   const daysOfWeek = [];
@@ -43,15 +49,25 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setSelectedDate(day);
   };
 
-  const addGame = (awayTeam: string, homeTeam: string) => {
-    const newGame = { date: selectedDate, awayTeam, homeTeam };
+  const addGame = (awayTeam: string, homeTeam: string, time: string) => {
+    const [hours, minutes] = time.split(':');
+    const newDate = new Date(selectedDate);
+    newDate.setHours(parseInt(hours));
+    newDate.setMinutes(parseInt(minutes));
+
+    const newGame = { date: newDate, awayTeam, homeTeam };
     setGames([...games, newGame]);
   };
 
-  const editGame = (awayTeam: string, homeTeam: string) => {
+  const editGame = (awayTeam: string, homeTeam: string, time: string) => {
+    const [hours, minutes] = time.split(':');
+    const newDate = new Date(selectedDate);
+    newDate.setHours(parseInt(hours));
+    newDate.setMinutes(parseInt(minutes));
+
     setGames(games.map(game =>
       isSameDay(game.date, selectedDate) && game.awayTeam === gameToEdit?.awayTeam && game.homeTeam === gameToEdit?.homeTeam
-        ? { ...game, awayTeam, homeTeam }
+        ? { ...game, date: newDate, awayTeam, homeTeam }
         : game
     ));
   };
@@ -103,10 +119,10 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
               <div>
                 <div><strong>Away Team:</strong> {game.awayTeam}</div>
                 <div><strong>Home Team:</strong> {game.homeTeam}</div>
+                <div><strong>Time:</strong> {format(game.date, 'HH:mm')}</div>
               </div>
               <button className="btn btn-sm btn-primary" onClick={() => openEditModal(game)}>
-              <span className=""><i className="bi bi-pencil"></i></span>
-
+                <i className="bi bi-pencil"></i>
               </button>
             </li>
           ))}
@@ -123,6 +139,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
         show={modalShow}
         onHide={closeModal}
         selectedDate={selectedDate}
+        teams={teams} // Passing teams prop to GameModal
         addGame={addGame}
         editGame={editGame}
         isEditing={isEditing}
