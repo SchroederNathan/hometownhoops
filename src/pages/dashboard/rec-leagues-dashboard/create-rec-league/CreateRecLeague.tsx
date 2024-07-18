@@ -29,15 +29,16 @@ import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
 
 const CreateRecLeague = () => {
-  const { state } = useLocation();
+  const location = useLocation();
+  const state = location.state || {};
 
   const [name, setName] = useState(state.name || "");
-  const [location, setLocation] = useState(state.location || "");
+  const [locationName, setLocationName] = useState(state.location || "");
   const [startDate, setStartDate] = useState(state.startDate || "");
   const [endDate, setEndDate] = useState(state.endDate || "");
   const [rules, setRules] = useState(state.rules || `<h1>League Information</h1><ul><li>Information here</li></ul>`);
   const [teams, setTeams] = useState(state.teams || []);
-  const [selectedImage, setSelectedImage] = useState(useRef<HTMLDivElement>(null));
+  const selectedImage = useRef<HTMLDivElement>(null);
 
   const { handleFiles, imageContainerRef } = useHooks();
   const [modalShow, setModalShow] = useState(false);
@@ -59,7 +60,7 @@ const CreateRecLeague = () => {
     try {
       await addDoc(eventsCollectionRef, {
         name: name,
-        location: location,
+        location: locationName,
         startDate: startDate,
         endDate: endDate,
         imgUrl: "none",
@@ -72,16 +73,16 @@ const CreateRecLeague = () => {
     }
   };
 
-  const preview = (event: any, tabName: string) => {
+  const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, tabName: string) => {
     event.preventDefault();
 
     if (tabName === 'teams') {
-      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location, startDate, endDate, rules, teams } });
+      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location: locationName, startDate, endDate, rules, teams } });
     } else if (tabName === 'preview') {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {
           name,
-          location,
+          location: locationName,
           startDate,
           endDate,
           rules,
@@ -113,17 +114,10 @@ const CreateRecLeague = () => {
   }) as Editor;
 
   useEffect(() => {
-    try {
-      setName(state.name);
-      setLocation(state.location);
-      setStartDate(state.startDate);
-      setEndDate(state.endDate);
-      setRules(state.rules);
-      setTeams(state.teams);
-
-      editor?.commands.setContent(state.rules);
-    } catch (error) { }
-  }, [editor]);
+    if (editor && state.rules) {
+      editor.commands.setContent(state.rules);
+    }
+  }, [editor, state.rules]);
 
   if (!editor) {
     return null;
@@ -156,7 +150,7 @@ const CreateRecLeague = () => {
   return (
     <div>
       <ul className="nav nav-tabs mb-3">
-        <li className="nav-item " >
+        <li className="nav-item">
           <a className="nav-link tab active me-1" aria-current="page" href="#">
             Information
           </a>
@@ -185,7 +179,7 @@ const CreateRecLeague = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="input-group mb-3 ">
+        <div className="input-group mb-3">
           <label htmlFor="imageUpload" className="form-label fs-5 w-100">Image</label>
           <input
             type="file"
@@ -202,8 +196,8 @@ const CreateRecLeague = () => {
             type="name"
             className="form-control"
             id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
           />
         </div>
         <div className="mb-3 row">
@@ -252,7 +246,6 @@ const CreateRecLeague = () => {
           </span>
         </button>
       </form>
-
     </div>
   );
 };

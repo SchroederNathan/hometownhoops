@@ -2,8 +2,21 @@ import React from 'react'
 import './PreviewCreateRecLeague.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import RecLeagueCard from '../../../../../components/helpers/rec-leagues/RecLeagueCard';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, writeBatch } from 'firebase/firestore';
 import { db } from '../../../../../config/firebase';
+
+// Define interfaces for the data structures
+interface Player {
+    name: string;
+}
+
+interface Team {
+    id: string;
+    teamName: string;
+    players: Player[];
+    playerCount: number;
+}
+
 
 const PreviewCreateRecLeague: React.FC = () => {
     const { state } = useLocation();
@@ -17,19 +30,47 @@ const PreviewCreateRecLeague: React.FC = () => {
 
     const eventsCollectionRef = collection(db, 'rec-leagues');
 
+
     const navigate = useNavigate();
+
 
     const onCreate = async () => {
         try {
-            await addDoc(eventsCollectionRef, {
+            // Initialize Firestore batch
+            const batch = writeBatch(db);
+
+            // Create the main rec-league document
+            const recLeagueRef = doc(collection(db, 'rec-leagues'));
+            batch.set(recLeagueRef, {
                 name: name,
                 location: location,
                 startDate: startDate,
                 endDate: endDate,
                 imgUrl: 'none',
                 rules: rules,
-                teams: teams
             });
+
+            // Add teams and players as subcollections
+            teams.forEach((team: Team) => {
+                const teamRef = doc(collection(recLeagueRef, 'teams'), team.id);
+                batch.set(teamRef, {
+                    name: team.teamName,
+                    playerCount: team.players.length,
+                });
+
+                // Add players to the teams subcollection
+                team.players.forEach((player, index) => {
+                    const playerRef = doc(collection(teamRef, 'players'), `player${index + 1}`);
+                    batch.set(playerRef, {
+                        name: player.name,
+                    });
+                });
+            });
+
+            // Commit the batch
+            await batch.commit();
+
+            // Navigate to the dashboard
             navigate("/dashboard/rec-leagues/");
         } catch (err) {
             alert(err);
@@ -38,22 +79,22 @@ const PreviewCreateRecLeague: React.FC = () => {
 
     const preview = (event: any, tabName: string) => {
         event.preventDefault();
-    
+
         if (tabName === 'info') {
-          navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams } });
+            navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams } });
         } else if (tabName === 'teams') {
-          navigate("/dashboard/rec-leagues/create/teams", {
-            state: {
-              name,
-              location,
-              startDate,
-              endDate,
-              rules,
-              teams
-            },
-          });
+            navigate("/dashboard/rec-leagues/create/teams", {
+                state: {
+                    name,
+                    location,
+                    startDate,
+                    endDate,
+                    rules,
+                    teams
+                },
+            });
         }
-      };
+    };
 
     return (
         <div>
