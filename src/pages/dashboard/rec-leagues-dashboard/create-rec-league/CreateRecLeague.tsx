@@ -27,7 +27,13 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
-import DateBrowser from "./DateBrowser";
+import DateBrowser from "./date-browser/DateBrowser";
+
+interface Game {
+  date: Date;
+  awayTeam: string;
+  homeTeam: string;
+}
 
 const CreateRecLeague = () => {
   const location = useLocation();
@@ -39,6 +45,8 @@ const CreateRecLeague = () => {
   const [endDate, setEndDate] = useState(state.endDate || "");
   const [rules, setRules] = useState(state.rules || `<h1>League Information</h1><ul><li>Information here</li></ul>`);
   const [teams, setTeams] = useState(state.teams || []);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [games, setGames] = useState<Game[]>([]);
   const selectedImage = useRef<HTMLDivElement>(null);
 
   const { handleFiles, imageContainerRef } = useHooks();
@@ -66,7 +74,8 @@ const CreateRecLeague = () => {
         endDate: endDate,
         imgUrl: "none",
         rules: rules,
-        teams: teams
+        teams: teams,
+        games: games,
       });
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
@@ -87,7 +96,8 @@ const CreateRecLeague = () => {
           startDate,
           endDate,
           rules,
-          teams
+          teams,
+          games
         },
       });
     }
@@ -123,30 +133,6 @@ const CreateRecLeague = () => {
   if (!editor) {
     return null;
   }
-
-  const handleConfirm = async (
-    event: ProcessedEvent,
-    action: EventActions
-  ): Promise<ProcessedEvent> => {
-    return new Promise((res, rej) => {
-      try {
-        scheduledEvents.push({
-          event_id: "n/a",
-          title: event.title,
-          start: event.start,
-          end: event.end,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-
-      if (action === "edit") {
-        /** PUT event to remote DB */
-      } else if (action === "create") {
-        /**POST event to remote DB */
-      }
-    });
-  };
 
   return (
     <div>
@@ -227,7 +213,7 @@ const CreateRecLeague = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
         <br />
-        <DateBrowser />
+        <DateBrowser selectedDate={selectedDate} setSelectedDate={setSelectedDate} games={games} setGames={setGames} />
 
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
