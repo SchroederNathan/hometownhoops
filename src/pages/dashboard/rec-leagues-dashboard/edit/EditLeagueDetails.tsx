@@ -172,7 +172,7 @@ const EditLeagueDetails = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
 
-        <p className="form-label fs-5">Schedule</p>
+        {/* <p className="form-label fs-5">Schedule</p>
 
         <Scheduler
           view="month"
@@ -184,7 +184,7 @@ const EditLeagueDetails = () => {
             endHour: 24,
           }}
           week={null}
-        />
+        /> */}
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
             <span className="btn-label">

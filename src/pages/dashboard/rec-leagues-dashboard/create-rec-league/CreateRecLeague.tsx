@@ -1,20 +1,12 @@
 import "./CreateRecLeague.css";
-// import { Link } from 'react-router-dom'
-import Color from "@tiptap/extension-text";
 import ListItem from "@tiptap/extension-list-item";
 import {
-  EditorProvider,
-  useCurrentEditor,
   useEditor,
   Editor,
-  EditorContent,
-  BubbleMenu,
 } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
-import TextStyle from "@tiptap/extension-text-style";
-
 import Bold from "@tiptap/extension-bold";
 import Underline from "@tiptap/extension-underline";
 import Italic from "@tiptap/extension-italic";
@@ -24,22 +16,13 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import EditorComponent from "../../../../components/helpers/EditorComponent";
-
-import StarterKit from "@tiptap/starter-kit";
 import React, {
-  useCallback,
-  ChangeEventHandler,
   useEffect,
   useRef,
   useState,
 } from "react";
-import * as Icons from "../../../../components/helpers/Icons";
-import classNames from "classnames";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
-import { FileInput } from "../../../../components/helpers/FileInput";
 import { useHooks } from "../../../../components/helpers/Hooks";
-import { ScheduleModal } from "../../../../components/helpers/schedule/ScheduleModal";
 import { Scheduler } from "@aldabil/react-scheduler";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
@@ -275,10 +258,10 @@ const CreateRecLeague = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
 
-        <p className="form-label fs-5">Schedule</p>
+        {/* <p className="form-label fs-5">Schedule</p> */}
 
 
-        <Scheduler
+        {/* <Scheduler
           view="month"
           day={null}
           onConfirm={handleConfirm}
@@ -290,7 +273,7 @@ const CreateRecLeague = () => {
           }}
           events={scheduledEvents}
           week={null}
-        />
+        /> */}
 
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
