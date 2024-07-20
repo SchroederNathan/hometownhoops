@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { format, addDays, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay, parse } from 'date-fns';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './DateBrowser.css'; // Ensure this file exists for custom styles
 import GameModal from './GameModal';
 import { Team } from '../teams/TeamsCreateRecLeague';
 import { Timestamp } from 'firebase/firestore';
-import { se } from 'date-fns/locale';
 
 
 export interface Game {

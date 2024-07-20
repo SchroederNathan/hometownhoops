@@ -23,10 +23,8 @@ import React, {
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useHooks } from "../../../../components/helpers/Hooks";
-import { Scheduler } from "@aldabil/react-scheduler";
-import { addDoc, collection, doc, writeBatch } from "firebase/firestore";
+import { collection, doc, writeBatch } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
-import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types";
 import DateBrowser from "./date-browser/DateBrowser";
 import GameModal from "./date-browser/GameModal";
 import { Team } from "./teams/TeamsCreateRecLeague";
