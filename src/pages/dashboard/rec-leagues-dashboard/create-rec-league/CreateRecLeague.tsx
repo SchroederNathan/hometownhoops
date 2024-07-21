@@ -25,7 +25,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useHooks } from "../../../../components/helpers/Hooks";
 import { collection, doc, writeBatch } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
-import DateBrowser from "./date-browser/DateBrowser";
+import DateBrowser, { Game } from "./date-browser/DateBrowser";
 import GameModal from "./date-browser/GameModal";
 import { Team } from "./teams/TeamsCreateRecLeague";
 
@@ -35,6 +35,8 @@ const CreateRecLeague = () => {
 
   const [name, setName] = useState(state.name || "");
   const [locationName, setLocationName] = useState(state.location || "");
+  const [deadline, setDeadline] = useState(state.deadline || "");
+
   const [startDate, setStartDate] = useState(state.startDate || "");
   const [endDate, setEndDate] = useState(state.endDate || "");
   const [rules, setRules] = useState(state.rules || `<h1>League Information</h1><ul><li>Information here</li></ul>`);
@@ -58,6 +60,7 @@ const CreateRecLeague = () => {
       batch.set(recLeagueRef, {
         name: name,
         location: locationName,
+        deadline: deadline,
         startDate: startDate,
         endDate: endDate,
         imgUrl: "none",
