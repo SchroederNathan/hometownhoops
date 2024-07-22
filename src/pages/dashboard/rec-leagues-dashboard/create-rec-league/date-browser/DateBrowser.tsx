@@ -4,12 +4,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './DateBrowser.css'; // Ensure this file exists for custom styles
 import GameModal from './GameModal';
 import { Team } from '../teams/TeamsCreateRecLeague';
-import { Timestamp } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
 import StatsModal from './stats/StatsModal';
+import { db } from '../../../../../config/firebase';
+import { PlayerStats } from '../../Models';
+import { useParams } from 'react-router-dom';
 
 
 export interface Game {
-  gameID?: string;
+  gameID?: string; // Firebase document ID
   gameDate: Date;
   awayTeam: string;
   homeTeam: string;
@@ -33,6 +36,11 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
 
   const startOfCurrentWeek = startOfWeek(currentWeek, { weekStartsOn: 0 });
   const endOfCurrentWeek = endOfWeek(currentWeek, { weekStartsOn: 0 });
+
+  const [stats, setStats] = useState<PlayerStats[]>([]);
+  const [winner, setWinner] = useState<string>("");
+
+  const { eventID } = useParams();
 
   const daysOfWeek = [];
   for (let i = 0; i < 7; i++) {
@@ -85,10 +93,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
 
   const gamesOnSelectedDate = convertedGames.filter(game => isSameDay(game.gameDate, selectedDate));
 
-  console.log(selectedDate);
-  gamesOnSelectedDate.forEach(game => {
-    console.log(game.gameDate);
-  });
 
   const openEditModal = (game: Game) => {
     setIsEditing(true);
@@ -96,9 +100,62 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setModalShow(true);
   };
 
-  const openStatsModal = (game: Game) => {
+  const fetchStats = async (gameId: string) => {
+    try {
+      // Fetch all teams and their players
+      const teamCollectionRef = collection(db, "rec-leagues", eventID!, "teams");
+      const teamsSnapshot = await getDocs(teamCollectionRef);
+
+      // Create a map to easily find a player by playerID
+      const playerMap = new Map();
+
+      // Iterate through each team and their players
+      for (const teamDoc of teamsSnapshot.docs) {
+        const teamData = teamDoc.data();
+        const playersCollectionRef = collection(teamDoc.ref, "players");
+        const playersSnapshot = await getDocs(playersCollectionRef);
+
+        playersSnapshot.docs.forEach((playerDoc) => {
+          const playerData = playerDoc.data();
+          playerMap.set(playerDoc.id, {
+            teamID: teamDoc.id,
+            teamName: teamData.name,
+            playerName: playerData.name,
+          });
+        });
+      }
+
+      // Fetch game stats
+      const gameRef = doc(db, "rec-leagues", eventID!, "games", gameId);
+      const statsRef = collection(gameRef, "stats");
+      const statsSnapshot = await getDocs(statsRef);
+
+      // Attach player information to stats
+      const statsList = statsSnapshot.docs.map((statDoc) => {
+        const statData = statDoc.data();
+        const playerInfo = playerMap.get(statData.playerID);
+
+        return {
+          ...statData,
+          teamName: playerInfo?.teamName || "Unknown Team",
+          playerName: playerInfo?.playerName || "Unknown Player",
+        };
+      });
+
+      return statsList;
+    } catch (error) {
+      console.error("Error fetching stats: ", error);
+      return [];
+    }
+  };
+
+  const openStatsModal = async (game: Game) => {
     setIsEditing(true);
     setGameToEdit(game);
+    const fetchedStats = await fetchStats(game.gameID || ""); // Fetch stats from Firebase
+    console.log(fetchedStats)
+    setStats(fetchedStats);
+    setWinner(""); // Set the initial winner once i have this info
     setStatsModalShow(true);
   };
 
@@ -154,7 +211,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
                   <i className="bi bi-pencil-fill"></i>
                 </button>
                 <button className="btn btn-sm btn-danger" onClick={() => openEditModal(game)}>
-                  <span> 
+                  <span>
                     <i className="bi bi-x"></i>
                   </span>
                 </button>
@@ -172,8 +229,14 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
 
       <StatsModal
         show={statsModalShow}
-        onHide={closeModal} 
-        game={gameToEdit} />
+        onHide={closeModal}
+        game={gameToEdit}
+        initialStats={stats}
+        initialWinner={winner}
+        onSave={(updatedStats, updatedWinner) => {
+          // Handle the save action, e.g., update Firebase or state
+        }}
+      />
 
       <GameModal
         show={modalShow}

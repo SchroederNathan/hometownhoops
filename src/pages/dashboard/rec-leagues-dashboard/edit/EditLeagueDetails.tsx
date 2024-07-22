@@ -144,7 +144,10 @@ const EditLeagueDetails = () => {
           // Grab all games from the rec-leagues collection
           const gamesCollectionRef = collection(docRef, "games");
           const gamesSnapshot = await getDocs(gamesCollectionRef);
-          const gamesList = gamesSnapshot.docs.map(doc => doc.data() as Game);
+          const gamesList = gamesSnapshot.docs.map(doc => {
+            const gameData = doc.data() as Game;
+            return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
+          });
           setGames(gamesList);
 
           // Grab all teams from the rec-leagues collection
