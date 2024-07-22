@@ -171,7 +171,8 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
 
       <StatsModal
         show={statsModalShow}
-        onHide={closeModal} />
+        onHide={closeModal} 
+        game={gameToEdit} />
 
       <GameModal
         show={modalShow}

@@ -7,6 +7,7 @@ import EditStats from './EditStats';
 interface GameModalProps {
     show: boolean;
     onHide: () => void;
+    game: Game;
     // selectedDate: Date;
     // teams: Team[];
     // addGame: (awayTeam: string, homeTeam: string, time: string) => void;
@@ -18,6 +19,7 @@ interface GameModalProps {
 const StatsModal: React.FC<GameModalProps> = ({
     show,
     onHide,
+    game,
     // selectedDate,
     // teams,
     // addGame,
@@ -60,7 +62,7 @@ const StatsModal: React.FC<GameModalProps> = ({
             </Modal.Header>
             <Modal.Body>
 
-                <EditStats />
+                <EditStats game={game} />
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>
