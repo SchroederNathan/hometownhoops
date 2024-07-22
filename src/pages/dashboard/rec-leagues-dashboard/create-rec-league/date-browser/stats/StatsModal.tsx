@@ -59,10 +59,8 @@ const StatsModal: React.FC<GameModalProps> = ({
                 <Modal.Title>Edit Stats</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                 <label className="form-label mb-3 fw-bold">Teams</label> 
 
                 <EditStats />
-                <label className="form-label mb-3 mt-3 fw-bold">Players</label> 
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>

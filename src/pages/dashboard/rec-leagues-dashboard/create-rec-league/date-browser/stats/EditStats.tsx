@@ -3,6 +3,7 @@ import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
 import { useState } from 'react';
 import { Team } from '../../teams/TeamsCreateRecLeague';
 import { AgGridReact } from '@ag-grid-community/react';
+import { PlayerStats } from '../../../Models';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 // Row Data Interface
@@ -23,6 +24,26 @@ const StatsGrid = () => {
         { field: "losses", flex: 1 },
     ]);
 
+    const [playerRowData, setPlayerRowData] = useState<PlayerStats[]>([
+        { name: "Nathan S.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Josh O.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Owen O.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Austin S.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Tigh J.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Eric J.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Nathan S.", points: 14, rebounds: 8, assists: 3 },
+
+    ]);
+
+    // Column Definitions: Defines & controls grid columns.
+    const [playerColDefs, setPlayerColDefs] = useState<ColDef<PlayerStats>[]>([
+        { field: "name", flex: 2 },
+        { field: "points", flex: 1 },
+        { field: "rebounds", flex: 1 },
+        { field: "assists", flex: 1 },
+
+    ]);
+
     const defaultColDef: ColDef = {
         flex: 1,
     };
@@ -33,9 +54,21 @@ const StatsGrid = () => {
             className={"ag-theme-quartz"}
             style={{ width: "100%" }}
         >
+            <label className="form-label mb-3 fw-bold">Teams</label>
+
             <AgGridReact
                 rowData={teamRowData}
                 columnDefs={teamColDefs}
+                rowSelection={"single"}
+                domLayout={"autoHeight"}
+
+                defaultColDef={defaultColDef}
+            />
+            <label className="form-label mb-3 mt-3 fw-bold">Players</label>
+
+            <AgGridReact
+                rowData={playerRowData}
+                columnDefs={playerColDefs}
                 rowSelection={"single"}
                 domLayout={"autoHeight"}
 
