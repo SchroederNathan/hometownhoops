@@ -28,10 +28,10 @@ const StatsGrid = () => {
         { name: "Nathan S.", points: 14, rebounds: 8, assists: 3 },
         { name: "Josh O.", points: 14, rebounds: 8, assists: 3 },
         { name: "Owen O.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Austin S.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Tigh J.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Eric J.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Nathan S.", points: 14, rebounds: 8, assists: 3 },
+        { name: "Austin S.", points: 5, rebounds: 8, assists: 3 },
+        { name: "Tigh J.", points: 8, rebounds: 8, assists: 3 },
+        { name: "Eric J.", points: 1, rebounds: 8, assists: 3 },
+        { name: "Nathan S.", points: 20, rebounds: 8, assists: 3 },
 
     ]);
 

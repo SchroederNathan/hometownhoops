@@ -145,12 +145,19 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
                 <div><strong>Away Team:</strong> {game.awayTeam}</div>
                 <div><strong>Home Team:</strong> {game.homeTeam}</div>
               </div>
-              <button className="btn btn-sm btn-primary" onClick={() => openStatsModal(game)}>
-                <i className="bi bi-pencil"></i>
-              </button>
-              <button className="btn btn-sm btn-primary" onClick={() => openEditModal(game)}>
-                <i className="bi bi-pencil"></i>
-              </button>
+              <div>
+                <button className="btn btn-sm btn-primary me-2" onClick={() => openStatsModal(game)}>
+                  <i className="bi bi-bar-chart-line-fill"></i>
+                </button>
+                <button className="btn btn-sm btn-primary me-2" onClick={() => openEditModal(game)}>
+                  <i className="bi bi-pencil-fill"></i>
+                </button>
+                <button className="btn btn-sm btn-danger" onClick={() => openEditModal(game)}>
+                  <span> 
+                    <i className="bi bi-x"></i>
+                  </span>
+                </button>
+              </div>
             </li>
           ))}
         </ul>
