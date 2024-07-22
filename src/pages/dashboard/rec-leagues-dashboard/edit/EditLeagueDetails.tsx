@@ -1,4 +1,3 @@
-// EditLeagueDetails.tsx
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { db } from "../../../../config/firebase";
@@ -20,6 +19,9 @@ import EditorComponent from "../../../../components/helpers/EditorComponent";
 import DateBrowser, { Game } from "../create-rec-league/date-browser/DateBrowser";
 import GameModal from "../create-rec-league/date-browser/GameModal";
 import { Team } from "../create-rec-league/teams/TeamsCreateRecLeague";
+import StatsModal from "../create-rec-league/date-browser/stats/StatsModal";
+import { PlayerStats } from "../Models";
+
 const EditLeagueDetails = () => {
   const { eventID } = useParams();
 
@@ -33,6 +35,10 @@ const EditLeagueDetails = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [modalShow, setModalShow] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
+
+  const [statsModalShow, setStatsModalShow] = useState(false);
+  const [stats, setStats] = useState<PlayerStats[]>([]);
+  const [winner, setWinner] = useState<string>("");
 
   const updateRef = doc(db, "rec-leagues", `${eventID}`);
   const navigate = useNavigate();
@@ -76,7 +82,7 @@ const EditLeagueDetails = () => {
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
 
-    const newGame = { date: newDate, awayTeam, homeTeam };
+    const newGame = { gameDate: newDate, awayTeam, homeTeam };
     if (editingGame) {
       setGames(games.map(g => (g === editingGame ? newGame : g)));
       setEditingGame(null);
@@ -88,6 +94,16 @@ const EditLeagueDetails = () => {
   const editGame = (game: Game) => {
     setEditingGame(game);
     setModalShow(true);
+  };
+
+  const openStatsModal = (game: Game) => {
+    setEditingGame(game);
+    setStatsModalShow(true);
+  };
+
+  const handleSaveStats = (stats: PlayerStats[], winner: string) => {
+    setStats(stats);
+    setWinner(winner);
   };
 
   const editor = useEditor({
@@ -261,6 +277,15 @@ const EditLeagueDetails = () => {
         editGame={addGame}
         isEditing={!!editingGame}
         gameToEdit={editingGame ?? undefined}
+      />
+
+      <StatsModal
+        show={statsModalShow}
+        onHide={() => setStatsModalShow(false)}
+        game={editingGame}
+        onSave={handleSaveStats}
+        initialStats={stats}
+        initialWinner={winner}
       />
     </div>
   );

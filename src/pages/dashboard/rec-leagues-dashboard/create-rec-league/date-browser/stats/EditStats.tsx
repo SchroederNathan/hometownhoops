@@ -1,31 +1,24 @@
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
 import { useState } from 'react';
-import { Team } from '../../teams/TeamsCreateRecLeague';
 import { AgGridReact } from '@ag-grid-community/react';
 import { PlayerStats } from '../../../Models';
-import { Form } from 'react-router-dom';
 import { Game } from '../DateBrowser';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
-// Row Data Interface
 
+interface StatsGridProps {
+    game?: Game;
+    stats: PlayerStats[];
+    onStatsChange: (stats: PlayerStats[]) => void;
+    winner: string;
+    onWinnerChange: (winner: string) => void;
+}
 
 // Create new GridExample component
-const StatsGrid = ({game}: {game?: Game}) => {
+const StatsGrid = ({ game, stats, onStatsChange, winner, onWinnerChange }: StatsGridProps) => {
 
-    const [winner, setWinner] = useState<string>('');
-
-    const [playerRowData, setPlayerRowData] = useState<PlayerStats[]>([
-        { name: "Nathan S.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Josh O.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Owen O.", points: 14, rebounds: 8, assists: 3 },
-        { name: "Austin S.", points: 5, rebounds: 8, assists: 3 },
-        { name: "Tigh J.", points: 8, rebounds: 8, assists: 3 },
-        { name: "Eric J.", points: 1, rebounds: 8, assists: 3 },
-        { name: "Nathan S.", points: 20, rebounds: 8, assists: 3 },
-
-    ]);
+    const [playerRowData, setPlayerRowData] = useState<PlayerStats[]>(stats);
 
     // Column Definitions: Defines & controls grid columns.
     const [playerColDefs, setPlayerColDefs] = useState<ColDef<PlayerStats>[]>([
@@ -33,14 +26,17 @@ const StatsGrid = ({game}: {game?: Game}) => {
         { field: "points", flex: 1, editable: true },
         { field: "rebounds", flex: 1, editable: true },
         { field: "assists", flex: 1, editable: true },
-
     ]);
 
     const defaultColDef: ColDef = {
         flex: 1,
     };
 
-    // Container: Defines the grid's theme & dimensions.
+    const handleStatsChange = (updatedStats: PlayerStats[]) => {
+        setPlayerRowData(updatedStats);
+        onStatsChange(updatedStats);
+    }
+
     return (
         <div
             className={"ag-theme-quartz"}
@@ -48,26 +44,37 @@ const StatsGrid = ({game}: {game?: Game}) => {
         >
             <label className="form-label mb-3 fw-bold">Winner</label>
             <select className="form-select" id="floatingSelect" value={winner}
-                onChange={(e) => setWinner(e.target.value)}>
+                onChange={(e) => onWinnerChange(e.target.value)}>
                 <option selected>Select Winner</option>
                 <option key='home' value={game?.homeTeam}>{game?.homeTeam}</option>
                 <option key='away' value={game?.awayTeam}>{game?.awayTeam}</option>
             </select>
 
             <br />
-            <label className="form-label mb-3 mt-3 fw-bold">Players</label>
+            <label className="form-label mb-3 fw-bold">{game?.homeTeam} Stats</label>
 
             <AgGridReact
                 rowData={playerRowData}
                 columnDefs={playerColDefs}
                 rowSelection={"single"}
                 domLayout={"autoHeight"}
-
                 defaultColDef={defaultColDef}
+                onCellValueChanged={(params) => handleStatsChange(params.api.getRowNode(params.node.id)?.data)}
+            />
+
+            <br />
+            <label className="form-label mb-3 fw-bold">{game?.awayTeam} Stats</label>
+
+            <AgGridReact
+                rowData={playerRowData}
+                columnDefs={playerColDefs}
+                rowSelection={"single"}
+                domLayout={"autoHeight"}
+                defaultColDef={defaultColDef}
+                onCellValueChanged={(params) => handleStatsChange(params.api.getRowNode(params.node.id)?.data)}
             />
         </div>
     );
 };
-
 
 export default StatsGrid;

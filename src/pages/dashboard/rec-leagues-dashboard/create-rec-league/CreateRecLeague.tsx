@@ -28,6 +28,7 @@ import { db } from "../../../../config/firebase";
 import DateBrowser, { Game } from "./date-browser/DateBrowser";
 import GameModal from "./date-browser/GameModal";
 import { Team } from "./teams/TeamsCreateRecLeague";
+import { v4 as uuidv4 } from 'uuid';
 
 const CreateRecLeague = () => {
   const location = useLocation();
@@ -52,9 +53,12 @@ const CreateRecLeague = () => {
 
   const navigate = useNavigate();
 
+
+
   const onCreate = async () => {
     try {
       const batch = writeBatch(db);
+      const playerIds: { [teamName: string]: string[] } = {};
 
       const recLeagueRef = doc(collection(db, "rec-leagues"));
       batch.set(recLeagueRef, {
@@ -67,16 +71,24 @@ const CreateRecLeague = () => {
         rules: rules,
       });
 
-      teams.forEach((team: Team) => {
+      teams.forEach(team => {
         const teamRef = doc(collection(recLeagueRef, "teams"), team.id);
         batch.set(teamRef, {
           name: team.name,
           playerCount: team.players.length,
         });
 
-        team.players.forEach((player, index) => {
-          const playerRef = doc(collection(teamRef, "players"), `player${index + 1}`);
-          batch.set(playerRef, { name: player.name });
+        playerIds[team.name] = []; // Initialize array for storing player IDs
+
+        team.players.forEach(player => {
+          const playerId = uuidv4(); // Generate a unique ID for each player
+          const playerRef = doc(collection(teamRef, "players"), playerId);
+          batch.set(playerRef, {
+            name: player.name,
+            id: playerId, // Store the player ID in the document
+          });
+
+          playerIds[team.name].push(playerId); // Store the player ID in the array
         });
       });
 
@@ -88,6 +100,36 @@ const CreateRecLeague = () => {
           gameDate: game.gameDate,
           winner: ""
         });
+
+        const statsRef = collection(gameRef, "stats");
+
+        // Set stats for players in the home team
+        if (playerIds[game.homeTeam]) {
+          playerIds[game.homeTeam].forEach(playerId => {
+            const statsDocRef = doc(statsRef, playerId);
+            batch.set(statsDocRef, {
+              teamName: game.homeTeam, // Store the team name in the stats document
+              playerID: playerId,
+              points: 0,
+              assists: 0,
+              rebounds: 0
+            });
+          });
+        }
+
+        // Set stats for players in the away team
+        if (playerIds[game.awayTeam]) {
+          playerIds[game.awayTeam].forEach(playerId => {
+            const statsDocRef = doc(statsRef, playerId);
+            batch.set(statsDocRef, {
+              teamName: game.awayTeam, // Store the team name in the stats document
+              playerID: playerId,
+              points: 0,
+              assists: 0,
+              rebounds: 0
+            });
+          });
+        }
       });
 
       await batch.commit();
@@ -144,6 +186,7 @@ const CreateRecLeague = () => {
       setEditingGame(null);
     }
   };
+
   const editor = useEditor({
     extensions: [
       Document,

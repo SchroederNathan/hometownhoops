@@ -9,6 +9,7 @@ import StatsModal from './stats/StatsModal';
 
 
 export interface Game {
+  gameID?: string;
   gameDate: Date;
   awayTeam: string;
   homeTeam: string;
