@@ -74,8 +74,7 @@ const CreateRecLeague = () => {
       teams.forEach(team => {
         const teamRef = doc(collection(recLeagueRef, "teams"), team.id);
         batch.set(teamRef, {
-          name: team.name,
-          playerCount: team.players.length,
+          name: team.name
         });
 
         playerIds[team.name] = []; // Initialize array for storing player IDs
@@ -131,7 +130,7 @@ const CreateRecLeague = () => {
           });
         }
       });
-
+      console.log(playerIds)
       await batch.commit();
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
@@ -212,6 +211,10 @@ const CreateRecLeague = () => {
     if (editor && state.rules) {
       editor.commands.setContent(state.rules);
     }
+    teams.forEach(team => {
+      console.log(team.players)
+    })
+    
   }, [editor, state.rules]);
 
   if (!editor) {

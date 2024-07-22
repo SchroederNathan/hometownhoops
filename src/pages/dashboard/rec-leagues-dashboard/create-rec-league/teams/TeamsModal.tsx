@@ -1,5 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { Modal } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { Team } from "./TeamsCreateRecLeague";
 
 interface TeamsModalProps {
@@ -10,17 +11,16 @@ interface TeamsModalProps {
 }
 
 interface Player {
+  id: string;
   name: string;
 }
-
-
 
 const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, teamToEdit }) => {
   const [name, setName] = useState("");
   const [captainFirstName, setCaptainFirstName] = useState("");
   const [captainLastName, setCaptainLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [players, setPlayers] = useState<Player[]>([{ name: "" }]);
+  const [players, setPlayers] = useState<Player[]>([{ id: uuidv4(), name: "" }]);
 
   useEffect(() => {
     if (teamToEdit) {
@@ -28,13 +28,13 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
       setCaptainFirstName(teamToEdit.captainFirstName);
       setCaptainLastName(teamToEdit.captainLastName);
       setPhoneNumber(teamToEdit.phoneNumber);
-      setPlayers(teamToEdit.players);
+      setPlayers(teamToEdit.players.map(player => ({ ...player, id: player.id || uuidv4() })));
     } else {
       setName("");
       setCaptainFirstName("");
       setCaptainLastName("");
       setPhoneNumber("");
-      setPlayers([{ name: "" }]);
+      setPlayers([{ id: uuidv4(), name: "" }]);
     }
   }, [teamToEdit]);
 
@@ -46,18 +46,23 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
       captainLastName,
       phoneNumber,
       players,
+      playerCount: players.length,
     });
     onHide();
   };
 
   const addPlayer = () => {
-    setPlayers([...players, { name: "" }]);
+    setPlayers([...players, { id: uuidv4(), name: "" }]);
   };
 
   const handlePlayerChange = (index: number, value: string) => {
     const newPlayers = [...players];
     newPlayers[index].name = value;
     setPlayers(newPlayers);
+  };
+
+  const removePlayer = (index: number) => {
+    setPlayers(players.filter((_, i) => i !== index));
   };
 
   return (
@@ -115,15 +120,26 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
           <hr />
           <h5>Players</h5>
           {players.map((player, index) => (
-            <div key={index} className="mb-3">
+            <div key={player.id} className="mb-3">
               <label className="form-label">Player {index + 1}</label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                placeholder="Player Name"
-                value={player.name}
-                onChange={(e) => handlePlayerChange(index, e.target.value)}
-              />
+              <div className="d-flex">
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  placeholder="Player Name"
+                  value={player.name}
+                  onChange={(e) => handlePlayerChange(index, e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="btn btn-danger ms-2"
+                  onClick={() => removePlayer(index)}
+                >
+                  <span>
+                    <i className="bi bi-x"></i>
+                  </span>
+                </button>
+              </div>
             </div>
           ))}
           <button type="button" className="btn btn-primary" onClick={addPlayer}>

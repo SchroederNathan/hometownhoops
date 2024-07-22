@@ -4,17 +4,18 @@ import TeamsModal from './TeamsModal';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Player {
+  id?: string;
   name: string;
 }
 
 export interface Team {
-  id?: string;
-  name?: string;
+  id: string;
+  name: string;
   captainFirstName?: string;
   captainLastName?: string;
   phoneNumber?: string;
-  players?: Player[];
-  playerCount?: number;
+  players: Player[];
+  playerCount: number;
   wins?: number;
   losses?: number;
 }
@@ -59,10 +60,11 @@ const TeamsCreateRecLeague: React.FC = () => {
       setTeams(teams.map(t => (t.id === team.id ? { ...team, playerCount: team.players.length } : t)));
     } else {
       // Add new team
-      const newTeam = { ...team, id: uuidv4(), playerCount: team.players.length };
+      const newTeam = { ...team, id: uuidv4(), players: team.players.map(player => ({ ...player, id: uuidv4() })), playerCount: team.players.length };
       setTeams([...teams, newTeam]);
     }
     setTeamToEdit(null);
+    setModalShow(false);
   };
 
   const removeTeam = (id: string) => {
