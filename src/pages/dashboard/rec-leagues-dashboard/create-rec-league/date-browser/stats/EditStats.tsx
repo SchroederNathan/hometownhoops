@@ -12,19 +12,7 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 
 // Create new GridExample component
-const StatsGrid = ({game}: {game: Game}) => {
-    // Row Data: The data to be displayed.
-    // const [teamRowData, setTeamRowData] = useState<Team[]>([
-    //     { name: "Tesla", wins: 1, losses: 2 },
-    //     { name: "Monstars", wins: 1, losses: 2 },
-    // ]);
-
-    // // Column Definitions: Defines & controls grid columns.
-    // const [teamColDefs, setTeamColDefs] = useState<ColDef<Team>[]>([
-    //     { field: "name", flex: 2 },
-    //     { field: "wins", flex: 1 },
-    //     { field: "losses", flex: 1 },
-    // ]);
+const StatsGrid = ({game}: {game?: Game}) => {
 
     const [winner, setWinner] = useState<string>('');
 
@@ -51,7 +39,6 @@ const StatsGrid = ({game}: {game: Game}) => {
     const defaultColDef: ColDef = {
         flex: 1,
     };
-    console.log(game);
 
     // Container: Defines the grid's theme & dimensions.
     return (
@@ -63,8 +50,8 @@ const StatsGrid = ({game}: {game: Game}) => {
             <select className="form-select" id="floatingSelect" value={winner}
                 onChange={(e) => setWinner(e.target.value)}>
                 <option selected>Select Winner</option>
-                <option key='home' value={game.homeTeam}>{game.homeTeam}</option>
-                <option key='away' value={game.awayTeam}>{game.awayTeam}</option>
+                <option key='home' value={game?.homeTeam}>{game?.homeTeam}</option>
+                <option key='away' value={game?.awayTeam}>{game?.awayTeam}</option>
             </select>
 
             <br />
@@ -82,12 +69,5 @@ const StatsGrid = ({game}: {game: Game}) => {
     );
 };
 
-const EditStats = ({game}: {game: Game}) => {
-    return (
-        <div>
-            <StatsGrid game={game} />
-        </div>
-    )
-}
 
-export default EditStats
+export default StatsGrid;
