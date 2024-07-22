@@ -1,10 +1,11 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { format, addDays, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay, parse } from 'date-fns';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './DateBrowser.css'; // Ensure this file exists for custom styles
 import GameModal from './GameModal';
 import { Team } from '../teams/TeamsCreateRecLeague';
 import { Timestamp } from 'firebase/firestore';
+import StatsModal from './stats/StatsModal';
 
 
 export interface Game {
@@ -24,6 +25,8 @@ interface DateBrowserProps {
 const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate, games, setGames, teams }) => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [modalShow, setModalShow] = useState(false);
+  const [statsModalShow, setStatsModalShow] = useState(false);
+
   const [isEditing, setIsEditing] = useState(false);
   const [gameToEdit, setGameToEdit] = useState<Game | undefined>(undefined);
 
@@ -92,11 +95,19 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setModalShow(true);
   };
 
+  const openStatsModal = (game: Game) => {
+    setIsEditing(true);
+    setGameToEdit(game);
+    setStatsModalShow(true);
+  };
+
   const closeModal = () => {
     setIsEditing(false);
     setGameToEdit(undefined);
     setModalShow(false);
+    setStatsModalShow(false);
   };
+
 
 
 
@@ -134,6 +145,9 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
                 <div><strong>Away Team:</strong> {game.awayTeam}</div>
                 <div><strong>Home Team:</strong> {game.homeTeam}</div>
               </div>
+              <button className="btn btn-sm btn-primary" onClick={() => openStatsModal(game)}>
+                <i className="bi bi-pencil"></i>
+              </button>
               <button className="btn btn-sm btn-primary" onClick={() => openEditModal(game)}>
                 <i className="bi bi-pencil"></i>
               </button>
@@ -147,6 +161,10 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
           Add Game
         </button>
       </div>
+
+      <StatsModal
+        show={statsModalShow}
+        onHide={closeModal} />
 
       <GameModal
         show={modalShow}
