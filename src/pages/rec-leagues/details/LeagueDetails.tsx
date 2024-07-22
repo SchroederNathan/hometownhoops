@@ -11,28 +11,25 @@ import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 
 import { checkIfOpen } from "../../../components/helpers/Functions";
+import { Team } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 // Row Data Interface
-interface Team {
-  teamName: string;
-  wins: number;
-  losses: number;
-}
+
 
 // Create new GridExample component
 const GridExample = () => {
   // Row Data: The data to be displayed.
   const [rowData, setRowData] = useState<Team[]>([
-    { teamName: "Tesla", wins: 1, losses: 2 },
-    { teamName: "Monstars", wins: 1, losses: 2 },
-    { teamName: "Test Data", wins: 3, losses: 2 },
-    { teamName: "Anotha", wins: 1, losses: 2 },
+    { name: "Tesla", wins: 1, losses: 2 },
+    { name: "Monstars", wins: 1, losses: 2 },
+    { name: "Test Data", wins: 3, losses: 2 },
+    { name: "Anotha", wins: 1, losses: 2 },
   ]);
 
   // Column Definitions: Defines & controls grid columns.
   const [colDefs, setColDefs] = useState<ColDef<Team>[]>([
-    { field: "teamName", flex: 2 },
+    { field: "name", flex: 2 },
     { field: "wins" , flex: 1},
     { field: "losses", flex: 1 },
   ]);

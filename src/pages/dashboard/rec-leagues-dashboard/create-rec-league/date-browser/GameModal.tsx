@@ -97,7 +97,7 @@ const GameModal: React.FC<GameModalProps> = ({
                     Close
                 </Button>
                 <Button variant="primary" onClick={handleAddGame}>
-                    {isEditing ? 'Edit Game' : 'Add Game'}
+                    {isEditing ? 'Confirm Changes' : 'Add Game'}
                 </Button>
             </Modal.Footer>
         </Modal>

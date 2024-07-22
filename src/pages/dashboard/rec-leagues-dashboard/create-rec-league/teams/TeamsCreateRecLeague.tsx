@@ -8,13 +8,15 @@ interface Player {
 }
 
 export interface Team {
-  id: string;
-  name: string;
-  captainFirstName: string;
-  captainLastName: string;
-  phoneNumber: string;
-  players: Player[];
-  playerCount: number;
+  id?: string;
+  name?: string;
+  captainFirstName?: string;
+  captainLastName?: string;
+  phoneNumber?: string;
+  players?: Player[];
+  playerCount?: number;
+  wins?: number;
+  losses?: number;
 }
 
 const TeamsCreateRecLeague: React.FC = () => {
