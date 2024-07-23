@@ -249,6 +249,7 @@ const EditLeagueDetails = () => {
         <EditorComponent editor={editor} />
         <br />
         <DateBrowser
+          isEditingLeague={true}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
           games={games}

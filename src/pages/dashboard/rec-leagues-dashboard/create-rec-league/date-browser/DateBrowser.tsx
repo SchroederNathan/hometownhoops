@@ -19,7 +19,7 @@ import {
   getDocs,
   setDoc,
   writeBatch,
-  Timestamp
+  Timestamp,
 } from "firebase/firestore";
 import StatsModal from "./stats/StatsModal";
 import { db } from "../../../../../config/firebase";
@@ -36,6 +36,7 @@ export interface Game {
 interface DateBrowserProps {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
+  isEditingLeague: boolean;
   games: Game[];
   setGames: (games: Game[]) => void;
   teams: Team[]; // Added teams prop
@@ -44,6 +45,7 @@ interface DateBrowserProps {
 const DateBrowser: React.FC<DateBrowserProps> = ({
   selectedDate,
   setSelectedDate,
+  isEditingLeague,
   games,
   setGames,
   teams,
@@ -198,17 +200,25 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setStatsModalShow(false);
   };
 
-  const handleSaveStats = async (updatedStats: PlayerStats[], updatedWinner: string) => {
-    console.log(gameToEdit?.gameID);
+  const handleSaveStats = async (
+    updatedStats: PlayerStats[],
+    updatedWinner: string
+  ) => {
     if (gameToEdit?.gameID) {
-      const gameRef = doc(db, "rec-leagues", eventID!, "games", gameToEdit.gameID);
+      const gameRef = doc(
+        db,
+        "rec-leagues",
+        eventID!,
+        "games",
+        gameToEdit.gameID
+      );
       const statsRef = collection(gameRef, "stats");
 
       try {
         const batch = writeBatch(db);
 
         // Update each stat in the stats collection
-        updatedStats.forEach(stat => {
+        updatedStats.forEach((stat) => {
           const statDocRef = doc(statsRef, stat.playerID);
           batch.set(statDocRef, stat);
         });
@@ -265,12 +275,16 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                 </div>
               </div>
               <div>
-                <button
-                  className="btn btn-sm btn-primary me-2"
-                  onClick={() => openStatsModal(game)}
-                >
-                  <i className="bi bi-bar-chart-line-fill"></i>
-                </button>
+                {isEditingLeague ? (
+                  <button
+                    className="btn btn-sm btn-primary me-2"
+                    onClick={() => openStatsModal(game)}
+                  >
+                    {" "}
+                    <i className="bi bi-bar-chart-line-fill"></i>
+                  </button>
+                ) : null}
+
                 <button
                   className="btn btn-sm btn-primary me-2"
                   onClick={() => openEditModal(game)}

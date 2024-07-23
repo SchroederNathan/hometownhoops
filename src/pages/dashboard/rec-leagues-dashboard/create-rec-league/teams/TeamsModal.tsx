@@ -32,9 +32,9 @@ const TeamsModal: React.FC<TeamsModalProps> = ({
   useEffect(() => {
     if (teamToEdit) {
       setName(teamToEdit.name);
-      setCaptainFirstName(teamToEdit.captainFirstName);
-      setCaptainLastName(teamToEdit.captainLastName);
-      setPhoneNumber(teamToEdit.phoneNumber);
+      setCaptainFirstName(teamToEdit.captainFirstName || "");
+      setCaptainLastName(teamToEdit.captainLastName || "");
+      setPhoneNumber(teamToEdit.phoneNumber || "");
       setPlayers(
         teamToEdit.players.map((player) => ({
           ...player,
@@ -52,7 +52,7 @@ const TeamsModal: React.FC<TeamsModalProps> = ({
 
   const handleSubmit = () => {
     parentCallback({
-      id: teamToEdit?.id,
+      id: teamToEdit!.id,
       name,
       captainFirstName,
       captainLastName,

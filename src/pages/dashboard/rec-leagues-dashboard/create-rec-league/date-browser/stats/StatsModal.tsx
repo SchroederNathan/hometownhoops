@@ -32,11 +32,11 @@ const StatsModal: React.FC<StatsModalProps> = ({
     const handleSave = () => {
         onSave(stats, winner);
         console.log(onSave);
-        // onHide();
+        onHide();
     }
 
     return (
-        <Modal show={show} onHide={onHide} centered>
+        <Modal show={show} onHide={onHide} className='modal-lg' centered>
             <Modal.Header closeButton>
                 <Modal.Title>Edit Stats</Modal.Title>
             </Modal.Header>
