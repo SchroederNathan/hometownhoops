@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { Team } from "./TeamsCreateRecLeague";
 
 interface TeamsModalProps {
@@ -15,12 +15,19 @@ interface Player {
   name: string;
 }
 
-const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, teamToEdit }) => {
+const TeamsModal: React.FC<TeamsModalProps> = ({
+  show,
+  onHide,
+  parentCallback,
+  teamToEdit,
+}) => {
   const [name, setName] = useState("");
   const [captainFirstName, setCaptainFirstName] = useState("");
   const [captainLastName, setCaptainLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [players, setPlayers] = useState<Player[]>([{ id: uuidv4(), name: "" }]);
+  const [players, setPlayers] = useState<Player[]>([
+    { id: uuidv4(), name: "" },
+  ]);
 
   useEffect(() => {
     if (teamToEdit) {
@@ -28,7 +35,12 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
       setCaptainFirstName(teamToEdit.captainFirstName);
       setCaptainLastName(teamToEdit.captainLastName);
       setPhoneNumber(teamToEdit.phoneNumber);
-      setPlayers(teamToEdit.players.map(player => ({ ...player, id: player.id || uuidv4() })));
+      setPlayers(
+        teamToEdit.players.map((player) => ({
+          ...player,
+          id: player.id || uuidv4(),
+        }))
+      );
     } else {
       setName("");
       setCaptainFirstName("");
@@ -66,15 +78,26 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Title className="mt-4 fs-4" style={{ paddingLeft: "15px", marginBottom: "0px" }}>
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Title
+        className="mt-4 fs-4"
+        style={{ paddingLeft: "15px", marginBottom: "0px" }}
+      >
         <strong>{teamToEdit ? "Edit Team" : "Add Team"}</strong>
       </Modal.Title>
       <hr className="featurette-divider" style={{ marginBottom: "0px" }} />
       <Modal.Body>
         <form onSubmit={(event) => event.preventDefault()}>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">Team Name</label>
+            <label htmlFor="name" className="form-label">
+              Team Name
+            </label>
             <input
               type="text"
               className="form-control"
@@ -85,7 +108,9 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="firstName" className="form-label">Captain First Name</label>
+            <label htmlFor="firstName" className="form-label">
+              Captain First Name
+            </label>
             <input
               type="text"
               className="form-control"
@@ -96,7 +121,9 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="lastName" className="form-label">Captain Last Name</label>
+            <label htmlFor="lastName" className="form-label">
+              Captain Last Name
+            </label>
             <input
               type="text"
               className="form-control"
@@ -107,7 +134,9 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="phone" className="form-label">Cell Phone Number</label>
+            <label htmlFor="phone" className="form-label">
+              Cell Phone Number
+            </label>
             <input
               type="tel"
               className="form-control"
@@ -148,7 +177,11 @@ const TeamsModal: React.FC<TeamsModalProps> = ({ show, onHide, parentCallback, t
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <button type="button" onClick={handleSubmit} className="btn btn-labeled-1 btn-primary float-end create-button">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="btn btn-labeled-1 btn-primary float-end create-button"
+        >
           Submit
           <span className="btn-label-1">
             <i className="bi bi-check"></i>

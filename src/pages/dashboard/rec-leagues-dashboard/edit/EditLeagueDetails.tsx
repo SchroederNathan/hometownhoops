@@ -1,7 +1,14 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { db } from "../../../../config/firebase";
-import { doc, getDoc, updateDoc, writeBatch, collection, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  writeBatch,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import ListItem from "@tiptap/extension-list-item";
 import { useEditor, Editor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
@@ -16,7 +23,9 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import EditorComponent from "../../../../components/helpers/EditorComponent";
-import DateBrowser, { Game } from "../create-rec-league/date-browser/DateBrowser";
+import DateBrowser, {
+  Game,
+} from "../create-rec-league/date-browser/DateBrowser";
 import GameModal from "../create-rec-league/date-browser/GameModal";
 import { Team } from "../create-rec-league/teams/TeamsCreateRecLeague";
 import StatsModal from "../create-rec-league/date-browser/stats/StatsModal";
@@ -65,7 +74,7 @@ const EditLeagueDetails = () => {
           awayTeam: game.awayTeam,
           homeTeam: game.homeTeam,
           gameDate: game.gameDate,
-          winner: ""
+          winner: "",
         });
       });
 
@@ -77,14 +86,14 @@ const EditLeagueDetails = () => {
   };
 
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
-    const [hours, minutes] = time.split(':');
+    const [hours, minutes] = time.split(":");
     const newDate = new Date(selectedDate);
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
 
     const newGame = { gameDate: newDate, awayTeam, homeTeam };
     if (editingGame) {
-      setGames(games.map(g => (g === editingGame ? newGame : g)));
+      setGames(games.map((g) => (g === editingGame ? newGame : g)));
       setEditingGame(null);
     } else {
       setGames([...games, newGame]);
@@ -144,7 +153,7 @@ const EditLeagueDetails = () => {
           // Grab all games from the rec-leagues collection
           const gamesCollectionRef = collection(docRef, "games");
           const gamesSnapshot = await getDocs(gamesCollectionRef);
-          const gamesList = gamesSnapshot.docs.map(doc => {
+          const gamesList = gamesSnapshot.docs.map((doc) => {
             const gameData = doc.data() as Game;
             return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
           });
@@ -153,9 +162,8 @@ const EditLeagueDetails = () => {
           // Grab all teams from the rec-leagues collection
           const teamsCollectionRef = collection(docRef, "teams");
           const teamsSnapshot = await getDocs(teamsCollectionRef);
-          const teamsList = teamsSnapshot.docs.map(doc => doc.data() as Team);
+          const teamsList = teamsSnapshot.docs.map((doc) => doc.data() as Team);
           setTeams(teamsList);
-
         } else {
           console.log("No such document!");
         }

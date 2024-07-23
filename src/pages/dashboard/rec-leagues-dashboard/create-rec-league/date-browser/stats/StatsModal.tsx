@@ -8,8 +8,8 @@ interface StatsModalProps {
     show: boolean;
     onHide: () => void;
     game?: Game;
-    onSave: (stats: PlayerStats[], winner: string) => void;
     initialStats: PlayerStats[];
+    onSave: (updatedStats: PlayerStats[], updatedWinner: string) => Promise<void>;
     initialWinner: string;
 }
 
@@ -31,7 +31,8 @@ const StatsModal: React.FC<StatsModalProps> = ({
 
     const handleSave = () => {
         onSave(stats, winner);
-        onHide();
+        console.log(onSave);
+        // onHide();
     }
 
     return (

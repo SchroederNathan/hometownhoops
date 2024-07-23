@@ -1,9 +1,6 @@
 import "./CreateRecLeague.css";
 import ListItem from "@tiptap/extension-list-item";
-import {
-  useEditor,
-  Editor,
-} from "@tiptap/react";
+import { useEditor, Editor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -16,11 +13,7 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import EditorComponent from "../../../../components/helpers/EditorComponent";
-import React, {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useHooks } from "../../../../components/helpers/Hooks";
 import { collection, doc, writeBatch } from "firebase/firestore";
@@ -28,7 +21,7 @@ import { db } from "../../../../config/firebase";
 import DateBrowser, { Game } from "./date-browser/DateBrowser";
 import GameModal from "./date-browser/GameModal";
 import { Team } from "./teams/TeamsCreateRecLeague";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const CreateRecLeague = () => {
   const location = useLocation();
@@ -40,7 +33,10 @@ const CreateRecLeague = () => {
 
   const [startDate, setStartDate] = useState(state.startDate || "");
   const [endDate, setEndDate] = useState(state.endDate || "");
-  const [rules, setRules] = useState(state.rules || `<h1>League Information</h1><ul><li>Information here</li></ul>`);
+  const [rules, setRules] = useState(
+    state.rules ||
+      `<h1>League Information</h1><ul><li>Information here</li></ul>`
+  );
   const [teams, setTeams] = useState(state.teams || []);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [games, setGames] = useState<Game[]>(state.games || []);
@@ -52,8 +48,6 @@ const CreateRecLeague = () => {
   const { handleFiles, imageContainerRef } = useHooks();
 
   const navigate = useNavigate();
-
-
 
   const onCreate = async () => {
     try {
@@ -71,15 +65,15 @@ const CreateRecLeague = () => {
         rules: rules,
       });
 
-      teams.forEach(team => {
+      teams.forEach((team) => {
         const teamRef = doc(collection(recLeagueRef, "teams"), team.id);
         batch.set(teamRef, {
-          name: team.name
+          name: team.name,
         });
 
         playerIds[team.name] = []; // Initialize array for storing player IDs
 
-        team.players.forEach(player => {
+        team.players.forEach((player) => {
           const playerId = uuidv4(); // Generate a unique ID for each player
           const playerRef = doc(collection(teamRef, "players"), playerId);
           batch.set(playerRef, {
@@ -92,45 +86,48 @@ const CreateRecLeague = () => {
       });
 
       games.forEach((game, index) => {
-        const gameRef = doc(collection(recLeagueRef, "games"), `game${index + 1}`);
+        const gameRef = doc(
+          collection(recLeagueRef, "games"),
+          `game${index + 1}`
+        );
         batch.set(gameRef, {
           awayTeam: game.awayTeam,
           homeTeam: game.homeTeam,
           gameDate: game.gameDate,
-          winner: ""
+          winner: "",
         });
 
         const statsRef = collection(gameRef, "stats");
 
         // Set stats for players in the home team
         if (playerIds[game.homeTeam]) {
-          playerIds[game.homeTeam].forEach(playerId => {
+          playerIds[game.homeTeam].forEach((playerId) => {
             const statsDocRef = doc(statsRef, playerId);
             batch.set(statsDocRef, {
               teamName: game.homeTeam, // Store the team name in the stats document
               playerID: playerId,
               points: 0,
               assists: 0,
-              rebounds: 0
+              rebounds: 0,
             });
           });
         }
 
         // Set stats for players in the away team
         if (playerIds[game.awayTeam]) {
-          playerIds[game.awayTeam].forEach(playerId => {
+          playerIds[game.awayTeam].forEach((playerId) => {
             const statsDocRef = doc(statsRef, playerId);
             batch.set(statsDocRef, {
               teamName: game.awayTeam, // Store the team name in the stats document
               playerID: playerId,
               points: 0,
               assists: 0,
-              rebounds: 0
+              rebounds: 0,
             });
           });
         }
       });
-      console.log(playerIds)
+      console.log(playerIds);
       await batch.commit();
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
@@ -138,12 +135,25 @@ const CreateRecLeague = () => {
     }
   };
 
-  const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, tabName: string) => {
+  const preview = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    tabName: string
+  ) => {
     event.preventDefault();
 
-    if (tabName === 'teams') {
-      navigate("/dashboard/rec-leagues/create/teams", { state: { name, location: locationName, startDate, endDate, rules, teams, games } });
-    } else if (tabName === 'preview') {
+    if (tabName === "teams") {
+      navigate("/dashboard/rec-leagues/create/teams", {
+        state: {
+          name,
+          location: locationName,
+          startDate,
+          endDate,
+          rules,
+          teams,
+          games,
+        },
+      });
+    } else if (tabName === "preview") {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {
           name,
@@ -152,21 +162,21 @@ const CreateRecLeague = () => {
           endDate,
           rules,
           teams,
-          games
+          games,
         },
       });
     }
   };
 
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
-    const [hours, minutes] = time.split(':');
+    const [hours, minutes] = time.split(":");
     const newDate = new Date(selectedDate);
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
 
     const newGame = { date: newDate, awayTeam, homeTeam };
     if (editingGame) {
-      setGames(games.map(g => (g === editingGame ? newGame : g)));
+      setGames(games.map((g) => (g === editingGame ? newGame : g)));
       setEditingGame(null);
     } else {
       setGames([...games, newGame]);
@@ -175,13 +185,15 @@ const CreateRecLeague = () => {
 
   const editGame = (awayTeam: string, homeTeam: string, time: string) => {
     if (editingGame) {
-      const [hours, minutes] = time.split(':');
+      const [hours, minutes] = time.split(":");
       const newDate = new Date(selectedDate);
       newDate.setHours(parseInt(hours));
       newDate.setMinutes(parseInt(minutes));
 
       const updatedGame = { ...editingGame, date: newDate, awayTeam, homeTeam };
-      setGames(games.map(game => game === editingGame ? updatedGame : game));
+      setGames(
+        games.map((game) => (game === editingGame ? updatedGame : game))
+      );
       setEditingGame(null);
     }
   };
@@ -211,10 +223,9 @@ const CreateRecLeague = () => {
     if (editor && state.rules) {
       editor.commands.setContent(state.rules);
     }
-    teams.forEach(team => {
-      console.log(team.players)
-    })
-    
+    teams.forEach((team) => {
+      console.log(team.players);
+    });
   }, [editor, state.rules]);
 
   if (!editor) {
@@ -230,12 +241,20 @@ const CreateRecLeague = () => {
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link tab" onClick={(event) => preview(event, 'teams')} href="#">
+          <a
+            className="nav-link tab"
+            onClick={(event) => preview(event, "teams")}
+            href="#"
+          >
             Teams
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link tab" onClick={(event) => preview(event, 'preview')} href="#">
+          <a
+            className="nav-link tab"
+            onClick={(event) => preview(event, "preview")}
+            href="#"
+          >
             Preview
           </a>
         </li>
@@ -243,7 +262,9 @@ const CreateRecLeague = () => {
 
       <form onSubmit={(event) => event.preventDefault()}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label fs-5">Name</label>
+          <label htmlFor="name" className="form-label fs-5">
+            Name
+          </label>
           <input
             type="name"
             className="form-control"
@@ -254,7 +275,9 @@ const CreateRecLeague = () => {
           />
         </div>
         <div className="input-group mb-3">
-          <label htmlFor="imageUpload" className="form-label fs-5 w-100">Image</label>
+          <label htmlFor="imageUpload" className="form-label fs-5 w-100">
+            Image
+          </label>
           <input
             type="file"
             className="form-control rounded"
@@ -265,7 +288,9 @@ const CreateRecLeague = () => {
           <div ref={selectedImage} />
         </div>
         <div className="mb-3">
-          <label htmlFor="location" className="form-label fs-5">Location</label>
+          <label htmlFor="location" className="form-label fs-5">
+            Location
+          </label>
           <input
             type="name"
             className="form-control"
@@ -276,7 +301,9 @@ const CreateRecLeague = () => {
         </div>
         <div className="mb-3 row">
           <div className="w-50">
-            <label htmlFor="startDate" className="form-label fs-5">Start Date</label>
+            <label htmlFor="startDate" className="form-label fs-5">
+              Start Date
+            </label>
             <input
               id="startDate"
               className="form-control"
@@ -286,7 +313,9 @@ const CreateRecLeague = () => {
             />
           </div>
           <div className="w-50">
-            <label htmlFor="endDate" className="form-label fs-5">End Date</label>
+            <label htmlFor="endDate" className="form-label fs-5">
+              End Date
+            </label>
             <input
               id="endDate"
               className="form-control"
@@ -300,7 +329,13 @@ const CreateRecLeague = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
         <br />
-        <DateBrowser selectedDate={selectedDate} setSelectedDate={setSelectedDate} games={games} setGames={setGames} teams={teams} />
+        <DateBrowser
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          games={games}
+          setGames={setGames}
+          teams={teams}
+        />
 
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
@@ -335,7 +370,6 @@ const CreateRecLeague = () => {
         isEditing={!!editingGame}
         gameToEdit={editingGame ?? undefined}
       />
-
     </div>
   );
 };

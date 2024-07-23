@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
-import { format, addDays, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay, parse } from 'date-fns';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './DateBrowser.css'; // Ensure this file exists for custom styles
-import GameModal from './GameModal';
-import { Team } from '../teams/TeamsCreateRecLeague';
-import { collection, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
-import StatsModal from './stats/StatsModal';
-import { db } from '../../../../../config/firebase';
-import { PlayerStats } from '../../Models';
-import { useParams } from 'react-router-dom';
-
+import React, { useState } from "react";
+import {
+  format,
+  addDays,
+  startOfWeek,
+  endOfWeek,
+  addWeeks,
+  subWeeks,
+  isSameDay,
+} from "date-fns";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./DateBrowser.css"; // Ensure this file exists for custom styles
+import GameModal from "./GameModal";
+import { Team } from "../teams/TeamsCreateRecLeague";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  writeBatch,
+  Timestamp
+} from "firebase/firestore";
+import StatsModal from "./stats/StatsModal";
+import { db } from "../../../../../config/firebase";
+import { PlayerStats } from "../../Models";
+import { useParams } from "react-router-dom";
 
 export interface Game {
   gameID?: string; // Firebase document ID
@@ -26,7 +41,13 @@ interface DateBrowserProps {
   teams: Team[]; // Added teams prop
 }
 
-const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate, games, setGames, teams }) => {
+const DateBrowser: React.FC<DateBrowserProps> = ({
+  selectedDate,
+  setSelectedDate,
+  games,
+  setGames,
+  teams,
+}) => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [modalShow, setModalShow] = useState(false);
   const [statsModalShow, setStatsModalShow] = useState(false);
@@ -60,7 +81,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
   };
 
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
-    const [hours, minutes] = time.split(':');
+    const [hours, minutes] = time.split(":");
     const newDate = new Date(selectedDate);
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
@@ -70,13 +91,15 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
   };
 
   const editGame = (awayTeam: string, homeTeam: string, time: string) => {
-    const [hours, minutes] = time.split(':');
+    const [hours, minutes] = time.split(":");
     const newDate = new Date(selectedDate);
     newDate.setHours(parseInt(hours));
     newDate.setMinutes(parseInt(minutes));
 
-    const updatedGames = games.map(game =>
-      isSameDay(game.gameDate, selectedDate) && game.awayTeam === gameToEdit?.awayTeam && game.homeTeam === gameToEdit?.homeTeam
+    const updatedGames = games.map((game) =>
+      isSameDay(game.gameDate, selectedDate) &&
+      game.awayTeam === gameToEdit?.awayTeam &&
+      game.homeTeam === gameToEdit?.homeTeam
         ? { ...game, awayTeam, homeTeam, gameDate: newDate }
         : game
     );
@@ -86,13 +109,17 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
   };
 
   // Convert Firestore Timestamps to JavaScript Dates
-  const convertedGames = games.map(game => ({
+  const convertedGames = games.map((game) => ({
     ...game,
-    gameDate: game.gameDate instanceof Timestamp ? game.gameDate.toDate() : game.gameDate,
+    gameDate:
+      game.gameDate instanceof Timestamp
+        ? game.gameDate.toDate()
+        : game.gameDate,
   }));
 
-  const gamesOnSelectedDate = convertedGames.filter(game => isSameDay(game.gameDate, selectedDate));
-
+  const gamesOnSelectedDate = convertedGames.filter((game) =>
+    isSameDay(game.gameDate, selectedDate)
+  );
 
   const openEditModal = (game: Game) => {
     setIsEditing(true);
@@ -103,7 +130,12 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
   const fetchStats = async (gameId: string) => {
     try {
       // Fetch all teams and their players
-      const teamCollectionRef = collection(db, "rec-leagues", eventID!, "teams");
+      const teamCollectionRef = collection(
+        db,
+        "rec-leagues",
+        eventID!,
+        "teams"
+      );
       const teamsSnapshot = await getDocs(teamCollectionRef);
 
       // Create a map to easily find a player by playerID
@@ -153,7 +185,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setIsEditing(true);
     setGameToEdit(game);
     const fetchedStats = await fetchStats(game.gameID || ""); // Fetch stats from Firebase
-    console.log(fetchedStats)
+    console.log(fetchedStats);
     setStats(fetchedStats);
     setWinner(""); // Set the initial winner once i have this info
     setStatsModalShow(true);
@@ -166,13 +198,33 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
     setStatsModalShow(false);
   };
 
+  const handleSaveStats = async (updatedStats: PlayerStats[], updatedWinner: string) => {
+    console.log(gameToEdit?.gameID);
+    if (gameToEdit?.gameID) {
+      const gameRef = doc(db, "rec-leagues", eventID!, "games", gameToEdit.gameID);
+      const statsRef = collection(gameRef, "stats");
 
+      try {
+        const batch = writeBatch(db);
 
+        // Update each stat in the stats collection
+        updatedStats.forEach(stat => {
+          const statDocRef = doc(statsRef, stat.playerID);
+          batch.set(statDocRef, stat);
+        });
+
+        await batch.commit();
+        console.log("Stats updated successfully!");
+      } catch (error) {
+        console.error("Error updating stats: ", error);
+      }
+    }
+  };
 
   return (
     <div className="container">
       <div className="d-flex align-items-center justify-content-center flex-column">
-        <div className="mb-3 fw-bold">{format(currentWeek, 'MMMM yyyy')}</div>
+        <div className="mb-3 fw-bold">{format(currentWeek, "MMMM yyyy")}</div>
         <div className="d-flex align-items-center">
           <button className="btn btn-outline-secondary" onClick={previousWeek}>
             <i className="bi bi-chevron-left"></i>
@@ -181,11 +233,13 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
             {daysOfWeek.map((day) => (
               <div
                 key={day.toISOString()}
-                className={`text-center date-item ${isSameDay(day, selectedDate) ? 'selected' : ''}`}
+                className={`text-center date-item ${
+                  isSameDay(day, selectedDate) ? "selected" : ""
+                }`}
                 onClick={() => handleDateClick(day)}
               >
-                <div>{format(day, 'EEE')}</div>
-                <div className="fw-bold">{format(day, 'd')}</div>
+                <div>{format(day, "EEE")}</div>
+                <div className="fw-bold">{format(day, "d")}</div>
               </div>
             ))}
           </div>
@@ -198,19 +252,35 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
       <div className="mt-4">
         <ul className="list-group">
           {gamesOnSelectedDate.map((game, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+            <li
+              key={index}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
               <div>
-                <div><strong>Away Team:</strong> {game.awayTeam}</div>
-                <div><strong>Home Team:</strong> {game.homeTeam}</div>
+                <div>
+                  <strong>Away Team:</strong> {game.awayTeam}
+                </div>
+                <div>
+                  <strong>Home Team:</strong> {game.homeTeam}
+                </div>
               </div>
               <div>
-                <button className="btn btn-sm btn-primary me-2" onClick={() => openStatsModal(game)}>
+                <button
+                  className="btn btn-sm btn-primary me-2"
+                  onClick={() => openStatsModal(game)}
+                >
                   <i className="bi bi-bar-chart-line-fill"></i>
                 </button>
-                <button className="btn btn-sm btn-primary me-2" onClick={() => openEditModal(game)}>
+                <button
+                  className="btn btn-sm btn-primary me-2"
+                  onClick={() => openEditModal(game)}
+                >
                   <i className="bi bi-pencil-fill"></i>
                 </button>
-                <button className="btn btn-sm btn-danger" onClick={() => openEditModal(game)}>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => openEditModal(game)}
+                >
                   <span>
                     <i className="bi bi-x"></i>
                   </span>
@@ -233,9 +303,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({ selectedDate, setSelectedDate
         game={gameToEdit}
         initialStats={stats}
         initialWinner={winner}
-        onSave={(updatedStats, updatedWinner) => {
-          // Handle the save action, e.g., update Firebase or state
-        }}
+        onSave={handleSaveStats}
       />
 
       <GameModal
