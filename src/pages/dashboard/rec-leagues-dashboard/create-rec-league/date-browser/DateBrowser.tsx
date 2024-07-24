@@ -20,6 +20,7 @@ import {
   setDoc,
   writeBatch,
   Timestamp,
+  deleteDoc,
 } from "firebase/firestore";
 import StatsModal from "./stats/StatsModal";
 import { db } from "../../../../../config/firebase";
@@ -262,6 +263,19 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     }
   };
 
+  const deleteGame = async (game: Game) => {
+    if (game.gameID) {
+      try {
+        const gameRef = doc(db, "rec-leagues", eventID!, "games", game.gameID);
+        await deleteDoc(gameRef);
+        console.log("Game deleted successfully!");
+        getEvent();
+      } catch (error) {
+        console.error("Error deleting game: ", error);
+      }
+    }
+  };
+
   return (
     <div className="container">
       <div className="d-flex align-items-center justify-content-center flex-column">
@@ -324,7 +338,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                 </button>
                 <button
                   className="btn btn-sm btn-danger"
-                  onClick={() => openEditModal(game)}
+                  onClick={() => deleteGame(game)}
                 >
                   <span>
                     <i className="bi bi-x"></i>
