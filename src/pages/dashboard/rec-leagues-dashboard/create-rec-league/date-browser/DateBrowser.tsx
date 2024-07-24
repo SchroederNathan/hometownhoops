@@ -8,7 +8,6 @@ import {
   subWeeks,
   isSameDay,
 } from "date-fns";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./DateBrowser.css"; // Ensure this file exists for custom styles
 import GameModal from "./GameModal";
 import { Team } from "../teams/TeamsCreateRecLeague";
