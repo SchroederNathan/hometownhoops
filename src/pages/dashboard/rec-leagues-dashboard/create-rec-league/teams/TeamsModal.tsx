@@ -10,7 +10,7 @@ interface TeamsModalProps {
   teamToEdit?: Team | null;
 }
 
-interface Player {
+export interface Player {
   id: string;
   name: string;
 }

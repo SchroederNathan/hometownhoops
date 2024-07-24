@@ -21,6 +21,7 @@ import {
   writeBatch,
   Timestamp,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import StatsModal from "./stats/StatsModal";
 import { db } from "../../../../../config/firebase";
@@ -236,6 +237,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     updatedStats: PlayerStats[],
     updatedWinner: string
   ) => {
+    console.log(gameToEdit)
     if (gameToEdit?.gameID) {
       const gameRef = doc(
         db,
@@ -247,15 +249,15 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       const statsRef = collection(gameRef, "stats");
 
       try {
-        const batch = writeBatch(db);
-
-        // Update each stat in the stats collection
-        updatedStats.forEach((stat) => {
+        // Use a loop instead of batch for updateDoc
+        for (const stat of updatedStats) {
+          // console.log(stat)
           const statDocRef = doc(statsRef, stat.playerID);
-          batch.set(statDocRef, stat);
-        });
+          const statDocSnap = await getDoc(statDocRef);
+          // console.log(statDocRef)
+          await updateDoc(statDocRef, stat);
+        }
 
-        await batch.commit();
         console.log("Stats updated successfully!");
       } catch (error) {
         console.error("Error updating stats: ", error);

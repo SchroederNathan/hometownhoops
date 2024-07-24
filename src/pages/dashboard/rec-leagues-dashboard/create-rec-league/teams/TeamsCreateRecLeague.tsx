@@ -76,7 +76,6 @@ const TeamsCreateRecLeague: React.FC = () => {
     setModalShow(true);
   };
 
-  console.log(teams);
 
   return (
     <div>

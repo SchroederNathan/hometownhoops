@@ -65,6 +65,7 @@ const CreateRecLeague = () => {
         rules: rules,
       });
 
+      // Set teams in the rec-leagues collection
       teams.forEach((team) => {
         const teamRef = doc(collection(recLeagueRef, "teams"), team.id);
         batch.set(teamRef, {
@@ -86,9 +87,10 @@ const CreateRecLeague = () => {
       });
 
       games.forEach((game, index) => {
+        const newGameID = uuidv4();
         const gameRef = doc(
           collection(recLeagueRef, "games"),
-          `game${index + 1}`
+          newGameID
         );
         batch.set(gameRef, {
           awayTeam: game.awayTeam,
@@ -127,7 +129,7 @@ const CreateRecLeague = () => {
           });
         }
       });
-      console.log(playerIds);
+      
       await batch.commit();
       navigate("/dashboard/rec-leagues/");
     } catch (err) {

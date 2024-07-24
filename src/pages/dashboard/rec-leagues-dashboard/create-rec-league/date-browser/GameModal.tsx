@@ -8,6 +8,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore"; // Import Firestore functions
 import { db } from "../../../../../config/firebase"; // Adjust the import path accordingly
@@ -83,23 +84,49 @@ const GameModal: React.FC<GameModalProps> = ({
   // Add game to DB
   const addGameToDB = async () => {
     try {
-
       const [hours, minutes] = time.split(":");
       const newDate = new Date(selectedDate);
       newDate.setHours(parseInt(hours));
       newDate.setMinutes(parseInt(minutes));
 
-      const gameRef = collection(db, "rec-leagues", eventID!, "games"); // Replace "eventID" with the actual event ID
+      const gameRef = collection(db, "rec-leagues", eventID!, "games");
 
       const gameData = {
         awayTeam,
         homeTeam,
         gameDate: newDate,
+        winner: "",
       };
 
-      await addDoc(gameRef, gameData);
+      // Add the game to the database and get the document reference
+      const gameDocRef = await addDoc(gameRef, gameData);
 
-      console.log("Game added successfully!");
+      // Create the stats collection within the newly added game document
+      const statsCollectionRef = collection(gameDocRef, "stats");
+
+      // Add documents for each player in the stats collection
+      teams.forEach((team) => {
+        if (team.name === awayTeam || team.name === homeTeam) {
+          team.players.forEach((player) => {
+            // create a document reference for the stats collection that includes the player's ID
+            const statDocRef = doc(statsCollectionRef, player.id);
+
+            const playerStatDoc = {
+              playerID: player.id,
+              playerName: player.name,
+              teamName: team.name,
+              points: 0,
+              assists: 0,
+              rebounds: 0,
+            };
+            
+            console.log(playerStatDoc)
+            setDoc(statDocRef, playerStatDoc);
+          });
+        }
+      });
+
+      console.log("Game and stats added successfully!");
     } catch (error) {
       console.error("Error adding game: ", error);
     }

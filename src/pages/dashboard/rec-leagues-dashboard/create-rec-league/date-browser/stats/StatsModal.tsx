@@ -31,7 +31,6 @@ const StatsModal: React.FC<StatsModalProps> = ({
 
     const handleSave = () => {
         onSave(stats, winner);
-        console.log(onSave);
         onHide();
     }
 

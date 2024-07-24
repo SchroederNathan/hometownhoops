@@ -30,6 +30,7 @@ import GameModal from "../create-rec-league/date-browser/GameModal";
 import { Team } from "../create-rec-league/teams/TeamsCreateRecLeague";
 import StatsModal from "../create-rec-league/date-browser/stats/StatsModal";
 import { PlayerStats } from "../Models";
+import { Player } from "../create-rec-league/teams/TeamsModal";
 
 const EditLeagueDetails = () => {
   const { eventID } = useParams();
@@ -112,6 +113,7 @@ const EditLeagueDetails = () => {
 
   const handleSaveStats = (stats: PlayerStats[], winner: string) => {
     setStats(stats);
+    console.log(stats); 
     setWinner(winner);
   };
 
@@ -159,10 +161,40 @@ const EditLeagueDetails = () => {
           });
           setGames(gamesList);
 
-          // Grab all teams from the rec-leagues collection
           const teamsCollectionRef = collection(docRef, "teams");
           const teamsSnapshot = await getDocs(teamsCollectionRef);
-          const teamsList = teamsSnapshot.docs.map((doc) => doc.data() as Team);
+
+          // Create an array to hold the teams with their players
+          const teamsList: Team[] = [];
+
+          // Iterate through each team document
+          for (const teamDoc of teamsSnapshot.docs) {
+            const teamData = teamDoc.data() as Team;
+            const playersCollectionRef = collection(teamDoc.ref, "players");
+            const playersSnapshot = await getDocs(playersCollectionRef);
+
+            // Create an array to hold the players
+            const playersList: Player[] = playersSnapshot.docs.map(
+              (playerDoc) => {
+                const playerData = playerDoc.data() as Player;
+                return {
+                  id: playerDoc.id, // Add player ID to the player object
+                  ...playerData,
+                };
+              }
+            );
+
+            // Add the players array to the team object
+            const teamWithPlayers: Team = {
+              ...teamData,
+              players: playersList,
+            };
+
+            // Add the team object to the teams list
+            teamsList.push(teamWithPlayers);
+          }
+
+          // Update state with the teams list
           setTeams(teamsList);
         } else {
           console.log("No such document!");
