@@ -12,7 +12,6 @@
   }
   
   .date-item.selected {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #00000020;
   }
   
