@@ -110,6 +110,36 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setGameToEdit(undefined);
   };
 
+  const getEvent = async () => {
+    try {
+      const docRef = doc(db, "rec-leagues", eventID!);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        // Grab all games from the rec-leagues collection
+        const gamesCollectionRef = collection(docRef, "games");
+        const gamesSnapshot = await getDocs(gamesCollectionRef);
+        const gamesList = gamesSnapshot.docs.map((doc) => {
+          const gameData = doc.data() as Game;
+          return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
+        });
+        setGames(gamesList);
+
+        // // Grab all teams from the rec-leagues collection
+        // const teamsCollectionRef = collection(docRef, "teams");
+        // const teamsSnapshot = await getDocs(teamsCollectionRef);
+        // const teamsList = teamsSnapshot.docs.map((doc) => doc.data() as Team);
+        // console.log(teamsList);
+      } else {
+        console.log("No such document!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // Convert Firestore Timestamps to JavaScript Dates
   const convertedGames = games.map((game) => ({
     ...game,
@@ -198,6 +228,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setGameToEdit(undefined);
     setModalShow(false);
     setStatsModalShow(false);
+    getEvent();
   };
 
   const handleSaveStats = async (
@@ -328,6 +359,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
         addGame={addGame}
         editGame={editGame}
         isEditing={isEditing}
+        isEditingLeague={isEditingLeague}
         gameToEdit={gameToEdit}
       />
     </div>

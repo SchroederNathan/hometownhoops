@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { Team } from "../teams/TeamsCreateRecLeague"; // Adjust the import path accordingly
 import { Game } from "./DateBrowser";
+import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore"; // Import Firestore functions
+import { db } from "../../../../../config/firebase"; // Adjust the import path accordingly
+import { useParams } from "react-router-dom";
 
 interface GameModalProps {
   show: boolean;
@@ -11,6 +14,7 @@ interface GameModalProps {
   addGame: (awayTeam: string, homeTeam: string, time: string) => void;
   editGame: (awayTeam: string, homeTeam: string, time: string) => void;
   isEditing: boolean;
+  isEditingLeague: boolean;
   gameToEdit?: Game;
 }
 
@@ -22,12 +26,14 @@ const GameModal: React.FC<GameModalProps> = ({
   addGame,
   editGame,
   isEditing,
+  isEditingLeague,
   gameToEdit,
 }) => {
   const [awayTeam, setAwayTeam] = useState("");
   const [homeTeam, setHomeTeam] = useState("");
-
   const [time, setTime] = useState("");
+
+  const { eventID } = useParams();
 
   useEffect(() => {
     if (isEditing && gameToEdit) {
@@ -41,10 +47,40 @@ const GameModal: React.FC<GameModalProps> = ({
     }
   }, [isEditing, gameToEdit]);
 
+  const saveEdits = async () => {
+    if (!gameToEdit?.gameID) return;
+    try {
+      const gameRef = doc(
+        db,
+        "rec-leagues",
+        eventID!,
+        "games",
+        gameToEdit.gameID
+      );
+      const [hours, minutes] = time.split(":");
+      const updatedDate = new Date(selectedDate);
+      updatedDate.setHours(parseInt(hours));
+      updatedDate.setMinutes(parseInt(minutes));
+
+      await updateDoc(gameRef, {
+        awayTeam,
+        homeTeam,
+        gameDate: updatedDate,
+      });
+      console.log("Game updated successfully!");
+    } catch (error) {
+      console.error("Error updating game: ", error);
+    }
+  };
+
   const handleAddGame = () => {
     if (awayTeam && homeTeam && time) {
       if (isEditing) {
-        editGame(awayTeam, homeTeam, time);
+        if (!isEditingLeague) {
+          editGame(awayTeam, homeTeam, time);
+        } else {
+          saveEdits();
+        }
       } else {
         addGame(awayTeam, homeTeam, time);
       }
@@ -79,7 +115,7 @@ const GameModal: React.FC<GameModalProps> = ({
         <Form.Group className="mb-3">
           <Form.Label>Home Team</Form.Label>
           <Form.Select
-          key={homeTeam}
+            key={homeTeam}
             value={homeTeam}
             onChange={(e) => setHomeTeam(e.target.value)}
           >
@@ -105,7 +141,7 @@ const GameModal: React.FC<GameModalProps> = ({
           Close
         </Button>
         <Button variant="primary" onClick={handleAddGame}>
-          {isEditing ? "Confirm Changes" : "Add Game"}
+          {isEditing ? "Save" : "Add Game"}
         </Button>
       </Modal.Footer>
     </Modal>
