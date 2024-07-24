@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { Team } from "../teams/TeamsCreateRecLeague"; // Adjust the import path accordingly
 import { Game } from "./DateBrowser";
-import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore"; // Import Firestore functions
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore"; // Import Firestore functions
 import { db } from "../../../../../config/firebase"; // Adjust the import path accordingly
 import { useParams } from "react-router-dom";
 
@@ -73,6 +80,31 @@ const GameModal: React.FC<GameModalProps> = ({
     }
   };
 
+  // Add game to DB
+  const addGameToDB = async () => {
+    try {
+
+      const [hours, minutes] = time.split(":");
+      const newDate = new Date(selectedDate);
+      newDate.setHours(parseInt(hours));
+      newDate.setMinutes(parseInt(minutes));
+
+      const gameRef = collection(db, "rec-leagues", eventID!, "games"); // Replace "eventID" with the actual event ID
+
+      const gameData = {
+        awayTeam,
+        homeTeam,
+        gameDate: newDate,
+      };
+
+      await addDoc(gameRef, gameData);
+
+      console.log("Game added successfully!");
+    } catch (error) {
+      console.error("Error adding game: ", error);
+    }
+  };
+
   const handleAddGame = () => {
     if (awayTeam && homeTeam && time) {
       if (isEditing) {
@@ -82,7 +114,11 @@ const GameModal: React.FC<GameModalProps> = ({
           saveEdits();
         }
       } else {
-        addGame(awayTeam, homeTeam, time);
+        if (!isEditingLeague) {
+          addGame(awayTeam, homeTeam, time);
+        } else {
+          addGameToDB();
+        }
       }
       onHide();
     }
