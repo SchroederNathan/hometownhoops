@@ -196,6 +196,11 @@ const EditLeagueDetails = () => {
 
           // Update state with the teams list
           setTeams(teamsList);
+
+          // Set the content in the editor once the data is fetched
+          if (editor) {
+            editor.commands.setContent(data.rules);
+          }
         } else {
           console.log("No such document!");
         }
@@ -204,7 +209,7 @@ const EditLeagueDetails = () => {
       }
     };
     getEvent();
-  }, [eventID]);
+  }, [eventID, editor]);
 
   if (!editor) {
     return null;

@@ -119,8 +119,8 @@ const GameModal: React.FC<GameModalProps> = ({
               assists: 0,
               rebounds: 0,
             };
-            
-            console.log(playerStatDoc)
+
+            console.log(playerStatDoc);
             setDoc(statDocRef, playerStatDoc);
           });
         }
@@ -167,7 +167,9 @@ const GameModal: React.FC<GameModalProps> = ({
             value={awayTeam}
             onChange={(e) => setAwayTeam(e.target.value)}
           >
-            <option value="">Select Away Team</option>
+            <option key="default" value="">
+              Select Away Team
+            </option>
             {teams.map((team) => (
               <option key={team.id} value={team.name}>
                 {team.name}
@@ -182,7 +184,10 @@ const GameModal: React.FC<GameModalProps> = ({
             value={homeTeam}
             onChange={(e) => setHomeTeam(e.target.value)}
           >
-            <option value="">Select Home Team</option>
+            <option key="default" value="">
+              Select Home Team
+            </option>
+            
             {teams.map((team) => (
               <option key={team.id} value={team.name}>
                 {team.name}
