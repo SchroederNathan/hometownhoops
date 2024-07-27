@@ -32,6 +32,7 @@ export interface Game {
   gameDate: Date;
   awayTeam: string;
   homeTeam: string;
+  winner?: string;
 }
 
 interface DateBrowserProps {
@@ -236,7 +237,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     updatedStats: PlayerStats[],
     updatedWinner: string
   ) => {
-    console.log(gameToEdit)
+    console.log(gameToEdit);
     if (gameToEdit?.gameID) {
       const gameRef = doc(
         db,
@@ -256,6 +257,9 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
           // console.log(statDocRef)
           await updateDoc(statDocRef, stat);
         }
+
+        // Update the winner field
+        await updateDoc(gameRef, { winner: updatedWinner });
 
         console.log("Stats updated successfully!");
       } catch (error) {
@@ -314,10 +318,16 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
             >
               <div>
                 <div>
-                  <strong>Away Team:</strong> {game.awayTeam}
+                  <strong>Away Team:</strong> {game.awayTeam}{" "}
+                  {game.winner === game.awayTeam && (
+                    <span className="badge bg-success">Winner</span>
+                  )}
                 </div>
                 <div>
-                  <strong>Home Team:</strong> {game.homeTeam}
+                  <strong>Home Team:</strong> {game.homeTeam}{" "}
+                  {game.winner === game.homeTeam && (
+                    <span className="badge bg-success">Winner</span>
+                  )}
                 </div>
               </div>
               <div>
