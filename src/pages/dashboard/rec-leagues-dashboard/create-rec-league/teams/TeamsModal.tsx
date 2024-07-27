@@ -52,7 +52,7 @@ const TeamsModal: React.FC<TeamsModalProps> = ({
 
   const handleSubmit = () => {
     parentCallback({
-      id: teamToEdit!.id,
+      id: teamToEdit?.id || '',
       name,
       captainFirstName,
       captainLastName,
