@@ -25,6 +25,7 @@ const StatsGrid = ({
 }: StatsGridProps) => {
   const [homeTeamStats, setHomeTeamStats] = useState<PlayerStats[]>([]);
   const [awayTeamStats, setAwayTeamStats] = useState<PlayerStats[]>([]);
+  const [currentWinner, setCurrentWinner] = useState<string>(game?.winner || '');
 
   useEffect(() => {
     if (game) {
@@ -32,6 +33,7 @@ const StatsGrid = ({
       const awayStats = stats.filter((stat) => stat.teamName === game.awayTeam);
       setHomeTeamStats(homeStats);
       setAwayTeamStats(awayStats);
+      setCurrentWinner(game.winner!); // Set initial winner from game
     }
   }, [game, stats]);
 
@@ -45,6 +47,11 @@ const StatsGrid = ({
       setAwayTeamStats(updatedStats);
     }
     onStatsChange([...homeTeamStats, ...awayTeamStats]);
+  };
+
+  const handleWinnerChange = (value: string) => {
+    setCurrentWinner(value);
+    onWinnerChange(value);
   };
 
   // Column Definitions: Defines & controls grid columns.
@@ -65,10 +72,10 @@ const StatsGrid = ({
       <select
         className="form-select"
         id="floatingSelect"
-        value={winner}
-        onChange={(e) => onWinnerChange(e.target.value)}
+        value={currentWinner}
+        onChange={(e) => handleWinnerChange(e.target.value)}
       >
-        <option selected>Select Winner</option>
+        <option value="" disabled>Select Winner</option>
         <option key="home" value={game?.homeTeam}>
           {game?.homeTeam}
         </option>
