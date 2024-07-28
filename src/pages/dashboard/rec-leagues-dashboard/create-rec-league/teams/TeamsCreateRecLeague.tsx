@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TeamsModal from "./TeamsModal";
 import { v4 as uuidv4 } from "uuid";
-import { doc, writeBatch } from "firebase/firestore";
+import { doc, writeBatch, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../../config/firebase";
 
 interface Player {
@@ -42,6 +42,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
   const [modalShow, setModalShow] = useState(false);
   const [teams, setTeams] = useState<Team[]>(state.teams || []);
   const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
+  const [teamsToDelete, setTeamsToDelete] = useState<string[]>([]);
 
   const preview = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -103,6 +104,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
 
   const removeTeam = (id: string) => {
     setTeams(teams.filter((team) => team.id !== id));
+    setTeamsToDelete([...teamsToDelete, id]);
   };
 
   const editTeam = (team: Team) => {
@@ -124,6 +126,11 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
         });
       });
 
+      for (const teamId of teamsToDelete) {
+        const teamRef = doc(db, "rec-leagues", eventID, "teams", teamId);
+        batch.delete(teamRef);
+      }
+
       await batch.commit();
       console.log("Teams updated successfully!");
       navigate(`/dashboard/rec-leagues/${eventID}`, {
@@ -141,7 +148,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
       console.error("Error updating teams: ", error);
     }
   };
-  
+
   return (
     <div>
       {isEditing ? (
