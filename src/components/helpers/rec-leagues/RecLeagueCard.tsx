@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 // const [email, setEmail] = useState("");
 // const [phone, setPhone] = useState("");
 
-function MyVerticallyCenteredModal(props: any) {
+function RegisterModal(props: any) {
   const [teamName, setTeamName] = React.useState("");
   const [captainFirstName, setCaptainFirstName] = React.useState("");
   const [captainLastName, setCaptainLastName] = React.useState("");
@@ -25,20 +25,20 @@ function MyVerticallyCenteredModal(props: any) {
 
   const eventsCollectionRef = collection(
     db,
-    `rec-leagues/${props.eventID}/registrar`
+    `rec-leagues/${props.eventID}/teams`
   );
 
   const onCreate = async () => {
     try {
       await addDoc(eventsCollectionRef, {
-        teamName: teamName,
-        captainFirstName: captainFirstName,
-        captainLastName: captainLastName,
-        phoneNumber: phoneNumber,
+        name: teamName,
+        captainFirstName,
+        captainLastName,
+        phoneNumber,
+        players: [], // Initialize with an empty players array
       });
-      wasSuccess();
+      props.parentCallback(true);
       props.onHide();
-      // SHOW CONFIRMATION
     } catch (err) {
       alert(err);
     }
@@ -222,7 +222,7 @@ function RecLeagueCard(props: any) {
           </div>
         </div>
       </div>
-      <MyVerticallyCenteredModal
+      <RegisterModal
         eventID={props.eventID}
         show={modalShow}
         parentCallback={handleCallback}
