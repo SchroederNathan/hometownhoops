@@ -38,7 +38,7 @@ function MyVerticallyCenteredModal(props: any) {
       });
       wasSuccess();
       props.onHide();
-      // SHOW CONFIRMATIOn
+      // SHOW CONFIRMATION
     } catch (err) {
       alert(err);
     }
@@ -54,7 +54,7 @@ function MyVerticallyCenteredModal(props: any) {
       <Modal.Title
         className="mt-4 fs-4"
         style={{ paddingLeft: "15px", marginBottom: "0px" }}
-      >9
+      >
         <strong>Register Your Team</strong>
       </Modal.Title>
       <hr className="featurette-divider" style={{ marginBottom: "0px" }} />

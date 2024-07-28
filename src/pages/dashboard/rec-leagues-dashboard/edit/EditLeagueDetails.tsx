@@ -113,7 +113,7 @@ const EditLeagueDetails = () => {
 
   const handleSaveStats = (stats: PlayerStats[], winner: string) => {
     setStats(stats);
-    console.log(stats); 
+    console.log(stats);
     setWinner(winner);
   };
 
@@ -215,8 +215,42 @@ const EditLeagueDetails = () => {
     return null;
   }
 
+  const preview = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+      navigate(`/dashboard/rec-leagues/${eventID}/teams`, {
+        state: {
+          name,
+          eventID: eventID,
+          location: location,
+          startDate,
+          endDate,
+          rules,
+          teams,
+          games,
+        },
+      });
+  };
+
   return (
     <div>
+      <ul className="nav nav-tabs mb-3">
+        <li className="nav-item">
+          <a className="nav-link tab active me-1" aria-current="page" href="#">
+            Information
+          </a>
+        </li>
+        <li className="nav-item">
+          <a
+            className="nav-link tab"
+            onClick={(event) => preview(event)}
+            href="#"
+          >
+            Teams
+          </a>
+        </li>
+      </ul>
       <form onSubmit={(event) => event.preventDefault()}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label fs-5">

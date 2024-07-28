@@ -48,6 +48,8 @@ const App = () => {
 
           <Route path="rec-leagues" element={<RecLeaguesDashboard />} />
           <Route path="rec-leagues/:eventID" element={<EditLeagueDetails />} errorElement={<NotFound/>} />
+          <Route path="rec-leagues/:eventID/teams" element={<TeamsCreateRecLeague isEditing={true} />} />
+
 
           <Route path="rec-leagues/create" element={<CreateRecLeague />} />
           <Route path="rec-leagues/create/teams" element={<TeamsCreateRecLeague />} />

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import TeamsModal from './TeamsModal';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import TeamsModal from "./TeamsModal";
+import { v4 as uuidv4 } from "uuid";
 
 interface Player {
   id?: string;
@@ -20,10 +20,16 @@ export interface Team {
   losses?: number;
 }
 
-const TeamsCreateRecLeague: React.FC = () => {
+interface TeamsCreateRecLeagueProps {
+  isEditing: boolean;
+}
+
+const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
+  isEditing,
+}) => {
   const { state } = useLocation();
   const navigate = useNavigate();
-
+  const eventID = state.eventID;
   const name = state.name;
   const location = state.location;
   const startDate = state.startDate;
@@ -35,12 +41,29 @@ const TeamsCreateRecLeague: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>(state.teams || []);
   const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
 
-  const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, tabName: string) => {
+  const preview = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    tabName: string
+  ) => {
     event.preventDefault();
-    if (tabName === 'info') {
-      navigate("/dashboard/rec-leagues/create", { state: { name, location, startDate, endDate, rules, teams, games } });
-    } else if (tabName === 'preview') {
+    if (tabName === "info") {
+      navigate("/dashboard/rec-leagues/create", {
+        state: { name, location, startDate, endDate, rules, teams, games },
+      });
+    } else if (tabName === "preview") {
       navigate("/dashboard/rec-leagues/create/preview", {
+        state: {
+          name,
+          location,
+          startDate,
+          endDate,
+          rules,
+          teams,
+          games,
+        },
+      });
+    } else if (tabName === "edit") {
+      navigate(`/dashboard/rec-leagues/${eventID}`, {
         state: {
           name,
           location,
@@ -57,10 +80,19 @@ const TeamsCreateRecLeague: React.FC = () => {
   const addOrEditTeam = (team: Team) => {
     if (team.id) {
       // Edit existing team
-      setTeams(teams.map(t => (t.id === team.id ? { ...team, playerCount: team.players.length } : t)));
+      setTeams(
+        teams.map((t) =>
+          t.id === team.id ? { ...team, playerCount: team.players.length } : t
+        )
+      );
     } else {
       // Add new team
-      const newTeam = { ...team, id: uuidv4(), players: team.players.map(player => ({ ...player, id: uuidv4() })), playerCount: team.players.length };
+      const newTeam = {
+        ...team,
+        id: uuidv4(),
+        players: team.players.map((player) => ({ ...player, id: uuidv4() })),
+        playerCount: team.players.length,
+      };
       setTeams([...teams, newTeam]);
     }
     setTeamToEdit(null);
@@ -68,7 +100,7 @@ const TeamsCreateRecLeague: React.FC = () => {
   };
 
   const removeTeam = (id: string) => {
-    setTeams(teams.filter(team => team.id !== id));
+    setTeams(teams.filter((team) => team.id !== id));
   };
 
   const editTeam = (team: Team) => {
@@ -76,28 +108,58 @@ const TeamsCreateRecLeague: React.FC = () => {
     setModalShow(true);
   };
 
-
   return (
     <div>
-      <ul className="nav nav-tabs mb-3">
-        <li className="nav-item" style={{ marginRight: "2px" }}>
-          <a className="nav-link tab activeTab" onClick={(event) => preview(event, 'info')} href="#">
-            Information
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link active tab" href="#">
-            Teams
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link tab" onClick={(event) => preview(event, 'preview')} href="#">
-            Preview
-          </a>
-        </li>
-      </ul>
+      {isEditing ? (
+        <ul className="nav nav-tabs mb-3">
+          <li className="nav-item" style={{ marginRight: "2px" }}>
+            <a
+              className="nav-link tab activeTab"
+              onClick={(event) => preview(event, "edit")}
+              href="#"
+            >
+              Information
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link active tab" href="#">
+              Teams
+            </a>
+          </li>
+        </ul>
+      ) : (
+        <ul className="nav nav-tabs mb-3">
+          <li className="nav-item" style={{ marginRight: "2px" }}>
+            <a
+              className="nav-link tab activeTab"
+              onClick={(event) => preview(event, "info")}
+              href="#"
+            >
+              Information
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link active tab" href="#">
+              Teams
+            </a>
+          </li>
+          <li className="nav-item">
+            <a
+              className="nav-link tab"
+              onClick={(event) => preview(event, "preview")}
+              href="#"
+            >
+              Preview
+            </a>
+          </li>
+        </ul>
+      )}
 
-      <button type="button" className="btn btn-teams" onClick={() => setModalShow(true)}>
+      <button
+        type="button"
+        className="btn btn-teams"
+        onClick={() => setModalShow(true)}
+      >
         <span className="btn-label-teams">
           <i className="bi bi-plus"></i>
         </span>
@@ -116,24 +178,38 @@ const TeamsCreateRecLeague: React.FC = () => {
         <thead>
           <tr>
             <th scope="col">Team Name</th>
-            <th scope="col" className='text-center'>Player Count</th>
-            <th scope="col" className='text-center'>Edit Players</th>
-            <th scope="col" className='text-center'>Remove Team</th>
+            <th scope="col" className="text-center">
+              Player Count
+            </th>
+            <th scope="col" className="text-center">
+              Edit Players
+            </th>
+            <th scope="col" className="text-center">
+              Remove Team
+            </th>
           </tr>
         </thead>
         <tbody>
           {teams.map((team) => (
             <tr key={team.id}>
               <td>{team.name}</td>
-              <td className='text-center'>{team.playerCount}</td>
+              <td className="text-center">{team.playerCount}</td>
               <td scope="row" className="text-center">
                 <div className="d-flex justify-content-center">
-                  <button className="btn btn-primary" onClick={() => editTeam(team)}>Edit Team</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => editTeam(team)}
+                  >
+                    Edit Team
+                  </button>
                 </div>
               </td>
               <td scope="row" className="text-center">
                 <div className="d-flex justify-content-center">
-                  <button className="btn btn-danger" onClick={() => removeTeam(team.id)}>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => removeTeam(team.id)}
+                  >
                     <span>
                       <i className="bi bi-x"></i>
                     </span>
@@ -144,6 +220,18 @@ const TeamsCreateRecLeague: React.FC = () => {
           ))}
         </tbody>
       </table>
+      {isEditing ? (
+        <button
+          type="button"
+          className="btn btn-labeled-1 btn-primary float-end create-button mt-3"
+          // onClick={onUpdate}
+        >
+          Update
+          <span className="btn-label-1">
+            <i className="bi bi-check"></i>
+          </span>
+        </button>
+      ) : null}
     </div>
   );
 };
