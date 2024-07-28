@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TeamsModal from "./TeamsModal";
 import { v4 as uuidv4 } from "uuid";
@@ -108,6 +108,13 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
     setModalShow(true);
   };
 
+  const onUpdate = () => {
+  };
+
+  useEffect(() => {
+    console.log(teams);
+  }, [teams]);
+
   return (
     <div>
       {isEditing ? (
@@ -192,8 +199,9 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
         <tbody>
           {teams.map((team) => (
             <tr key={team.id}>
+              
               <td>{team.name}</td>
-              <td className="text-center">{team.playerCount}</td>
+              <td className="text-center">{team.players.length}</td>
               <td scope="row" className="text-center">
                 <div className="d-flex justify-content-center">
                   <button
@@ -224,7 +232,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
         <button
           type="button"
           className="btn btn-labeled-1 btn-primary float-end create-button mt-3"
-          // onClick={onUpdate}
+          onClick={onUpdate}
         >
           Update
           <span className="btn-label-1">
