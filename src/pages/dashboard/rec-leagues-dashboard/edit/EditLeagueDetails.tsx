@@ -211,7 +211,7 @@ const EditLeagueDetails = () => {
 
     };
     getEvent();
-  }, [eventID, editor]);
+  }, [eventID, editor, games]);
 
   if (!editor) {
     return null;
