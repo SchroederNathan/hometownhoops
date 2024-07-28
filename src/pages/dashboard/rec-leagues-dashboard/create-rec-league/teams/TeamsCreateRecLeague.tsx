@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TeamsModal from "./TeamsModal";
 import { v4 as uuidv4 } from "uuid";
+import { doc, writeBatch } from "firebase/firestore";
+import { db } from "../../../../../config/firebase";
 
 interface Player {
   id?: string;
@@ -108,13 +110,38 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
     setModalShow(true);
   };
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
+    try {
+      const batch = writeBatch(db);
+
+      teams.forEach((team) => {
+        const teamRef = doc(db, "rec-leagues", eventID, "teams", team.id);
+        batch.set(teamRef, team);
+
+        team.players.forEach((player) => {
+          const playerRef = doc(teamRef, "players", player.id!);
+          batch.set(playerRef, player);
+        });
+      });
+
+      await batch.commit();
+      console.log("Teams updated successfully!");
+      navigate(`/dashboard/rec-leagues/${eventID}`, {
+        state: {
+          name,
+          location,
+          startDate,
+          endDate,
+          rules,
+          teams,
+          games,
+        },
+      });
+    } catch (error) {
+      console.error("Error updating teams: ", error);
+    }
   };
-
-  useEffect(() => {
-    console.log(teams);
-  }, [teams]);
-
+  
   return (
     <div>
       {isEditing ? (
@@ -199,7 +226,6 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
         <tbody>
           {teams.map((team) => (
             <tr key={team.id}>
-              
               <td>{team.name}</td>
               <td className="text-center">{team.players.length}</td>
               <td scope="row" className="text-center">

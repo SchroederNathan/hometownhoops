@@ -186,6 +186,7 @@ const EditLeagueDetails = () => {
 
             // Add the players array to the team object
             const teamWithPlayers: Team = {
+              id: teamDoc.id, // Add team ID to the team object
               ...teamData,
               players: playersList,
             };
@@ -207,6 +208,7 @@ const EditLeagueDetails = () => {
       } catch (err) {
         console.log(err);
       }
+
     };
     getEvent();
   }, [eventID, editor]);
@@ -215,22 +217,20 @@ const EditLeagueDetails = () => {
     return null;
   }
 
-  const preview = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
+  const preview = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
-      navigate(`/dashboard/rec-leagues/${eventID}/teams`, {
-        state: {
-          name,
-          eventID: eventID,
-          location: location,
-          startDate,
-          endDate,
-          rules,
-          teams,
-          games,
-        },
-      });
+    navigate(`/dashboard/rec-leagues/${eventID}/teams`, {
+      state: {
+        name,
+        eventID: eventID,
+        location: location,
+        startDate,
+        endDate,
+        rules,
+        teams,
+        games,
+      },
+    });
   };
 
   return (
