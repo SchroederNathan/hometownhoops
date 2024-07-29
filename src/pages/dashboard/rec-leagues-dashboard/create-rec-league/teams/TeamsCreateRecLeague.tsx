@@ -34,6 +34,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
   const eventID = state.eventID;
   const name = state.name;
   const location = state.location;
+  const deadline = state.deadline;
   const startDate = state.startDate;
   const endDate = state.endDate;
   const rules = state.rules;
@@ -51,13 +52,14 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
     event.preventDefault();
     if (tabName === "info") {
       navigate("/dashboard/rec-leagues/create", {
-        state: { name, location, startDate, endDate, rules, teams, games },
+        state: { name, location, deadline, startDate, endDate, rules, teams, games },
       });
     } else if (tabName === "preview") {
       navigate("/dashboard/rec-leagues/create/preview", {
         state: {
           name,
           location,
+          deadline,
           startDate,
           endDate,
           rules,
@@ -70,6 +72,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
         state: {
           name,
           location,
+          deadline,
           startDate,
           endDate,
           rules,
@@ -137,6 +140,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
         state: {
           name,
           location,
+          deadline,
           startDate,
           endDate,
           rules,

@@ -30,7 +30,6 @@ const CreateRecLeague = () => {
   const [name, setName] = useState(state.name || "");
   const [locationName, setLocationName] = useState(state.location || "");
   const [deadline, setDeadline] = useState(state.deadline || "");
-
   const [startDate, setStartDate] = useState(state.startDate || "");
   const [endDate, setEndDate] = useState(state.endDate || "");
   const [rules, setRules] = useState(
@@ -88,10 +87,7 @@ const CreateRecLeague = () => {
 
       games.forEach((game, index) => {
         const newGameID = uuidv4();
-        const gameRef = doc(
-          collection(recLeagueRef, "games"),
-          newGameID
-        );
+        const gameRef = doc(collection(recLeagueRef, "games"), newGameID);
         batch.set(gameRef, {
           awayTeam: game.awayTeam,
           homeTeam: game.homeTeam,
@@ -129,7 +125,7 @@ const CreateRecLeague = () => {
           });
         }
       });
-      
+
       await batch.commit();
       navigate("/dashboard/rec-leagues/");
     } catch (err) {
@@ -148,6 +144,7 @@ const CreateRecLeague = () => {
         state: {
           name,
           location: locationName,
+          deadline,
           startDate,
           endDate,
           rules,
@@ -160,6 +157,7 @@ const CreateRecLeague = () => {
         state: {
           name,
           location: locationName,
+          deadline,
           startDate,
           endDate,
           rules,
@@ -299,6 +297,18 @@ const CreateRecLeague = () => {
             id="location"
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
+          />
+        </div>
+        <div className="w-100 mb-3">
+          <label htmlFor="deadline" className="form-label fs-5">
+            Registration Deadline
+          </label>
+          <input
+            id="mb"
+            className="form-control"
+            type="date"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
           />
         </div>
         <div className="mb-3 row">
