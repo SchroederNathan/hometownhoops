@@ -15,6 +15,18 @@
     overflow-x: hidden;
 }
 
+.navbar-toggler {
+    border: none;
+    background: transparent;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+
+  
+  
+
 @media (max-width: 990px) {
     .container-fluid{ 
         max-width: 100%;

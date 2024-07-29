@@ -1,9 +1,6 @@
-import React from 'react'
-import Nav from './components/header/Nav'
 import Footer from './components/footer/Footer'
 import { Navigate, Route, Routes, redirect } from 'react-router-dom'
 import Home from './pages/home/Home'
-import Auth from './pages/auth/Auth'
 import SingUp from './auth/SingUp'
 import Login from './auth/Login'
 import RecLeagues from './pages/rec-leagues/RecLeagues'
@@ -23,13 +20,14 @@ import PreviewCreateTournament from './pages/dashboard/tournaments-dashboard/pre
 import LeagueDetails from './pages/rec-leagues/details/LeagueDetails'
 import EditLeagueDetails from './pages/dashboard/rec-leagues-dashboard/edit/EditLeagueDetails'
 import TeamsCreateRecLeague from './pages/dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague'
+import NavBar from './components/header/Nav'
 
 
 
 const App = () => {
   return (
     <div >
-      <Nav />
+      <NavBar />
       <Routes>
         <Route path='/' element={<Home />} errorElement={<NotFound />} />
         <Route path='/login' element={<Login />} errorElement={<NotFound />} />
