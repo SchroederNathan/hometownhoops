@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   format,
   addDays,
@@ -83,6 +83,10 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
   };
+
+  useEffect(() => {
+    getEvent();
+  }, [games]);
 
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
     const [hours, minutes] = time.split(":");

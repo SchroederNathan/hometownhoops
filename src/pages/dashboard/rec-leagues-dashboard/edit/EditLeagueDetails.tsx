@@ -37,6 +37,7 @@ const EditLeagueDetails = () => {
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [deadline, setDeadline] = useState(Date);
   const [startDate, setStartDate] = useState(Date);
   const [endDate, setEndDate] = useState(Date);
   const [rules, setRules] = useState("");
@@ -61,6 +62,7 @@ const EditLeagueDetails = () => {
       batch.update(updateRef, {
         name: name,
         location: location,
+        deadline: deadline,
         startDate: startDate,
         endDate: endDate,
         imgUrl: "none",
@@ -69,13 +71,16 @@ const EditLeagueDetails = () => {
 
       const gamesRef = collection(updateRef, "games");
 
-      games.forEach((game, index) => {
-        const gameRef = doc(gamesRef, `game${index + 1}`);
+      games.forEach((game) => {
+        // Use existing game ID if it exists, otherwise generate a new one
+        const gameRef = game.gameID
+          ? doc(gamesRef, game.gameID)
+          : doc(gamesRef);
         batch.set(gameRef, {
           awayTeam: game.awayTeam,
           homeTeam: game.homeTeam,
           gameDate: game.gameDate,
-          winner: "",
+          winner: game.winner || "", // Use existing winner or default to empty string
         });
       });
 
@@ -138,80 +143,81 @@ const EditLeagueDetails = () => {
     content: rules,
   }) as Editor;
 
-  useEffect(() => {
-    const getEvent = async () => {
-      try {
-        const docRef = doc(db, "rec-leagues", eventID!);
-        const docSnap = await getDoc(docRef);
+  const getEvent = async () => {
+    try {
+      const docRef = doc(db, "rec-leagues", eventID!);
+      const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setName(data.name);
-          setStartDate(data.startDate);
-          setEndDate(data.endDate);
-          setLocation(data.location);
-          setRules(data.rules);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setName(data.name);
+        setDeadline(data.deadline);
+        setStartDate(data.startDate);
+        setEndDate(data.endDate);
+        setLocation(data.location);
+        setRules(data.rules);
 
-          // Grab all games from the rec-leagues collection
-          const gamesCollectionRef = collection(docRef, "games");
-          const gamesSnapshot = await getDocs(gamesCollectionRef);
-          const gamesList = gamesSnapshot.docs.map((doc) => {
-            const gameData = doc.data() as Game;
-            return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
-          });
-          setGames(gamesList);
+        // Grab all games from the rec-leagues collection
+        const gamesCollectionRef = collection(docRef, "games");
+        const gamesSnapshot = await getDocs(gamesCollectionRef);
+        const gamesList = gamesSnapshot.docs.map((doc) => {
+          const gameData = doc.data() as Game;
+          return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
+        });
+        setGames(gamesList);
 
-          const teamsCollectionRef = collection(docRef, "teams");
-          const teamsSnapshot = await getDocs(teamsCollectionRef);
+        const teamsCollectionRef = collection(docRef, "teams");
+        const teamsSnapshot = await getDocs(teamsCollectionRef);
 
-          // Create an array to hold the teams with their players
-          const teamsList: Team[] = [];
+        // Create an array to hold the teams with their players
+        const teamsList: Team[] = [];
 
-          // Iterate through each team document
-          for (const teamDoc of teamsSnapshot.docs) {
-            const teamData = teamDoc.data() as Team;
-            const playersCollectionRef = collection(teamDoc.ref, "players");
-            const playersSnapshot = await getDocs(playersCollectionRef);
+        // Iterate through each team document
+        for (const teamDoc of teamsSnapshot.docs) {
+          const teamData = teamDoc.data() as Team;
+          const playersCollectionRef = collection(teamDoc.ref, "players");
+          const playersSnapshot = await getDocs(playersCollectionRef);
 
-            // Create an array to hold the players
-            const playersList: Player[] = playersSnapshot.docs.map(
-              (playerDoc) => {
-                const playerData = playerDoc.data() as Player;
-                return {
-                  id: playerDoc.id, // Add player ID to the player object
-                  ...playerData,
-                };
-              }
-            );
+          // Create an array to hold the players
+          const playersList: Player[] = playersSnapshot.docs.map(
+            (playerDoc) => {
+              const playerData = playerDoc.data() as Player;
+              return {
+                id: playerDoc.id, // Add player ID to the player object
+                ...playerData,
+              };
+            }
+          );
 
-            // Add the players array to the team object
-            const teamWithPlayers: Team = {
-              id: teamDoc.id, // Add team ID to the team object
-              ...teamData,
-              players: playersList,
-            };
+          // Add the players array to the team object
+          const teamWithPlayers: Team = {
+            id: teamDoc.id, // Add team ID to the team object
+            ...teamData,
+            players: playersList,
+          };
 
-            // Add the team object to the teams list
-            teamsList.push(teamWithPlayers);
-          }
-
-          // Update state with the teams list
-          setTeams(teamsList);
-
-          // Set the content in the editor once the data is fetched
-          if (editor) {
-            editor.commands.setContent(data.rules);
-          }
-        } else {
-          console.log("No such document!");
+          // Add the team object to the teams list
+          teamsList.push(teamWithPlayers);
         }
-      } catch (err) {
-        console.log(err);
-      }
 
-    };
+        // Update state with the teams list
+        setTeams(teamsList);
+
+        // Set the content in the editor once the data is fetched
+        if (editor) {
+          editor.commands.setContent(data.rules);
+        }
+      } else {
+        console.log("No such document!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
     getEvent();
-  }, [eventID, editor, games]);
+  }, [eventID, editor]);
 
   if (!editor) {
     return null;
@@ -287,6 +293,18 @@ const EditLeagueDetails = () => {
             id="location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
+        <div className="w-100 mb-3">
+          <label htmlFor="deadline" className="form-label fs-5">
+            Registration Deadline
+          </label>
+          <input
+            id="mb"
+            className="form-control"
+            type="date"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
           />
         </div>
         <div className="mb-3 row">
