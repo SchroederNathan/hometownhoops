@@ -16,15 +16,8 @@
     margin: auto;
 }
 
-.main-container {
-    margin-top: 120px;
-}
-
 @media (max-width: 990px) {
     .container-fluid{ 
         max-width: 100%;
-    }
-    .main-container {
-        margin-top: 135px;
     }
 }

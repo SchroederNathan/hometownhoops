@@ -50,7 +50,7 @@ const NavBar = () => {
     <>
       <Navbar
         expand="lg"
-        className="bg-body-tertiary mb-3"
+        className="bg-body-tertiary shadow-sm"
         expanded={!isNavbarCollapsed}
       >
         <Container fluid>

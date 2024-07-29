@@ -87,7 +87,7 @@ const RecLeagues = () => {
       </div>
       {openRegistrationLeagues.length > 0 ? (
         <>
-          showEvents("Open Registration", openRegistrationLeagues)
+          {showEvents("Open Registration", openRegistrationLeagues)}
           <div
             className="mb-3"
             style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
@@ -98,7 +98,7 @@ const RecLeagues = () => {
       ) : null}
       {activeLeagues.length > 0 ? (
         <>
-          showEvents("Active Leagues", activeLeagues)
+          {showEvents("Active Leagues", activeLeagues)}
           <div
             className="mb-3"
             style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
@@ -109,7 +109,7 @@ const RecLeagues = () => {
       ) : null}
       {pastLeagues.length > 0 ? (
         <>
-          showEvents("Past Leagues", pastLeagues)
+          {showEvents("Past Leagues", pastLeagues)}
           <div
             className="mb-3"
             style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}

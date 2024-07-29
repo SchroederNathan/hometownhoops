@@ -1,6 +1,5 @@
 .main-div {
     overflow-x: hidden;
-    margin-top: 120px;
 }
 
 .active {
@@ -23,7 +22,4 @@
 }
 
 @media (max-width: 990px) {
-    .main-div {
-        margin-top: 135px;
-    }
 }
