@@ -344,6 +344,8 @@ const EditLeagueDetails = () => {
           games={games}
           setGames={setGames}
           teams={teams}
+          startDate={new Date(startDate)}
+          endDate={new Date(endDate)}
         />
 
         <Link to="../travel-teams">

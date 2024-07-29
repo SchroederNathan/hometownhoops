@@ -1,17 +1,30 @@
 .date-item {
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-    width: 50px; /* Fixed width for all date items */
-    text-align: center;
-  }
-  
-  .date-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .date-item.selected {
-    background-color: #00000020;
-  }
-  
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  width: 50px; /* Fixed width for all date items */
+  text-align: center;
+}
+
+.date-item:hover {
+  background-color: #f0f0f0;
+}
+
+.date-item.selected {
+  background-color: #00000020;
+}
+
+.date-item {
+  position: relative;
+}
+
+.date-item .game-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: orange;
+  border-radius: 50%;
+}

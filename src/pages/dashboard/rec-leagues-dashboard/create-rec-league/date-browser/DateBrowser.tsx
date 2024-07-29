@@ -7,6 +7,7 @@ import {
   addWeeks,
   subWeeks,
   isSameDay,
+  isWithinInterval,
 } from "date-fns";
 import "./DateBrowser.css"; // Ensure this file exists for custom styles
 import GameModal from "./GameModal";
@@ -42,6 +43,8 @@ interface DateBrowserProps {
   games: Game[];
   setGames: (games: Game[]) => void;
   teams: Team[]; // Added teams prop
+  startDate: Date;
+  endDate: Date;
 }
 
 const DateBrowser: React.FC<DateBrowserProps> = ({
@@ -51,8 +54,10 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
   games,
   setGames,
   teams,
+  startDate,
+  endDate,
 }) => {
-  const [currentWeek, setCurrentWeek] = useState(new Date());
+  const [currentWeek, setCurrentWeek] = useState(startDate);
   const [modalShow, setModalShow] = useState(false);
   const [statsModalShow, setStatsModalShow] = useState(false);
 
@@ -69,15 +74,23 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
 
   const daysOfWeek = [];
   for (let i = 0; i < 7; i++) {
-    daysOfWeek.push(addDays(startOfCurrentWeek, i));
+    const day = addDays(startOfCurrentWeek, i);
+    if (day >= startDate && day <= endDate) {
+      daysOfWeek.push(day);
+    }
   }
-
   const previousWeek = () => {
-    setCurrentWeek(subWeeks(currentWeek, 1));
+    const newWeek = subWeeks(currentWeek, 1);
+    if (endOfWeek(newWeek) >= startDate) {
+      setCurrentWeek(newWeek);
+    }
   };
 
   const nextWeek = () => {
-    setCurrentWeek(addWeeks(currentWeek, 1));
+    const newWeek = addWeeks(currentWeek, 1);
+    if (startOfWeek(newWeek) <= endDate) {
+      setCurrentWeek(newWeek);
+    }
   };
 
   const handleDateClick = (day: Date) => {
@@ -85,8 +98,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
   };
 
   useEffect(() => {
-    getEvent();
-  }, [games]);
+  }, []);
 
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
     const [hours, minutes] = time.split(":");
@@ -123,6 +135,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
 
       if (docSnap.exists()) {
         const data = docSnap.data();
+        console.log(data);
 
         // Grab all games from the rec-leagues collection
         const gamesCollectionRef = collection(docRef, "games");
@@ -132,12 +145,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
           return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
         });
         setGames(gamesList);
-
-        // // Grab all teams from the rec-leagues collection
-        // const teamsCollectionRef = collection(docRef, "teams");
-        // const teamsSnapshot = await getDocs(teamsCollectionRef);
-        // const teamsList = teamsSnapshot.docs.map((doc) => doc.data() as Team);
-        // console.log(teamsList);
       } else {
         console.log("No such document!");
       }
@@ -145,6 +152,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       console.log(err);
     }
   };
+
 
   // Convert Firestore Timestamps to JavaScript Dates
   const convertedGames = games.map((game) => ({
@@ -255,10 +263,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       try {
         // Use a loop instead of batch for updateDoc
         for (const stat of updatedStats) {
-          // console.log(stat)
           const statDocRef = doc(statsRef, stat.playerID);
-          const statDocSnap = await getDoc(statDocRef);
-          // console.log(statDocRef)
           await updateDoc(statDocRef, stat);
         }
 
@@ -290,9 +295,14 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       <div className="d-flex align-items-center justify-content-center flex-column">
         <div className="mb-3 fw-bold">{format(currentWeek, "MMMM yyyy")}</div>
         <div className="d-flex align-items-center">
-          <button className="btn btn-outline-secondary" onClick={previousWeek}>
-            <i className="bi bi-chevron-left"></i>
-          </button>
+          {startOfCurrentWeek > startDate && (
+            <button
+              className="btn btn-outline-secondary"
+              onClick={previousWeek}
+            >
+              <i className="bi bi-chevron-left"></i>
+            </button>
+          )}
           <div className="d-flex justify-content-between w-100 mx-3">
             {daysOfWeek.map((day) => (
               <div
@@ -302,14 +312,20 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                 }`}
                 onClick={() => handleDateClick(day)}
               >
+                {games.some((game) => isSameDay(game.gameDate, day)) && (
+                  <div className="game-indicator"></div>
+                )}
                 <div>{format(day, "EEE")}</div>
                 <div className="fw-bold">{format(day, "d")}</div>
               </div>
             ))}
           </div>
-          <button className="btn btn-outline-secondary" onClick={nextWeek}>
-            <i className="bi bi-chevron-right"></i>
-          </button>
+
+          {endOfCurrentWeek < endDate && (
+            <button className="btn btn-outline-secondary" onClick={nextWeek}>
+              <i className="bi bi-chevron-right"></i>
+            </button>
+          )}
         </div>
       </div>
 
