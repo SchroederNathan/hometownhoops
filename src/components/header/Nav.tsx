@@ -5,7 +5,13 @@ import { auth } from "../../config/firebase";
 import { useState, useEffect } from "react";
 import logo from "../../assets/hometownhoopslogo.png";
 import { CloseButton, Container, Nav, Navbar } from "react-bootstrap";
-import { ArrowRight, DoorOpen, List, Opencollective, X } from 'react-bootstrap-icons';
+import {
+  ArrowRight,
+  DoorOpen,
+  List,
+  Opencollective,
+  X,
+} from "react-bootstrap-icons";
 
 const NavBar = () => {
   const [loginStatus, setLoginStatus] = useState("");
@@ -48,17 +54,20 @@ const NavBar = () => {
         expanded={!isNavbarCollapsed}
       >
         <Container fluid>
-          <Navbar.Brand
-            href="#"
-            className={`navbar-brand ${!isNavbarCollapsed ? "center-logo" : ""}`}
-          >
-            <img
-              src={logo}
-              alt="Logo"
-              width="120"
-              className="d-inline-block align-text-top"
-            />
-          </Navbar.Brand>
+          <Link className="nav-link" to="/">
+            <Navbar.Brand
+              className={`navbar-brand ${
+                !isNavbarCollapsed ? "center-logo" : ""
+              }`}
+            >
+              <img
+                src={logo}
+                alt="Logo"
+                width="120"
+                className="d-inline-block align-text-top p-1"
+              />
+            </Navbar.Brand>
+          </Link>
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             onClick={handleNavbarToggle}
@@ -66,7 +75,7 @@ const NavBar = () => {
             {isNavbarCollapsed ? (
               <Navbar.Toggle />
             ) : (
-              <CloseButton className="me-2"/>
+              <CloseButton className="me-2" />
             )}
           </Navbar.Toggle>
           <Navbar.Collapse id="basic-navbar-nav">
