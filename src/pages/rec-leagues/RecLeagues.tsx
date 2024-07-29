@@ -119,6 +119,10 @@ const RecLeagues = () => {
         </>
       ) : null}
 
+      {activeLeagues.length <= 0 && openRegistrationLeagues.length <= 0 && pastLeagues.length <= 0 ? (
+        <NoEvents title="No Events" />
+      ) : null}
+
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   );
