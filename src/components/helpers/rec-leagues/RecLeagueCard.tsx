@@ -3,13 +3,8 @@ import { Button, Modal } from "react-bootstrap";
 import "../../../assets/tournaments.jpg";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
-// const [parentFirstName, setParentFirstName] = useState("");
-// const [parentLastName, setParentLastName] = useState("");
-// const [email, setEmail] = useState("");
-// const [phone, setPhone] = useState("");
 
 function RegisterModal(props: any) {
   const [teamName, setTeamName] = React.useState("");
@@ -132,10 +127,8 @@ function RecLeagueCard(props: any) {
   const [modalShow, setModalShow] = React.useState(false);
   const [wasSuccess, setWasSuccess] = React.useState(false);
 
-  // Callback function to handle data received from the
-  //child component
+  // Callback function to handle data received from the child component
   const handleCallback = (childData: any) => {
-    // Update the name in the component's state
     setWasSuccess(childData);
     if (wasSuccess) {
       toast.success("Successfully Registered!");
@@ -144,9 +137,10 @@ function RecLeagueCard(props: any) {
   };
 
   function checkIfOpen(time1: string, time2: Date) {
-    // alert(new Date(time1) < new Date(time2))
     return new Date(time1) < new Date(time2); // true if time2 is later
   }
+
+  const isBeforeDeadline = checkIfOpen(props.deadline, new Date());
 
   return (
     <div>
@@ -154,30 +148,27 @@ function RecLeagueCard(props: any) {
         <div className="row g-0">
           <div className="col-md-8">
             <div className="card-body">
-              {checkIfOpen(props.endDate, new Date()) ? (
-                <h2 className="card-title mb-1">
-                  <strong>{props.name}</strong>{" "}
-                  <span className="badge text-bg-primary fs-6 align-middle">
-                    Closed
-                  </span>
-                </h2>
-              ) : (
-                <h2 className="card-title mb-1">
-                  <strong>{props.name}</strong>{" "}
-                  <span className="badge text-bg-primary fs-6 align-middle">
-                    Open
-                  </span>
-                </h2>
-              )}
+              <h2 className="card-title mb-1">
+                <strong>{props.name}</strong>{" "}
+                <span className="badge text-bg-primary fs-6 align-middle">
+                  {isBeforeDeadline ? "Open" : "Closed"}
+                </span>
+              </h2>
               <span style={{ lineHeight: "40px" }}>
                 <i
                   className="bi bi-calendar d-inline "
                   style={{ paddingRight: "10px" }}
                 ></i>
                 <p className="d-inline ">
-                  {props.startDate}
-                  <i className="bi bi-arrow-right-short"></i>
-                  {props.endDate}
+                  {isBeforeDeadline ? (
+                    props.deadline
+                  ) : props.startDate && props.endDate ? (
+                    <>
+                      {props.startDate}
+                      <i className="bi bi-arrow-right-short"></i>
+                      {props.endDate}
+                    </>
+                  ) : null}
                 </p>
               </span>
               <br />
@@ -197,18 +188,17 @@ function RecLeagueCard(props: any) {
                 <Link to={props.eventID}>
                   <a className="btn btn-primary w-100">Edit League</a>
                 </Link>
-              ) : checkIfOpen(props.endDate, new Date()) ? (
-                // Make it navigate to seperate page
-                <Link to={`/rec-leagues/${props.eventID}`}>
-                  <a className="btn btn-primary w-100">View Details</a>
-                </Link>
-              ) : (
+              ) : isBeforeDeadline ? (
                 <a
                   onClick={() => setModalShow(true)}
                   className="btn btn-primary w-100"
                 >
                   Register Your Team
                 </a>
+              ) : (
+                <Link to={`/rec-leagues/${props.eventID}`}>
+                  <a className="btn btn-primary w-100">View Details</a>
+                </Link>
               )}
             </div>
           </div>
@@ -218,7 +208,6 @@ function RecLeagueCard(props: any) {
               className="img-fluid h-100 object-fit-cover  "
               alt="..."
             />
-            {/* <p className="card-text"><small className="text-body-secondary position-absolute bottom-0 end-0">Posted 3 mins ago</small></p> */}
           </div>
         </div>
       </div>
