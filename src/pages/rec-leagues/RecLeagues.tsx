@@ -48,23 +48,21 @@ const RecLeagues = () => {
   const showEvents = (title: string, leagues: any[]) => (
     <div className="mt-3">
       <span className="h1 d-block mb-3">{title}</span>
-      {leagues.length === 0 ? (
-        <NoEvents title="No Events" />
-      ) : (
-        leagues.map((event: any) => (
-          <RecLeagueCard
-            key={event.id}
-            name={event.name}
-            location={event.location}
-            rules={event.rules}
-            imgSrc={event.imgUrl}
-            deadline={event.deadline}
-            startDate={event.startDate}
-            endDate={event.endDate}
-            eventID={event.id}
-          />
-        ))
-      )}
+      {leagues.length === 0
+        ? null
+        : leagues.map((event: any) => (
+            <RecLeagueCard
+              key={event.id}
+              name={event.name}
+              location={event.location}
+              rules={event.rules}
+              imgSrc={event.imgUrl}
+              deadline={event.deadline}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              eventID={event.id}
+            />
+          ))}
     </div>
   );
 
@@ -87,21 +85,40 @@ const RecLeagues = () => {
       >
         <hr className="featurette-divider" />
       </div>
-      {showEvents("Open Registration", openRegistrationLeagues)}
-      <div
-        className="mb-3"
-        style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
-      >
-        <hr className="featurette-divider" />
-      </div>
-      {showEvents("Active Leagues", activeLeagues)}
-      <div
-        className="mb-3"
-        style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
-      >
-        <hr className="featurette-divider" />
-      </div>
-      {showEvents("Past Leagues", pastLeagues)}
+      {openRegistrationLeagues.length > 0 ? (
+        <>
+          showEvents("Open Registration", openRegistrationLeagues)
+          <div
+            className="mb-3"
+            style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+          >
+            <hr className="featurette-divider" />
+          </div>
+        </>
+      ) : null}
+      {activeLeagues.length > 0 ? (
+        <>
+          showEvents("Active Leagues", activeLeagues)
+          <div
+            className="mb-3"
+            style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+          >
+            <hr className="featurette-divider" />
+          </div>
+        </>
+      ) : null}
+      {pastLeagues.length > 0 ? (
+        <>
+          showEvents("Past Leagues", pastLeagues)
+          <div
+            className="mb-3"
+            style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+          >
+            <hr className="featurette-divider" />
+          </div>
+        </>
+      ) : null}
+
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   );
