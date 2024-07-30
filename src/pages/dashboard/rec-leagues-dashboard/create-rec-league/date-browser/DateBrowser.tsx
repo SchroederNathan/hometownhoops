@@ -79,6 +79,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       daysOfWeek.push(day);
     }
   }
+
   const previousWeek = () => {
     const newWeek = subWeeks(currentWeek, 1);
     if (endOfWeek(newWeek) >= startDate) {
@@ -97,8 +98,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setSelectedDate(day);
   };
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
     const [hours, minutes] = time.split(":");
@@ -152,7 +152,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       console.log(err);
     }
   };
-
 
   // Convert Firestore Timestamps to JavaScript Dates
   const convertedGames = games.map((game) => ({
@@ -312,11 +311,11 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                 }`}
                 onClick={() => handleDateClick(day)}
               >
-                {games.some((game) => isSameDay(game.gameDate, day)) && (
-                  <div className="game-indicator"></div>
-                )}
                 <div>{format(day, "EEE")}</div>
                 <div className="fw-bold">{format(day, "d")}</div>
+                {games.filter((game) => isSameDay(game.gameDate, day)) && (
+                  <div className="game-indicator"></div>
+                )}
               </div>
             ))}
           </div>

@@ -4,6 +4,7 @@
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
   width: 50px; /* Fixed width for all date items */
+  min-height: 80px;
   text-align: center;
 }
 
@@ -21,8 +22,10 @@
 
 .date-item .game-indicator {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  bottom: 8px;
+  right: 0;
+  left: 0;
+  margin: auto;
   width: 10px;
   height: 10px;
   background-color: orange;
