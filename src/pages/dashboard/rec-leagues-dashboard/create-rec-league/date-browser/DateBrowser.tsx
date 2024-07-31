@@ -349,6 +349,13 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                     <span className="badge bg-success">Winner</span>
                   )}
                 </div>
+                <p className="opacity-50 fw-semibold">
+                  {game.gameDate.toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                  })}
+                </p>
               </div>
               <div>
                 {isEditingLeague ? (
