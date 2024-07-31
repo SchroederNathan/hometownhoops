@@ -50,7 +50,7 @@ interface DateBrowserProps {
 const DateBrowser: React.FC<DateBrowserProps> = ({
   selectedDate,
   setSelectedDate,
-  isEditingLeague,
+  isEditingLeague = false,
   games,
   setGames,
   teams,

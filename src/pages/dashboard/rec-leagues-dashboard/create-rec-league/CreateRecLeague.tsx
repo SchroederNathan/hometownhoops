@@ -341,13 +341,18 @@ const CreateRecLeague = () => {
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
         <br />
-        <DateBrowser
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          games={games}
-          setGames={setGames}
-          teams={teams}
-        />
+        {startDate && endDate ? (
+          <DateBrowser
+            isEditingLeague={false}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            games={games}
+            startDate={new Date(startDate)}
+            endDate={new Date(endDate)}
+            setGames={setGames}
+            teams={teams}
+          />
+        ) : null}
 
         <Link to="../travel-teams">
           <button type="button" className="btn btn-labeled btn-danger mt-3">
