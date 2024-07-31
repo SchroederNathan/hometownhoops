@@ -217,6 +217,7 @@ const EditLeagueDetails = () => {
 
   useEffect(() => {
     getEvent();
+    console.log(deadline)
   }, [eventID, editor]);
 
   if (!editor) {

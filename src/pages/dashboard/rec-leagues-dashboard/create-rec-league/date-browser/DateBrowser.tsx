@@ -313,7 +313,8 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
               >
                 <div>{format(day, "EEE")}</div>
                 <div className="fw-bold">{format(day, "d")}</div>
-                {games.filter((game) => isSameDay(game.gameDate, day)) && (
+                {/* #TODO: GAME INDICATOR */}
+                {games.some((game) => isSameDay(game.gameDate, day)) && (
                   <div className="game-indicator"></div>
                 )}
               </div>

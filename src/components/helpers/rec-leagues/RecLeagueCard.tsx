@@ -136,11 +136,16 @@ function RecLeagueCard(props: any) {
     }
   };
 
-  function checkIfOpen(time1: string, time2: Date) {
-    return new Date(time1) < new Date(time2); // true if time2 is later
+  // Check if registration is open by comparing the deadline date with the current date
+  function checkIfRegistrationOpen(time1: Date, time2: Date) {
+    time1.setHours(time1.getHours() + 27, 59, 59);
+    return time1 > time2; // true if time2 is later
   }
 
-  const isBeforeDeadline = checkIfOpen(props.deadline, new Date());
+  const isBeforeDeadline = checkIfRegistrationOpen(
+    new Date(props.deadline),
+    new Date()
+  );
 
   return (
     <div>

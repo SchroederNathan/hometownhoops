@@ -19,6 +19,7 @@ const RecLeagues = () => {
           ...doc.data(),
           id: doc.id,
         }));
+        console.log(filteredData);
         setEventList(filteredData);
       } catch (err) {
         console.log(err);
@@ -31,17 +32,25 @@ const RecLeagues = () => {
 
   const openRegistrationLeagues = eventList.filter((event: any) => {
     const deadline = new Date(event.deadline);
+    deadline.setHours(deadline.getHours() + 27, 59, 59);
+    console.log(deadline)
+
     return now < deadline;
   });
 
   const activeLeagues = eventList.filter((event: any) => {
-    const startDate = new Date(event.startDate);
+    const startDate = new Date(event.deadline);
+    startDate.setHours(startDate.getHours() + 27, 59, 59);
     const endDate = new Date(event.endDate);
-    return startDate <= now && now <= endDate;
+    endDate.setHours(endDate.getHours() + 4);
+
+    return startDate < now && now <= endDate;
   });
 
   const pastLeagues = eventList.filter((event: any) => {
     const endDate = new Date(event.endDate);
+    endDate.setHours(endDate.getHours() + 4);
+
     return now > endDate;
   });
 
