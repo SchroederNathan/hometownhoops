@@ -1,36 +1,51 @@
 .row .featurette {
-    max-width: 800px ;
+  max-width: 800px;
 }
 
+.landing-container {
+    height: 500px;
+    vertical-align: middle;
+}
+
+.landing-text {
+    width: 60%;
+}
+
+.newsletter {
+    width: 60%;
+}
+
+.newsletter-button {
+  margin-bottom: 0px !important;
+}
 
 .card {
-    transition: 0.3s;
+  transition: 0.3s;
 }
 
 .card:hover {
-    scale: 1.05;
-    transition: 0.3s;
+  scale: 1.05;
+  transition: 0.3s;
 }
 
 .item {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
 }
 
 .main-div {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
-
 @media (max-width: 990px) {
-    .main-div {
-    }
-    
-    .feature { 
-        width: 90% !important;
-    }
+  .main-div {
+  }
 
-    .cards {
-        max-width: 100% !important;
-        width: 90% !important;
-    }
+  .feature {
+    width: 90% !important;
+  }
+
+  .cards {
+    max-width: 100% !important;
+    width: 90% !important;
+  }
 }
