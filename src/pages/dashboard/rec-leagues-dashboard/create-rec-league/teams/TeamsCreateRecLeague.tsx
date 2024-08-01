@@ -70,6 +70,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
     } else if (tabName === "edit") {
       navigate(`/dashboard/rec-leagues/${eventID}`, {
         state: {
+          hasProps: true,
           name,
           location,
           deadline,
@@ -138,6 +139,7 @@ const TeamsCreateRecLeague: React.FC<TeamsCreateRecLeagueProps> = ({
       console.log("Teams updated successfully!");
       navigate(`/dashboard/rec-leagues/${eventID}`, {
         state: {
+          hasProps: true,
           name,
           location,
           deadline,

@@ -1,10 +1,9 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { db } from "../../../../config/firebase";
 import {
   doc,
   getDoc,
-  updateDoc,
   writeBatch,
   collection,
   getDocs,
@@ -35,11 +34,12 @@ import { Player } from "../create-rec-league/teams/TeamsModal";
 const EditLeagueDetails = () => {
   const { eventID } = useParams();
 
+  const [loading, setLoading] = useState(true); // State to track loading
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [deadline, setDeadline] = useState(Date);
-  const [startDate, setStartDate] = useState(Date);
-  const [endDate, setEndDate] = useState(Date);
+  const [deadline, setDeadline] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [rules, setRules] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
   const [games, setGames] = useState<Game[]>([]);
@@ -51,12 +51,15 @@ const EditLeagueDetails = () => {
   const [stats, setStats] = useState<PlayerStats[]>([]);
   const [winner, setWinner] = useState<string>("");
 
-  const updateRef = doc(db, "rec-leagues", `${eventID}`);
   const navigate = useNavigate();
   const selectedImage = useRef<HTMLDivElement>(null);
 
+  // Get state from navigation
+  const { state } = useLocation();
+
   const onUpdate = async () => {
     try {
+      const updateRef = doc(db, "rec-leagues", `${eventID}`);
       const batch = writeBatch(db);
 
       batch.update(updateRef, {
@@ -147,6 +150,7 @@ const EditLeagueDetails = () => {
     try {
       const docRef = doc(db, "rec-leagues", eventID!);
       const docSnap = await getDoc(docRef);
+      console.log("reloaded data");
 
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -207,6 +211,9 @@ const EditLeagueDetails = () => {
         if (editor) {
           editor.commands.setContent(data.rules);
         }
+
+        // Set loading to false once data is fetched
+        setLoading(false);
       } else {
         console.log("No such document!");
       }
@@ -216,9 +223,28 @@ const EditLeagueDetails = () => {
   };
 
   useEffect(() => {
-    getEvent();
-    console.log(deadline)
-  }, [eventID, editor]);
+    if (state && state.hasProps) {
+      // If the component receives state with props, use it instead of fetching again
+      setName(state.name);
+      setDeadline(state.deadline);
+      setStartDate(state.startDate);
+      setEndDate(state.endDate);
+      setLocation(state.location);
+      setRules(state.rules);
+      setGames(state.games || []);
+      setTeams(state.teams || []);
+      setLoading(false);
+    } else {
+      getEvent();
+    }
+  }, [state]); // Run effect on mount and when state changes
+
+  // Set editor content once both data is fetched and editor is ready
+  useEffect(() => {
+    if (editor && rules) {
+      editor.commands.setContent(rules);
+    }
+  }, [editor, rules]); // Depend on both editor and rules
 
   if (!editor) {
     return null;
@@ -228,9 +254,11 @@ const EditLeagueDetails = () => {
     event.preventDefault();
     navigate(`/dashboard/rec-leagues/${eventID}/teams`, {
       state: {
+        hasProps: true,
         name,
-        eventID: eventID,
-        location: location,
+        eventID,
+        location,
+        deadline,
         startDate,
         endDate,
         rules,
@@ -242,155 +270,169 @@ const EditLeagueDetails = () => {
 
   return (
     <div>
-      <ul className="nav nav-tabs mb-3">
-        <li className="nav-item">
-          <a className="nav-link tab active me-1" aria-current="page" href="#">
-            Information
-          </a>
-        </li>
-        <li className="nav-item">
-          <a
-            className="nav-link tab"
-            onClick={(event) => preview(event)}
-            href="#"
-          >
-            Teams
-          </a>
-        </li>
-      </ul>
-      <form onSubmit={(event) => event.preventDefault()}>
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label fs-5">
-            Name
-          </label>
-          <input
-            type="name"
-            className="form-control"
-            id="name"
-            autoComplete="true"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="input-group mb-3 ">
-          <label htmlFor="imageUpload" className="form-label fs-5 w-100">
-            Image
-          </label>
-          <input
-            type="file"
-            className="form-control rounded"
-            accept="image/*"
-            onChange={(event) => onImageChange(event)}
-            id="imageUpload"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="location" className="form-label fs-5">
-            Location
-          </label>
-          <input
-            type="name"
-            className="form-control"
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div>
-        <div className="w-100 mb-3">
-          <label htmlFor="deadline" className="form-label fs-5">
-            Registration Deadline
-          </label>
-          <input
-            id="mb"
-            className="form-control"
-            type="date"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
-          />
-        </div>
-        <div className="mb-3 row">
-          <div className="w-50">
-            <label htmlFor="startDate" className="form-label fs-5">
-              Start Date
-            </label>
-            <input
-              id="startDate"
-              className="form-control"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </div>
-          <div className="w-50">
-            <label htmlFor="endDate" className="form-label fs-5">
-              End Date
-            </label>
-            <input
-              id="endDate"
-              className="form-control"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
+      ) : (
+        <>
+          <ul className="nav nav-tabs mb-3">
+            <li className="nav-item">
+              <a
+                className="nav-link tab active me-1"
+                aria-current="page"
+                href="#"
+              >
+                Information
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className="nav-link tab"
+                onClick={(event) => preview(event)}
+                href="#"
+              >
+                Teams
+              </a>
+            </li>
+          </ul>
+          <form onSubmit={(event) => event.preventDefault()}>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label fs-5">
+                Name
+              </label>
+              <input
+                type="name"
+                className="form-control"
+                id="name"
+                autoComplete="true"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="input-group mb-3 ">
+              <label htmlFor="imageUpload" className="form-label fs-5 w-100">
+                Image
+              </label>
+              <input
+                type="file"
+                className="form-control rounded"
+                accept="image/*"
+                onChange={(event) => onImageChange(event)}
+                id="imageUpload"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="location" className="form-label fs-5">
+                Location
+              </label>
+              <input
+                type="name"
+                className="form-control"
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
+            <div className="w-100 mb-3">
+              <label htmlFor="deadline" className="form-label fs-5">
+                Registration Deadline
+              </label>
+              <input
+                id="mb"
+                className="form-control"
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </div>
+            <div className="mb-3 row">
+              <div className="w-50">
+                <label htmlFor="startDate" className="form-label fs-5">
+                  Start Date
+                </label>
+                <input
+                  id="startDate"
+                  className="form-control"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+              <div className="w-50">
+                <label htmlFor="endDate" className="form-label fs-5">
+                  End Date
+                </label>
+                <input
+                  id="endDate"
+                  className="form-control"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+            </div>
 
-        <p className="form-label fs-5">Rules</p>
-        <EditorComponent editor={editor} />
-        <br />
-        <DateBrowser
-          isEditingLeague={true}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          games={games}
-          setGames={setGames}
-          teams={teams}
-          startDate={new Date(startDate)}
-          endDate={new Date(endDate)}
-        />
+            <p className="form-label fs-5">Rules</p>
+            <EditorComponent editor={editor} />
+            <br />
+            <DateBrowser
+              isEditingLeague={true}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              games={games}
+              setGames={setGames}
+              teams={teams}
+              startDate={new Date(startDate)}
+              endDate={new Date(endDate)}
+            />
 
-        <Link to="../travel-teams">
-          <button type="button" className="btn btn-labeled btn-danger mt-3">
-            <span className="btn-label">
-              <i className="bi bi-x"></i>
-            </span>
-            Cancel
-          </button>
-        </Link>
-        <button
-          type="button"
-          className="btn btn-labeled-1 btn-primary float-end create-button mt-3"
-          onClick={onUpdate}
-        >
-          Update
-          <span className="btn-label-1">
-            <i className="bi bi-check"></i>
-          </span>
-        </button>
-      </form>
+            <Link to="../travel-teams">
+              <button type="button" className="btn btn-labeled btn-danger mt-3">
+                <span className="btn-label">
+                  <i className="bi bi-x"></i>
+                </span>
+                Cancel
+              </button>
+            </Link>
+            <button
+              type="button"
+              className="btn btn-labeled-1 btn-primary float-end create-button mt-3"
+              onClick={onUpdate}
+            >
+              Update
+              <span className="btn-label-1">
+                <i className="bi bi-check"></i>
+              </span>
+            </button>
+          </form>
 
-      <GameModal
-        show={modalShow}
-        onHide={() => {
-          setModalShow(false);
-          setEditingGame(null);
-        }}
-        selectedDate={selectedDate}
-        teams={teams}
-        addGame={addGame}
-        editGame={addGame}
-        isEditing={!!editingGame}
-        gameToEdit={editingGame ?? undefined}
-      />
+          <GameModal
+            show={modalShow}
+            onHide={() => {
+              setModalShow(false);
+              setEditingGame(null);
+            }}
+            selectedDate={selectedDate}
+            teams={teams}
+            addGame={addGame}
+            editGame={addGame}
+            isEditing={!!editingGame}
+            gameToEdit={editingGame ?? undefined}
+          />
 
-      <StatsModal
-        show={statsModalShow}
-        onHide={() => setStatsModalShow(false)}
-        game={editingGame}
-        onSave={handleSaveStats}
-        initialStats={stats}
-        initialWinner={winner}
-      />
+          <StatsModal
+            show={statsModalShow}
+            onHide={() => setStatsModalShow(false)}
+            game={editingGame}
+            onSave={handleSaveStats}
+            initialStats={stats}
+            initialWinner={winner}
+          />
+        </>
+      )}
     </div>
   );
 };
