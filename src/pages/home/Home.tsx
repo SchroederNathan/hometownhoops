@@ -36,29 +36,32 @@ const Home = () => {
   ];
 
   return (
-    <div className="main-div ">
-      <div className="container-fluid landing-container d-flex align-items-center">
-        <div>
-          <h1 className="display-3 fw-bold">Hometown Hoops</h1>
-          <p className="mb-4 lead landing-text">
-            A local organization bringing basketball to people of all ages and
-            skill levels. 
-          </p>
-          <div className="input-group newsletter">
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Email"
-              aria-label="User's Email"
-              aria-describedby="email"
-            />
-            <button
-              className="btn btn-primary newsletter-button"
-              type="button"
-              id="email"
-            >
-              Subscribe
-            </button>
+    <div className="main-div position-relative">
+      <img src="src/assets/pattern.png" className="position-absolute top-0 end-0 pattern" />
+      <div className="landing-background">
+        <div className="container-fluid landing-container d-flex align-items-center">
+          <div>
+            <h1 className="display-3 fw-bold">Hometown Hoops</h1>
+            <p className="mb-4 lead landing-text">
+              A local organization bringing basketball to people of all ages and
+              skill levels. 
+            </p>
+            <div className="input-group newsletter">
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Email"
+                aria-label="User's Email"
+                aria-describedby="email"
+              />
+              <button
+                className="btn btn-primary newsletter-button"
+                type="button"
+                id="email"
+              >
+                Subscribe
+              </button>
+            </div>
           </div>
         </div>
       </div>

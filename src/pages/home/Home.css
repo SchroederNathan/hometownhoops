@@ -4,7 +4,12 @@
 
 .landing-container {
     height: 500px;
-    vertical-align: middle;
+}
+
+
+.pattern {
+    z-index: -10;
+    height: 100vh
 }
 
 .landing-text {
@@ -37,8 +42,6 @@
 }
 
 @media (max-width: 990px) {
-  .main-div {
-  }
 
   .feature {
     width: 90% !important;
