@@ -149,16 +149,7 @@ const EditLeagueDetails = () => {
   const getEvent = async () => {
     try {
       const docRef = doc(db, "rec-leagues", eventID!);
-      // const docSnap = await getDoc(docRef);
       console.log("reloaded data");
-
-      // const data = docSnap.data();
-      // setName(data.name);
-      // setDeadline(data.deadline);
-      // setStartDate(data.startDate);
-      // setEndDate(data.endDate);
-      // setLocation(data.location);
-      // setRules(data.rules);
 
       // Grab all games from the rec-leagues collection
       const gamesCollectionRef = collection(docRef, "games");
@@ -233,7 +224,6 @@ const EditLeagueDetails = () => {
       }
       setLoading(false);
     } else {
-      
     }
   }, [state]); // Run effect on mount and when state changes
 
