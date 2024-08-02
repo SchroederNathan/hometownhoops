@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import "./LeagueDetails.css";
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { AgGridReact } from "@ag-grid-community/react"; // React Grid Logic
@@ -18,42 +18,53 @@ import { Player } from "../../dashboard/rec-leagues-dashboard/create-rec-league/
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 // Row Data Interface
 
-// Create new GridExample component
+// Create new StatsGrid component
 
-const GridExample = ({ teams, games }: { teams: Team[]; games: Game[] }) => {
-  // Initialize rowData with teams' names and default wins and losses set to 0.
-  const [rowData, setRowData] = useState<Team[]>(teams);
-
-  console.log(rowData);
+const StatsGrid = ({ teams, games }) => {
+  const [rowData, setRowData] = useState([]);
   useEffect(() => {
-    setRowData(teams);
+    // Initialize rowData with teams' names and default wins and losses set to 0.
+    setRowData(teams.map((team) => ({ ...team, wins: 0, losses: 0 })));
   }, [teams]);
 
-  // Column Definitions: Defines & controls grid columns.
-  const [colDefs, setColDefs] = useState<ColDef<Team>[]>([
+  const gridRef = useRef(null);
+
+  const onSelectionChanged = () => {
+    if (gridRef.current?.api) {
+      const selectedNodes = gridRef.current.api.getSelectedNodes();
+      const selectedData = selectedNodes.map((node: any) => node.data);
+      setSelectedTeam(selectedData[0] || null);
+      console.log("Selected Team:", selectedData);
+    } else {
+      console.log("Grid API not available");
+    }
+  };
+
+  const onGridReady = (params: any) => {
+    console.log("Grid is ready", params);
+  };
+
+  const [selectedTeam, setSelectedTeam] = useState<Team>();
+  const [colDefs] = useState([
     { field: "name", flex: 2 },
     { field: "wins", flex: 1 },
     { field: "losses", flex: 1 },
   ]);
+  const defaultColDef = { flex: 1 };
 
-  const defaultColDef: ColDef = {
-    flex: 1,
-  };
-
-  // Container: Defines the grid's theme & dimensions.
   return (
-    <div
-      className={"ag-theme-quartz"}
-      style={{ width: "100%"}}
-    >
+    <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
       <AgGridReact
-      suppressCellFocus="true"
-      rowSelection="single"
-        domLayout="autoHeight"
+        ref={gridRef}
         rowData={rowData}
         columnDefs={colDefs}
         defaultColDef={defaultColDef}
+        rowSelection="single"
+        onSelectionChanged={onSelectionChanged}
+        onGridReady={onGridReady}
+        domLayout="autoHeight"
       />
+      {selectedTeam && <div>Selected Team: {selectedTeam.name}</div>}
     </div>
   );
 };
@@ -126,7 +137,6 @@ const LeagueDetails = () => {
 
       // Update state with the teams list
       setTeams(teamsList);
-      console.log(teamsList);
 
       // Set loading to false once data is fetched
       setLoading(false);
@@ -193,7 +203,7 @@ const LeagueDetails = () => {
         className="card-text mb-3 mt-1"
         dangerouslySetInnerHTML={{ __html: rules }}
       ></p>
-      <GridExample teams={teams} games={games} />
+      <StatsGrid teams={teams} games={games} />
     </div>
   );
 };
