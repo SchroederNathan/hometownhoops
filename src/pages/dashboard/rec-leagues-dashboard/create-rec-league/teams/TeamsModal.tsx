@@ -11,8 +11,11 @@ interface TeamsModalProps {
 }
 
 export interface Player {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
+  points?: number;
+  rebounds?: number;
+  assists?: number;
 }
 
 const TeamsModal: React.FC<TeamsModalProps> = ({

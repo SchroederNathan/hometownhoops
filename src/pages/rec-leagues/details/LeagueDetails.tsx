@@ -25,6 +25,12 @@ const StatsGrid = ({ teams, games }) => {
   useEffect(() => {
     // Initialize rowData with teams' names and default wins and losses set to 0.
     setRowData(teams.map((team) => ({ ...team, wins: 0, losses: 0 })));
+
+    // Ensure that teams are loaded before setting the default selected team
+    if (teams.length > 0) {
+      setSelectedTeam(teams[0]);
+      console.log("Selected Team:", teams[0]);
+    }
   }, [teams]);
 
   const gridRef = useRef(null);
@@ -33,8 +39,7 @@ const StatsGrid = ({ teams, games }) => {
     if (gridRef.current?.api) {
       const selectedNodes = gridRef.current.api.getSelectedNodes();
       const selectedData = selectedNodes.map((node: any) => node.data);
-      setSelectedTeam(selectedData[0] || null);
-      console.log("Selected Team:", selectedData);
+      setSelectedTeam(selectedData[0]);
     } else {
       console.log("Grid API not available");
     }
@@ -44,8 +49,9 @@ const StatsGrid = ({ teams, games }) => {
     console.log("Grid is ready", params);
   };
 
-  const [selectedTeam, setSelectedTeam] = useState<Team>();
-  const [colDefs] = useState([
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(teams[0]);
+
+  const [colDefs, setColDefs] = useState<ColDef<Team>[]>([
     { field: "name", flex: 2 },
     { field: "wins", flex: 1 },
     { field: "losses", flex: 1 },
@@ -53,18 +59,49 @@ const StatsGrid = ({ teams, games }) => {
   const defaultColDef = { flex: 1 };
 
   return (
-    <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
+    <div className="ag-theme-quartz mb-3" style={{ height: "100%" }}>
       <AgGridReact
+      className="mb-3"
         ref={gridRef}
         rowData={rowData}
         columnDefs={colDefs}
+        suppressCellFocus={true}
         defaultColDef={defaultColDef}
         rowSelection="single"
         onSelectionChanged={onSelectionChanged}
         onGridReady={onGridReady}
         domLayout="autoHeight"
       />
-      {selectedTeam && <div>Selected Team: {selectedTeam.name}</div>}
+
+      <PlayerStats players={selectedTeam?.players} />
+    </div>
+  );
+};
+
+const PlayerStats = ({ players }: { players: Player[] }) => {
+  const [rowData, setRowData] = useState<Player[]>(); // Initialize with players
+
+  console.log(rowData);
+  const [colDefs, setColDefs] = useState<ColDef<Player>[]>([
+    { field: "name", flex: 2 },
+    { field: "points", flex: 1 },
+    { field: "rebounds", flex: 1 },
+    { field: "assists", flex: 1 },
+  ]);
+  const defaultColDef = { flex: 1 };
+
+  useEffect(() => {
+    setRowData(players);
+  }, [players]);
+
+  return (
+    <div className="ag-theme-quartz " style={{ height: "100%", width: "100%" }}>
+      <AgGridReact
+        rowData={rowData}
+        columnDefs={colDefs}
+        defaultColDef={defaultColDef}
+        domLayout="autoHeight"
+      />
     </div>
   );
 };
@@ -118,6 +155,9 @@ const LeagueDetails = () => {
           const playerData = playerDoc.data() as Player;
           return {
             id: playerDoc.id, // Add player ID to the player object
+            points: 0,
+            rebounds: 0,
+            assists: 0,
             ...playerData,
           };
         });
