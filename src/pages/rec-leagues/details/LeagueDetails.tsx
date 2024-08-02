@@ -1,115 +1,20 @@
 import { useLocation, useParams } from "react-router-dom";
 import "./LeagueDetails.css";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { AgGridReact } from "@ag-grid-community/react"; // React Grid Logic
 import "@ag-grid-community/styles/ag-grid.css"; // Core CSS
 import "@ag-grid-community/styles/ag-theme-quartz.css"; // Theme
-
-import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 
 import { checkIfOpen } from "../../../components/helpers/Functions";
 import { Team } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague";
 import { Game } from "../../dashboard/rec-leagues-dashboard/create-rec-league/date-browser/DateBrowser";
 import { Player } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsModal";
-
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
-// Row Data Interface
-
-// Create new StatsGrid component
-
-const StatsGrid = ({ teams, games }) => {
-  const [rowData, setRowData] = useState([]);
-  useEffect(() => {
-    // Initialize rowData with teams' names and default wins and losses set to 0.
-    setRowData(teams.map((team) => ({ ...team, wins: 0, losses: 0 })));
-
-    // Ensure that teams are loaded before setting the default selected team
-    if (teams.length > 0) {
-      setSelectedTeam(teams[0]);
-      console.log("Selected Team:", teams[0]);
-    }
-  }, [teams]);
-
-  const gridRef = useRef(null);
-
-  const onSelectionChanged = () => {
-    if (gridRef.current?.api) {
-      const selectedNodes = gridRef.current.api.getSelectedNodes();
-      const selectedData = selectedNodes.map((node: any) => node.data);
-      setSelectedTeam(selectedData[0]);
-    } else {
-      console.log("Grid API not available");
-    }
-  };
-
-  const onGridReady = (params: any) => {
-    console.log("Grid is ready", params);
-  };
-
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(teams[0]);
-
-  const [colDefs, setColDefs] = useState<ColDef<Team>[]>([
-    { field: "name", flex: 2 },
-    { field: "wins", flex: 1 },
-    { field: "losses", flex: 1 },
-  ]);
-  const defaultColDef = { flex: 1 };
-
-  return (
-    <div className="ag-theme-quartz mb-3" style={{ height: "100%" }}>
-      <AgGridReact
-      className="mb-3"
-        ref={gridRef}
-        rowData={rowData}
-        columnDefs={colDefs}
-        suppressCellFocus={true}
-        defaultColDef={defaultColDef}
-        rowSelection="single"
-        onSelectionChanged={onSelectionChanged}
-        onGridReady={onGridReady}
-        domLayout="autoHeight"
-      />
-
-      <PlayerStats players={selectedTeam?.players} />
-    </div>
-  );
-};
-
-const PlayerStats = ({ players }: { players: Player[] }) => {
-  const [rowData, setRowData] = useState<Player[]>(); // Initialize with players
-
-  console.log(rowData);
-  const [colDefs, setColDefs] = useState<ColDef<Player>[]>([
-    { field: "name", flex: 2 },
-    { field: "points", flex: 1 },
-    { field: "rebounds", flex: 1 },
-    { field: "assists", flex: 1 },
-  ]);
-  const defaultColDef = { flex: 1 };
-
-  useEffect(() => {
-    setRowData(players);
-  }, [players]);
-
-  return (
-    <div className="ag-theme-quartz " style={{ height: "100%", width: "100%" }}>
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={colDefs}
-        defaultColDef={defaultColDef}
-        domLayout="autoHeight"
-      />
-    </div>
-  );
-};
+import TeamStats from "./grids/TeamStats";
 
 const LeagueDetails = () => {
   const { eventID } = useParams();
 
-  const [event, setEvent] = useState({});
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [deadline, setDeadline] = useState("");
@@ -243,7 +148,7 @@ const LeagueDetails = () => {
         className="card-text mb-3 mt-1"
         dangerouslySetInnerHTML={{ __html: rules }}
       ></p>
-      <StatsGrid teams={teams} games={games} />
+      <TeamStats teams={teams} games={games} />
     </div>
   );
 };
