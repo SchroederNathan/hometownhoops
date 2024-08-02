@@ -8,6 +8,7 @@ import {
   subWeeks,
   isSameDay,
   isWithinInterval,
+  set,
 } from "date-fns";
 import "./DateBrowser.css"; // Ensure this file exists for custom styles
 import GameModal from "./GameModal";
@@ -56,7 +57,10 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
   teams,
   startDate,
   endDate,
+  isUserView = false,
 }) => {
+  console.log(startDate, endDate, games, teams); // Inside DateBrowser component
+
   const [currentWeek, setCurrentWeek] = useState(startDate);
   const [modalShow, setModalShow] = useState(false);
   const [statsModalShow, setStatsModalShow] = useState(false);
@@ -230,7 +234,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setIsEditing(true);
     setGameToEdit(game);
     const fetchedStats = await fetchStats(game.gameID || ""); // Fetch stats from Firebase
-    console.log(fetchedStats);
     setStats(fetchedStats);
     setWinner(""); // Set the initial winner once i have this info
     setStatsModalShow(true);
@@ -289,6 +292,8 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     }
   };
 
+  console.log(startDate, endDate);
+
   return (
     <div className="container">
       <div className="d-flex align-items-center justify-content-center flex-column">
@@ -328,7 +333,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
           )}
         </div>
       </div>
-
       <div className="mt-4">
         <ul className="list-group">
           {gamesOnSelectedDate.map((game, index) => (
@@ -358,6 +362,16 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                 </p>
               </div>
               <div>
+                {isUserView ? (
+                  <button
+                    className="btn btn-sm btn-primary me-2"
+                    onClick={() => openStatsModal(game, )}
+                  >
+                    {" "}
+                    <i className="bi bi-bar-chart-line-fill"></i>
+                  </button>
+                ) : null}
+
                 {isEditingLeague ? (
                   <button
                     className="btn btn-sm btn-primary me-2"
@@ -368,31 +382,39 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                   </button>
                 ) : null}
 
-                <button
-                  className="btn btn-sm btn-primary me-2"
-                  onClick={() => openEditModal(game)}
-                >
-                  <i className="bi bi-pencil-fill"></i>
-                </button>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => deleteGame(game)}
-                >
-                  <span>
-                    <i className="bi bi-x"></i>
-                  </span>
-                </button>
+                {isUserView ? null : (
+                  <>
+                    <button
+                      className="btn btn-sm btn-primary me-2"
+                      onClick={() => openEditModal(game)}
+                    >
+                      <i className="bi bi-pencil-fill"></i>
+                    </button>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => deleteGame(game)}
+                    >
+                      <span>
+                        <i className="bi bi-x"></i>
+                      </span>
+                    </button>
+                  </>
+                )}
               </div>
             </li>
           ))}
         </ul>
       </div>
-
-      <div className="mt-4">
-        <button className="btn btn-primary" onClick={() => setModalShow(true)}>
-          Add Game
-        </button>
-      </div>
+      {isUserView ? null : (
+        <div className="mt-4">
+          <button
+            className="btn btn-primary"
+            onClick={() => setModalShow(true)}
+          >
+            Add Game
+          </button>
+        </div>
+      )}
 
       <StatsModal
         show={statsModalShow}
@@ -400,9 +422,9 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
         game={gameToEdit}
         initialStats={stats}
         initialWinner={winner}
+        isUserView={isUserView}
         onSave={handleSaveStats}
       />
-
       <GameModal
         show={modalShow}
         onHide={closeModal}

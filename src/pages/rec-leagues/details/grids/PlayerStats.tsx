@@ -9,7 +9,6 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 const PlayerStats = ({ players }: { players: Player[] }) => {
   const [rowData, setRowData] = useState<Player[]>(); // Initialize with players
 
-  console.log(rowData);
   const [colDefs, setColDefs] = useState<ColDef<Player>[]>([
     { field: "name", flex: 2 },
     { field: "points", flex: 1 },

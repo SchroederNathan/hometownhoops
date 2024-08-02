@@ -8,7 +8,9 @@ import "@ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 
 import { checkIfOpen } from "../../../components/helpers/Functions";
 import { Team } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague";
-import { Game } from "../../dashboard/rec-leagues-dashboard/create-rec-league/date-browser/DateBrowser";
+import DateBrowser, {
+  Game,
+} from "../../dashboard/rec-leagues-dashboard/create-rec-league/date-browser/DateBrowser";
 import { Player } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsModal";
 import TeamStats from "./grids/TeamStats";
 
@@ -23,6 +25,7 @@ const LeagueDetails = () => {
   const [rules, setRules] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
   const [games, setGames] = useState<Game[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [loading, setLoading] = useState(true); // State to track loading
 
@@ -85,6 +88,8 @@ const LeagueDetails = () => {
 
       // Set loading to false once data is fetched
       setLoading(false);
+
+      console.log(gamesList);
     } catch (err) {
       console.log(err);
     }
@@ -99,6 +104,7 @@ const LeagueDetails = () => {
       setEndDate(state.endDate);
       setLocation(state.location);
       setRules(state.rules);
+
       if (state.games) {
         setGames(state.games);
         setTeams(state.teams);
@@ -149,6 +155,24 @@ const LeagueDetails = () => {
         dangerouslySetInnerHTML={{ __html: rules }}
       ></p>
       <TeamStats teams={teams} games={games} />
+
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <DateBrowser
+          games={games}
+          teams={teams}
+          startDate={new Date(startDate)}
+          endDate={new Date(endDate)}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          isUserView={true}
+        />
+      )}
     </div>
   );
 };
