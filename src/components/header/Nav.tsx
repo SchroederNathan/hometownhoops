@@ -82,28 +82,28 @@ const NavBar = () => {
             <Nav className="justify-content-end flex-grow-1 pe-3 text-center">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link className="nav-link text-black" to="/tournaments">
+                  <Link className="nav-link text-black" to="/tournaments" onClick={handleNavbarToggle}>
                     <strong>Tournaments</strong>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-black" to="/travel-teams">
+                  <Link className="nav-link text-black" to="/travel-teams" onClick={handleNavbarToggle}>
                     <strong>Travel Teams</strong>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-black" to="/rec-leagues">
+                  <Link className="nav-link text-black" to="/rec-leagues" onClick={handleNavbarToggle}>
                     <strong>Rec Leagues</strong>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-black" href="#about-us">
+                  <a className="nav-link text-black" href="#about-us" onClick={handleNavbarToggle}>
                     <strong>About Us</strong>
                   </a>
                 </li>
                 {loginStatus === "Log Out" ? (
                   <li className="nav-item">
-                    <Link to="dashboard" className="nav-link text-black">
+                    <Link to="dashboard" className="nav-link text-black" onClick={handleNavbarToggle}>
                       <strong>Dashboard</strong>
                     </Link>
                   </li>
