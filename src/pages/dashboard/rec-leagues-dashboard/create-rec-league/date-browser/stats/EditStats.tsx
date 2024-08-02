@@ -93,7 +93,7 @@ const StatsGrid = ({
           <label className="form-label mb-3 fw-bold">Winner</label>
           <input
             type="text"
-            className="form-control mb-3"
+            className="form-control mb-3 shadow-none pe-none"
             readOnly={true}
             id="floatingSelect"
             value={currentWinner}
