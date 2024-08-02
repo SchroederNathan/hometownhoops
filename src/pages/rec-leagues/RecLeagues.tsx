@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 const RecLeagues = () => {
   const [eventList, setEventList] = useState([{}]);
+  const [loading, setLoading] = useState(true); // State to track loading
 
   const eventCollectionRef = collection(db, "rec-leagues");
 
@@ -21,6 +22,7 @@ const RecLeagues = () => {
         }));
         console.log(filteredData);
         setEventList(filteredData);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -33,7 +35,7 @@ const RecLeagues = () => {
   const openRegistrationLeagues = eventList.filter((event: any) => {
     const deadline = new Date(event.deadline);
     deadline.setHours(deadline.getHours() + 27, 59, 59);
-    console.log(deadline)
+    console.log(deadline);
 
     return now < deadline;
   });
@@ -94,43 +96,55 @@ const RecLeagues = () => {
       >
         <hr className="featurette-divider" />
       </div>
-      {openRegistrationLeagues.length > 0 ? (
-        <>
-          {showEvents("Open Registration", openRegistrationLeagues)}
-          <div
-            className="mb-3"
-            style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
-          >
-            <hr className="featurette-divider" />
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
-        </>
-      ) : null}
-      {activeLeagues.length > 0 ? (
-        <>
-          {showEvents("Active Leagues", activeLeagues)}
-          <div
-            className="mb-3"
-            style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
-          >
-            <hr className="featurette-divider" />
-          </div>
-        </>
-      ) : null}
-      {pastLeagues.length > 0 ? (
-        <>
-          {showEvents("Past Leagues", pastLeagues)}
-          <div
-            className="mb-3"
-            style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
-          >
-            <hr className="featurette-divider" />
-          </div>
-        </>
-      ) : null}
+        </div>
+      ) : (
+        <div>
+          {openRegistrationLeagues.length > 0 ? (
+            <>
+              {showEvents("Open Registration", openRegistrationLeagues)}
+              <div
+                className="mb-3"
+                style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+              >
+                <hr className="featurette-divider" />
+              </div>
+            </>
+          ) : null}
+          {activeLeagues.length > 0 ? (
+            <>
+              {showEvents("Active Leagues", activeLeagues)}
+              <div
+                className="mb-3"
+                style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+              >
+                <hr className="featurette-divider" />
+              </div>
+            </>
+          ) : null}
+          {pastLeagues.length > 0 ? (
+            <>
+              {showEvents("Past Leagues", pastLeagues)}
+              <div
+                className="mb-3"
+                style={{ maxWidth: "80%", margin: "auto", padding: "10px" }}
+              >
+                <hr className="featurette-divider" />
+              </div>
+            </>
+          ) : null}
 
-      {activeLeagues.length <= 0 && openRegistrationLeagues.length <= 0 && pastLeagues.length <= 0 ? (
-        <NoEvents title="No Events" />
-      ) : null}
+          {activeLeagues.length <= 0 &&
+          openRegistrationLeagues.length <= 0 &&
+          pastLeagues.length <= 0 ? (
+            <NoEvents title="No Events" />
+          ) : null}
+        </div>
+      )}
 
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>
