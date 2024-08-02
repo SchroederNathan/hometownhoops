@@ -12,6 +12,7 @@ import {
   Opencollective,
   X,
 } from "react-bootstrap-icons";
+import { is } from "date-fns/locale";
 
 const NavBar = () => {
   const [loginStatus, setLoginStatus] = useState("");
@@ -42,8 +43,14 @@ const NavBar = () => {
     }
   };
 
-  const handleNavbarToggle = () => {
-    setIsNavbarCollapsed(!isNavbarCollapsed);
+  const handleNavbarToggle = (isToggleButton = false) => {
+    if (isToggleButton) {
+      setIsNavbarCollapsed(!isNavbarCollapsed);
+    } else {
+      if (!isNavbarCollapsed) {
+        setIsNavbarCollapsed(true);
+      }
+    }
   };
 
   return (
@@ -70,40 +77,60 @@ const NavBar = () => {
           </Link>
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
-            onClick={handleNavbarToggle}
+            onClick={() => handleNavbarToggle(true)}
           >
             {isNavbarCollapsed ? (
-              <Navbar.Toggle />
+              <Navbar.Toggle onClick={() => handleNavbarToggle(true)} />
             ) : (
-              <CloseButton className="me-2" />
+              <CloseButton className="me-2" onClick={() => handleNavbarToggle(true)} />
             )}
           </Navbar.Toggle>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="justify-content-end flex-grow-1 pe-3 text-center">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link className="nav-link text-black" to="/tournaments" onClick={handleNavbarToggle}>
+                  <Link
+                    className="nav-link text-black"
+                    to="/tournaments"
+                    onClick={() => handleNavbarToggle(false)}
+                  >
                     <strong>Tournaments</strong>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-black" to="/travel-teams" onClick={handleNavbarToggle}>
+                  <Link
+                    className="nav-link text-black"
+                    to="/travel-teams"
+                    onClick={() => handleNavbarToggle(false)}
+                  >
                     <strong>Travel Teams</strong>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link text-black" to="/rec-leagues" onClick={handleNavbarToggle}>
+                  <Link
+                    className="nav-link text-black"
+                    to="/rec-leagues"
+                    onClick={() => handleNavbarToggle(false)}
+                  >
                     <strong>Rec Leagues</strong>
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-black" href="#about-us" onClick={handleNavbarToggle}>
+                  <a
+                    className="nav-link text-black"
+                    href="#about-us"
+                    onClick={() => handleNavbarToggle(false)}
+                  >
                     <strong>About Us</strong>
                   </a>
                 </li>
                 {loginStatus === "Log Out" ? (
                   <li className="nav-item">
-                    <Link to="dashboard" className="nav-link text-black" onClick={handleNavbarToggle}>
+                    <Link
+                      to="dashboard"
+                      className="nav-link text-black"
+                      onClick={() => handleNavbarToggle(false)}
+                    >
                       <strong>Dashboard</strong>
                     </Link>
                   </li>
