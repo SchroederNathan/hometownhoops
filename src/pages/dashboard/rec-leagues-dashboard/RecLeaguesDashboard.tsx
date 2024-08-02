@@ -36,10 +36,12 @@ const RecLeaguesDashboard = () => {
         {eventList.map((event: any) => (
           <RecLeagueCard
             isDashboard={true}
+            key={event.id}
             name={event.name}
             location={event.location}
             rules={event.rules}
             imgSrc={event.imgUrl}
+            deadline={event.deadline}
             startDate={event.startDate}
             endDate={event.endDate}
             eventID={event.id}

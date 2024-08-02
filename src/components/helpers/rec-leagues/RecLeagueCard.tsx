@@ -3,7 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import "../../../assets/tournaments.jpg";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 function RegisterModal(props: any) {
@@ -147,6 +147,42 @@ function RecLeagueCard(props: any) {
     new Date()
   );
 
+  const navigate = useNavigate();
+
+  const openDetails = (eventID: string, isDashboard?: boolean) => {
+    if (isDashboard) {
+      navigate(`/dashboard/rec-leagues/${eventID}`, {
+        state: {
+          hasProps: true,
+          name: props.name,
+          eventID,
+          location: props.location,
+          deadline: props.deadline,
+          startDate: props.startDate,
+          endDate: props.endDate,
+          rules: props.rules,
+          teams: props.teams,
+          games: props.games,
+        },
+      });
+    } else {
+      navigate(`/rec-leagues/${eventID}`, {
+        state: {
+          hasProps: true,
+          name: props.name,
+          eventID,
+          location: props.location,
+          deadline: props.deadline,
+          startDate: props.startDate,
+          endDate: props.endDate,
+          rules: props.rules,
+          teams: props.teams,
+          games: props.games,
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className="card d-grid mb-3 overflow-hidden shadow-sm">
@@ -190,10 +226,16 @@ function RecLeagueCard(props: any) {
                 dangerouslySetInnerHTML={{ __html: props.rules }}
               ></p>
               {props.isDashboard ? (
-                <Link to={props.eventID}>
-                  <a className="btn btn-primary w-100">Edit League</a>
-                </Link>
-              ) : isBeforeDeadline ? (
+                <a
+                  onClick={() => openDetails(props.eventID, props.isDashboard)}
+                  className="btn btn-primary w-100"
+                >
+                  Edit League
+                </a>
+              ) : // <Link to={props.eventID}>
+              //   <a className="btn btn-primary w-100">Edit League</a>
+              // </Link>
+              isBeforeDeadline ? (
                 <a
                   onClick={() => setModalShow(true)}
                   className="btn btn-primary w-100"
@@ -201,9 +243,15 @@ function RecLeagueCard(props: any) {
                   Register Your Team
                 </a>
               ) : (
-                <Link to={`/rec-leagues/${props.eventID}`}>
-                  <a className="btn btn-primary w-100">View Details</a>
-                </Link>
+                <a
+                  onClick={() => openDetails(props.eventID)}
+                  className="btn btn-primary w-100"
+                >
+                  View Details
+                </a>
+                // <Link to={`/rec-leagues/${props.eventID}`}>
+                //   <a className="btn btn-primary w-100">View Details</a>
+                // </Link>
               )}
             </div>
           </div>

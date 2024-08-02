@@ -149,74 +149,68 @@ const EditLeagueDetails = () => {
   const getEvent = async () => {
     try {
       const docRef = doc(db, "rec-leagues", eventID!);
-      const docSnap = await getDoc(docRef);
+      // const docSnap = await getDoc(docRef);
       console.log("reloaded data");
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setName(data.name);
-        setDeadline(data.deadline);
-        setStartDate(data.startDate);
-        setEndDate(data.endDate);
-        setLocation(data.location);
-        setRules(data.rules);
+      // const data = docSnap.data();
+      // setName(data.name);
+      // setDeadline(data.deadline);
+      // setStartDate(data.startDate);
+      // setEndDate(data.endDate);
+      // setLocation(data.location);
+      // setRules(data.rules);
 
-        // Grab all games from the rec-leagues collection
-        const gamesCollectionRef = collection(docRef, "games");
-        const gamesSnapshot = await getDocs(gamesCollectionRef);
-        const gamesList = gamesSnapshot.docs.map((doc) => {
-          const gameData = doc.data() as Game;
-          return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
-        });
-        setGames(gamesList);
+      // Grab all games from the rec-leagues collection
+      const gamesCollectionRef = collection(docRef, "games");
+      const gamesSnapshot = await getDocs(gamesCollectionRef);
+      const gamesList = gamesSnapshot.docs.map((doc) => {
+        const gameData = doc.data() as Game;
+        return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
+      });
+      setGames(gamesList);
 
-        const teamsCollectionRef = collection(docRef, "teams");
-        const teamsSnapshot = await getDocs(teamsCollectionRef);
+      const teamsCollectionRef = collection(docRef, "teams");
+      const teamsSnapshot = await getDocs(teamsCollectionRef);
 
-        // Create an array to hold the teams with their players
-        const teamsList: Team[] = [];
+      // Create an array to hold the teams with their players
+      const teamsList: Team[] = [];
 
-        // Iterate through each team document
-        for (const teamDoc of teamsSnapshot.docs) {
-          const teamData = teamDoc.data() as Team;
-          const playersCollectionRef = collection(teamDoc.ref, "players");
-          const playersSnapshot = await getDocs(playersCollectionRef);
+      // Iterate through each team document
+      for (const teamDoc of teamsSnapshot.docs) {
+        const teamData = teamDoc.data() as Team;
+        const playersCollectionRef = collection(teamDoc.ref, "players");
+        const playersSnapshot = await getDocs(playersCollectionRef);
 
-          // Create an array to hold the players
-          const playersList: Player[] = playersSnapshot.docs.map(
-            (playerDoc) => {
-              const playerData = playerDoc.data() as Player;
-              return {
-                id: playerDoc.id, // Add player ID to the player object
-                ...playerData,
-              };
-            }
-          );
-
-          // Add the players array to the team object
-          const teamWithPlayers: Team = {
-            id: teamDoc.id, // Add team ID to the team object
-            ...teamData,
-            players: playersList,
+        // Create an array to hold the players
+        const playersList: Player[] = playersSnapshot.docs.map((playerDoc) => {
+          const playerData = playerDoc.data() as Player;
+          return {
+            id: playerDoc.id, // Add player ID to the player object
+            ...playerData,
           };
+        });
 
-          // Add the team object to the teams list
-          teamsList.push(teamWithPlayers);
-        }
+        // Add the players array to the team object
+        const teamWithPlayers: Team = {
+          id: teamDoc.id, // Add team ID to the team object
+          ...teamData,
+          players: playersList,
+        };
 
-        // Update state with the teams list
-        setTeams(teamsList);
-
-        // Set the content in the editor once the data is fetched
-        if (editor) {
-          editor.commands.setContent(data.rules);
-        }
-
-        // Set loading to false once data is fetched
-        setLoading(false);
-      } else {
-        console.log("No such document!");
+        // Add the team object to the teams list
+        teamsList.push(teamWithPlayers);
       }
+
+      // Update state with the teams list
+      setTeams(teamsList);
+
+      // Set the content in the editor once the data is fetched
+      if (editor) {
+        editor.commands.setContent(data.rules);
+      }
+
+      // Set loading to false once data is fetched
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -231,11 +225,15 @@ const EditLeagueDetails = () => {
       setEndDate(state.endDate);
       setLocation(state.location);
       setRules(state.rules);
-      setGames(state.games || []);
-      setTeams(state.teams || []);
+      if (state.games) {
+        setGames(state.games);
+        setTeams(state.teams);
+      } else {
+        getEvent();
+      }
       setLoading(false);
     } else {
-      getEvent();
+      
     }
   }, [state]); // Run effect on mount and when state changes
 
