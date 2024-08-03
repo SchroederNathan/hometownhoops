@@ -26,7 +26,6 @@ const StatsModal: React.FC<StatsModalProps> = ({
   const [stats, setStats] = useState<PlayerStats[]>(initialStats);
   const [winner, setWinner] = useState<string>(initialWinner);
 
-  console.log(isUserView)
 
   useEffect(() => {
     setStats(initialStats);

@@ -48,6 +48,55 @@ interface DateBrowserProps {
   endDate: Date;
 }
 
+export const fetchStats = async (gameId: string, eventID: string) => {
+  try {
+    // Fetch all teams and their players
+    const teamCollectionRef = collection(db, "rec-leagues", eventID!, "teams");
+    const teamsSnapshot = await getDocs(teamCollectionRef);
+
+    // Create a map to easily find a player by playerID
+    const playerMap = new Map();
+
+    // Iterate through each team and their players
+    for (const teamDoc of teamsSnapshot.docs) {
+      const teamData = teamDoc.data();
+      const playersCollectionRef = collection(teamDoc.ref, "players");
+      const playersSnapshot = await getDocs(playersCollectionRef);
+
+      playersSnapshot.docs.forEach((playerDoc) => {
+        const playerData = playerDoc.data();
+        playerMap.set(playerDoc.id, {
+          teamID: teamDoc.id,
+          teamName: teamData.name,
+          playerName: playerData.name,
+        });
+      });
+    }
+
+    // Fetch game stats
+    const gameRef = doc(db, "rec-leagues", eventID!, "games", gameId);
+    const statsRef = collection(gameRef, "stats");
+    const statsSnapshot = await getDocs(statsRef);
+
+    // Attach player information to stats
+    const statsList = statsSnapshot.docs.map((statDoc) => {
+      const statData = statDoc.data();
+      const playerInfo = playerMap.get(statData.playerID);
+
+      return {
+        ...statData,
+        teamName: playerInfo?.teamName || "Unknown Team",
+        playerName: playerInfo?.playerName || "Unknown Player",
+      };
+    });
+
+    return statsList;
+  } catch (error) {
+    console.error("Error fetching stats: ", error);
+    return [];
+  }
+};
+
 const DateBrowser: React.FC<DateBrowserProps> = ({
   selectedDate,
   setSelectedDate,
@@ -59,8 +108,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
   endDate,
   isUserView = false,
 }) => {
-  console.log(startDate, endDate, games, teams); // Inside DateBrowser component
-
   const [currentWeek, setCurrentWeek] = useState(startDate);
   const [modalShow, setModalShow] = useState(false);
   const [statsModalShow, setStatsModalShow] = useState(false);
@@ -102,8 +149,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setSelectedDate(day);
   };
 
-  useEffect(() => {}, []);
-
   const addGame = (awayTeam: string, homeTeam: string, time: string) => {
     const [hours, minutes] = time.split(":");
     const newDate = new Date(selectedDate);
@@ -139,7 +184,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
 
       if (docSnap.exists()) {
         const data = docSnap.data();
-        console.log(data);
 
         // Grab all games from the rec-leagues collection
         const gamesCollectionRef = collection(docRef, "games");
@@ -176,64 +220,10 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     setModalShow(true);
   };
 
-  const fetchStats = async (gameId: string) => {
-    try {
-      // Fetch all teams and their players
-      const teamCollectionRef = collection(
-        db,
-        "rec-leagues",
-        eventID!,
-        "teams"
-      );
-      const teamsSnapshot = await getDocs(teamCollectionRef);
-
-      // Create a map to easily find a player by playerID
-      const playerMap = new Map();
-
-      // Iterate through each team and their players
-      for (const teamDoc of teamsSnapshot.docs) {
-        const teamData = teamDoc.data();
-        const playersCollectionRef = collection(teamDoc.ref, "players");
-        const playersSnapshot = await getDocs(playersCollectionRef);
-
-        playersSnapshot.docs.forEach((playerDoc) => {
-          const playerData = playerDoc.data();
-          playerMap.set(playerDoc.id, {
-            teamID: teamDoc.id,
-            teamName: teamData.name,
-            playerName: playerData.name,
-          });
-        });
-      }
-
-      // Fetch game stats
-      const gameRef = doc(db, "rec-leagues", eventID!, "games", gameId);
-      const statsRef = collection(gameRef, "stats");
-      const statsSnapshot = await getDocs(statsRef);
-
-      // Attach player information to stats
-      const statsList = statsSnapshot.docs.map((statDoc) => {
-        const statData = statDoc.data();
-        const playerInfo = playerMap.get(statData.playerID);
-
-        return {
-          ...statData,
-          teamName: playerInfo?.teamName || "Unknown Team",
-          playerName: playerInfo?.playerName || "Unknown Player",
-        };
-      });
-
-      return statsList;
-    } catch (error) {
-      console.error("Error fetching stats: ", error);
-      return [];
-    }
-  };
-
   const openStatsModal = async (game: Game) => {
     setIsEditing(true);
     setGameToEdit(game);
-    const fetchedStats = await fetchStats(game.gameID || ""); // Fetch stats from Firebase
+    const fetchedStats = await fetchStats(game.gameID || "", eventID!); // Fetch stats from Firebase
     setStats(fetchedStats);
     setWinner(""); // Set the initial winner once i have this info
     setStatsModalShow(true);
@@ -251,7 +241,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     updatedStats: PlayerStats[],
     updatedWinner: string
   ) => {
-    console.log(gameToEdit);
     if (gameToEdit?.gameID) {
       const gameRef = doc(
         db,
@@ -291,8 +280,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       }
     }
   };
-
-  console.log(startDate, endDate);
 
   return (
     <div className="container">
@@ -365,7 +352,7 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
                 {isUserView ? (
                   <button
                     className="btn btn-sm btn-primary me-2"
-                    onClick={() => openStatsModal(game, )}
+                    onClick={() => openStatsModal(game)}
                   >
                     {" "}
                     <i className="bi bi-bar-chart-line-fill"></i>

@@ -45,6 +45,7 @@ const LeagueDetails = () => {
         return { ...gameData, gameID: doc.id }; // Include the document ID as gameID
       });
       setGames(gamesList);
+      console.log(gamesList);
 
       const teamsCollectionRef = collection(docRef, "teams");
       const teamsSnapshot = await getDocs(teamsCollectionRef);
@@ -89,7 +90,6 @@ const LeagueDetails = () => {
       // Set loading to false once data is fetched
       setLoading(false);
 
-      console.log(gamesList);
     } catch (err) {
       console.log(err);
     }
