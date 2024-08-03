@@ -50,7 +50,7 @@ const Home = () => {
               <input
                 type="email"
                 className="form-control"
-                placeholder="Email"
+                placeholder="email@example.com"
                 aria-label="User's Email"
                 aria-describedby="email"
               />
@@ -59,7 +59,7 @@ const Home = () => {
                 type="button"
                 id="email"
               >
-                Subscribe
+                Subscribe For Updates
               </button>
             </div>
           </div>

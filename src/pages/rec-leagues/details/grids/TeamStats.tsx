@@ -49,9 +49,9 @@ const TeamStats = ({ teams, games }) => {
   const defaultColDef = { flex: 1 };
 
   return (
-    <div className="ag-theme-quartz mb-3" style={{ height: "100%" }}>
+    <div className="ag-theme-quartz mb-3 d-flex" style={{ height: "100%", width: "100%", gap: "10px" }}>
       <AgGridReact
-        className="mb-3"
+        className="mb-3 w-50"
         ref={gridRef}
         rowData={rowData}
         columnDefs={colDefs}

@@ -23,7 +23,7 @@ const PlayerStats = ({ players }: { players: Player[] }) => {
   }, [players]);
 
   return (
-    <div className="ag-theme-quartz " style={{ height: "100%", width: "100%" }}>
+    <div className="ag-theme-quartz " style={{ height: "100%", width: "50%" }}>
       <AgGridReact
         rowData={rowData}
         suppressCellFocus={true}
