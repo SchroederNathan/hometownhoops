@@ -281,8 +281,6 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     }
   };
 
-
-
   console.log("Games:", games);
   games.forEach((game) => console.log("Game Date:", game.gameDate));
 
@@ -332,74 +330,80 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
       </div>
       <div className="mt-4">
         <ul className="list-group">
-          {gamesOnSelectedDate.map((game, index) => (
-            <li
-              key={index}
-              className="list-group-item d-flex justify-content-between align-items-center"
-            >
-              <div>
-                <div>
-                  <strong>Away Team:</strong> {game.awayTeam}{" "}
-                  {game.winner === game.awayTeam && (
-                    <span className="badge bg-success">Winner</span>
-                  )}
-                </div>
-                <div>
-                  <strong>Home Team:</strong> {game.homeTeam}{" "}
-                  {game.winner === game.homeTeam && (
-                    <span className="badge bg-success">Winner</span>
-                  )}
-                </div>
-                <p className="opacity-50 fw-semibold">
-                  {game.gameDate.toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                  })}
-                </p>
-              </div>
-              <div>
-                {isUserView ? (
-                  <button
-                    className="btn btn-sm btn-primary me-2"
-                    onClick={() => openStatsModal(game)}
-                  >
-                    {" "}
-                    <i className="bi bi-bar-chart-line-fill"></i>
-                  </button>
-                ) : null}
+          {gamesOnSelectedDate.length > 0 ? (
+            <>
+              {gamesOnSelectedDate.map((game, index) => (
+                <li
+                  key={index}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <div>
+                    <div>
+                      <strong>Away Team:</strong> {game.awayTeam}{" "}
+                      {game.winner === game.awayTeam && (
+                        <span className="badge bg-success">Winner</span>
+                      )}
+                    </div>
+                    <div>
+                      <strong>Home Team:</strong> {game.homeTeam}{" "}
+                      {game.winner === game.homeTeam && (
+                        <span className="badge bg-success">Winner</span>
+                      )}
+                    </div>
+                    <p className="opacity-50 fw-semibold">
+                      {game.gameDate.toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })}
+                    </p>
+                  </div>
+                  <div>
+                    {isUserView ? (
+                      <button
+                        className="btn btn-sm btn-primary me-2"
+                        onClick={() => openStatsModal(game)}
+                      >
+                        {" "}
+                        <i className="bi bi-bar-chart-line-fill"></i>
+                      </button>
+                    ) : null}
 
-                {isEditingLeague ? (
-                  <button
-                    className="btn btn-sm btn-primary me-2"
-                    onClick={() => openStatsModal(game)}
-                  >
-                    {" "}
-                    <i className="bi bi-bar-chart-line-fill"></i>
-                  </button>
-                ) : null}
+                    {isEditingLeague ? (
+                      <button
+                        className="btn btn-sm btn-primary me-2"
+                        onClick={() => openStatsModal(game)}
+                      >
+                        {" "}
+                        <i className="bi bi-bar-chart-line-fill"></i>
+                      </button>
+                    ) : null}
 
-                {isUserView ? null : (
-                  <>
-                    <button
-                      className="btn btn-sm btn-primary me-2"
-                      onClick={() => openEditModal(game)}
-                    >
-                      <i className="bi bi-pencil-fill"></i>
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => deleteGame(game)}
-                    >
-                      <span>
-                        <i className="bi bi-x"></i>
-                      </span>
-                    </button>
-                  </>
-                )}
-              </div>
-            </li>
-          ))}
+                    {isUserView ? null : (
+                      <>
+                        <button
+                          className="btn btn-sm btn-primary me-2"
+                          onClick={() => openEditModal(game)}
+                        >
+                          <i className="bi bi-pencil-fill"></i>
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => deleteGame(game)}
+                        >
+                          <span>
+                            <i className="bi bi-x"></i>
+                          </span>
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </>
+          ) : (
+            <p className="text-center lead fw-semibold mb-3">No games scheduled for this date.</p>
+          )}
         </ul>
       </div>
       {isUserView ? null : (
