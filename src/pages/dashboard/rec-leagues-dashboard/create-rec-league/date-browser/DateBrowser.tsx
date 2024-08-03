@@ -281,6 +281,11 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
     }
   };
 
+
+
+  console.log("Games:", games);
+  games.forEach((game) => console.log("Game Date:", game.gameDate));
+
   return (
     <div className="container">
       <div className="d-flex align-items-center justify-content-center flex-column">
@@ -305,10 +310,15 @@ const DateBrowser: React.FC<DateBrowserProps> = ({
               >
                 <div>{format(day, "EEE")}</div>
                 <div className="fw-bold">{format(day, "d")}</div>
-                {/* #TODO: GAME INDICATOR */}
-                {games.some((game) => isSameDay(game.gameDate, day)) && (
-                  <div className="game-indicator"></div>
-                )}
+                {/* Game Indicator */}
+                {convertedGames.filter((game) => {
+                  const sameDay = isSameDay(game.gameDate, day);
+                  console.log("Same day:", sameDay);
+                  if (sameDay) {
+                    console.log("Game on this day:", sameDay);
+                  }
+                  return sameDay;
+                }).length > 0 && <div className="game-indicator"></div>}
               </div>
             ))}
           </div>
