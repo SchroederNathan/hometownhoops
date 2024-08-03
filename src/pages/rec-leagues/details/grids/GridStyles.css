@@ -1,0 +1,28 @@
+.team-stats-grid {
+  width: 100%;
+}
+
+.player-stats-grid {
+  width: 100%;
+}
+
+.grid-container {
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .team-stats-grid {
+    width: 50%;
+  }
+
+  .player-stats-grid {
+    width: 50%;
+  }
+
+  .grid-container {
+    flex-direction: row;
+  }
+}

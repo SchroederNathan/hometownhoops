@@ -4,6 +4,7 @@ import { Team } from "../../../dashboard/rec-leagues-dashboard/create-rec-league
 import { useEffect, useRef, useState } from "react";
 import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import './GridStyles.css'
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 // Row Data Interface
@@ -49,9 +50,9 @@ const TeamStats = ({ teams, games }) => {
   const defaultColDef = { flex: 1 };
 
   return (
-    <div className="ag-theme-quartz mb-3 d-flex" style={{ height: "100%", width: "100%", gap: "10px" }}>
+    <div className="ag-theme-quartz mb-3 d-flex grid-container ">
       <AgGridReact
-        className="mb-3 w-50"
+        className="mb-3 team-stats-grid"
         ref={gridRef}
         rowData={rowData}
         columnDefs={colDefs}

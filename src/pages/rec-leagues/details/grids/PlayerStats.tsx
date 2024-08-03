@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Player } from "../../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsModal";
 import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import './GridStyles.css'
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -23,7 +24,7 @@ const PlayerStats = ({ players }: { players: Player[] }) => {
   }, [players]);
 
   return (
-    <div className="ag-theme-quartz " style={{ height: "100%", width: "50%" }}>
+    <div className="ag-theme-quartz player-stats-grid">
       <AgGridReact
         rowData={rowData}
         suppressCellFocus={true}
