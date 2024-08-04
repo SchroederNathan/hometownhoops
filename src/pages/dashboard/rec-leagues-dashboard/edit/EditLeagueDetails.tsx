@@ -1,9 +1,8 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { db, storage } from "../../../../config/firebase";
+import { db } from "../../../../config/firebase";
 import {
   doc,
-  getDoc,
   writeBatch,
   collection,
   getDocs,
@@ -30,7 +29,7 @@ import { Team } from "../create-rec-league/teams/TeamsCreateRecLeague";
 import StatsModal from "../create-rec-league/date-browser/stats/StatsModal";
 import { PlayerStats } from "../Models";
 import { Player } from "../create-rec-league/teams/TeamsModal";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { uploadImage } from "../LeagueHelpers";
 
 const EditLeagueDetails = () => {
   const { eventID } = useParams();
@@ -54,28 +53,9 @@ const EditLeagueDetails = () => {
   const [winner, setWinner] = useState<string>("");
 
   const navigate = useNavigate();
-  const selectedImage = useRef<HTMLDivElement>(null);
 
   // Get state from navigation
   const { state } = useLocation();
-
-  async function uploadImage(file: File) {
-    try {
-      // Create a reference to 'images/fileName'
-      const storageRef = ref(storage, `images/${file.name}`);
-
-      // Upload the file
-      await uploadBytes(storageRef, file);
-
-      // Get the download URL
-      const downloadURL = await getDownloadURL(storageRef);
-
-      return downloadURL;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      return null;
-    }
-  }
 
   const onUpdate = async () => {
     try {

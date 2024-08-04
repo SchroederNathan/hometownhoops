@@ -20,8 +20,8 @@ import { collection, doc, writeBatch } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import DateBrowser, { Game } from "./date-browser/DateBrowser";
 import GameModal from "./date-browser/GameModal";
-import { Team } from "./teams/TeamsCreateRecLeague";
 import { v4 as uuidv4 } from "uuid";
+import { uploadImage } from "../LeagueHelpers";
 
 const CreateRecLeague = () => {
   const location = useLocation();
@@ -41,10 +41,8 @@ const CreateRecLeague = () => {
   const [games, setGames] = useState<Game[]>(state.games || []);
   const [modalShow, setModalShow] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
+  const [image, setImage] = useState<File | null>(null);
 
-  const selectedImage = useRef<HTMLDivElement>(null);
-
-  const { handleFiles, imageContainerRef } = useHooks();
 
   const navigate = useNavigate();
 
@@ -53,14 +51,17 @@ const CreateRecLeague = () => {
       const batch = writeBatch(db);
       const playerIds: { [teamName: string]: string[] } = {};
 
+      const imageURL = await uploadImage(image!);
+
       const recLeagueRef = doc(collection(db, "rec-leagues"));
+      
       batch.set(recLeagueRef, {
         name: name,
+        imgUrl: imageURL,
         location: locationName,
         deadline: deadline,
         startDate: startDate,
         endDate: endDate,
-        imgUrl: "none",
         rules: rules,
       });
 
@@ -73,7 +74,7 @@ const CreateRecLeague = () => {
 
         playerIds[team.name] = []; // Initialize array for storing player IDs
 
-        team.players.forEach((player) => {
+        team.players.forEach((player: any) => {
           const playerId = uuidv4(); // Generate a unique ID for each player
           const playerRef = doc(collection(teamRef, "players"), playerId);
           batch.set(playerRef, {
@@ -279,13 +280,12 @@ const CreateRecLeague = () => {
             Image
           </label>
           <input
-            type="file"
-            className="form-control rounded"
-            accept="image/*"
-            onChange={(event) => handleFiles(event)}
-            id="imageUpload"
-          />
-          <div ref={selectedImage} />
+                type="file"
+                className="form-control rounded"
+                accept="image/*"
+                onChange={(event) => setImage(event.target.files![0])}
+                id="imageUpload"
+              />
         </div>
         <div className="mb-3">
           <label htmlFor="location" className="form-label fs-5">
