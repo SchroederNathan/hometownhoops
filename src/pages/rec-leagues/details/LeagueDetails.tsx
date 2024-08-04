@@ -19,6 +19,7 @@ const LeagueDetails = () => {
   const { eventID } = useParams();
 
   const [name, setName] = useState("");
+  const [image, setImage] = useState("");
   const [location, setLocation] = useState("");
   const [deadline, setDeadline] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -110,6 +111,7 @@ const LeagueDetails = () => {
     if (state && state.hasProps) {
       // If the component receives state with props, use it instead of fetching again
       setName(state.name);
+      setImage(state.image);
       setDeadline(state.deadline);
       setStartDate(state.startDate);
       setEndDate(state.endDate);

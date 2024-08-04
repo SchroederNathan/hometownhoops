@@ -234,6 +234,7 @@ const EditLeagueDetails = () => {
     if (state && state.hasProps) {
       // If the component receives state with props, use it instead of fetching again
       setName(state.name);
+      setImage(state.image);
       setDeadline(state.deadline);
       setStartDate(state.startDate);
       setEndDate(state.endDate);
