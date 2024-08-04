@@ -40,7 +40,7 @@ const RecLeaguesDashboard = () => {
             name={event.name}
             location={event.location}
             rules={event.rules}
-            imgSrc={event.imgUrl}
+            imgUrl={event.imgUrl}
             deadline={event.deadline}
             startDate={event.startDate}
             endDate={event.endDate}

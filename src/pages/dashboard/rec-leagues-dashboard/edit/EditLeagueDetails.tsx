@@ -85,7 +85,6 @@ const EditLeagueDetails = () => {
       //Promise
       const imageURL = await uploadImage(image!);
 
-
       batch.update(updateRef, {
         name: name,
         imgUrl: imageURL,

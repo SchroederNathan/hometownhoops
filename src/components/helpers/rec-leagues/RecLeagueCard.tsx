@@ -155,6 +155,7 @@ function RecLeagueCard(props: any) {
         state: {
           hasProps: true,
           name: props.name,
+          imgURL: props.imgURL,
           eventID,
           location: props.location,
           deadline: props.deadline,
@@ -170,6 +171,7 @@ function RecLeagueCard(props: any) {
         state: {
           hasProps: true,
           name: props.name,
+          imgURL: props.imgURL,
           eventID,
           location: props.location,
           deadline: props.deadline,
@@ -182,6 +184,8 @@ function RecLeagueCard(props: any) {
       });
     }
   };
+
+  console.log(props);
 
   return (
     <div>
@@ -256,11 +260,19 @@ function RecLeagueCard(props: any) {
             </div>
           </div>
           <div className="col-md-4">
-            <img
-              src="/src/assets/tournaments.jpg"
-              className="img-fluid h-100 object-fit-cover  "
-              alt="..."
-            />
+            {props.imgUrl != "none" ? (
+              <img
+                src={props.imgUrl}
+                className="img-fluid h-100 object-fit-cover  "
+                alt="..."
+              />
+            ) : (
+              <img
+                src="/src/assets/tournaments.jpg"
+                className="img-fluid h-100 object-fit-cover  "
+                alt="..."
+              />
+            )}
           </div>
         </div>
       </div>
