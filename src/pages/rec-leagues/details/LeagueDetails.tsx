@@ -9,6 +9,7 @@ import "@ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 import { checkIfOpen } from "../../../components/helpers/Functions";
 import { Team } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague";
 import DateBrowser, {
+  fetchStats,
   Game,
 } from "../../dashboard/rec-leagues-dashboard/create-rec-league/date-browser/DateBrowser";
 import { Player } from "../../dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsModal";
@@ -94,6 +95,16 @@ const LeagueDetails = () => {
       console.log(err);
     }
   };
+
+  const getPlayerAverages = async () => {
+    for (const game of games) {
+      console.log(fetchStats(game.gameID!, eventID!));
+    }
+  }
+
+  useEffect(() => {
+    getPlayerAverages();
+  }, [games]);
 
   useEffect(() => {
     if (state && state.hasProps) {

@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { db } from "../../../../config/firebase";
+import { db, storage } from "../../../../config/firebase";
 import {
   doc,
   getDoc,
@@ -30,12 +30,14 @@ import { Team } from "../create-rec-league/teams/TeamsCreateRecLeague";
 import StatsModal from "../create-rec-league/date-browser/stats/StatsModal";
 import { PlayerStats } from "../Models";
 import { Player } from "../create-rec-league/teams/TeamsModal";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const EditLeagueDetails = () => {
   const { eventID } = useParams();
 
   const [loading, setLoading] = useState(true); // State to track loading
   const [name, setName] = useState("");
+  const [image, setImage] = useState<File | null>(null);
   const [location, setLocation] = useState("");
   const [deadline, setDeadline] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -57,10 +59,32 @@ const EditLeagueDetails = () => {
   // Get state from navigation
   const { state } = useLocation();
 
+  async function uploadImage(file: File) {
+    try {
+      // Create a reference to 'images/fileName'
+      const storageRef = ref(storage, `images/${file.name}`);
+
+      // Upload the file
+      await uploadBytes(storageRef, file);
+
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      return null;
+    }
+  }
+
   const onUpdate = async () => {
     try {
       const updateRef = doc(db, "rec-leagues", `${eventID}`);
       const batch = writeBatch(db);
+
+      const upload = uploadImage(image!);
+
+      console.log(upload);
 
       batch.update(updateRef, {
         name: name,
@@ -308,7 +332,7 @@ const EditLeagueDetails = () => {
                 type="file"
                 className="form-control rounded"
                 accept="image/*"
-                onChange={(event) => onImageChange(event)}
+                onChange={(event) => setImage(event.target.files![0])}
                 id="imageUpload"
               />
             </div>
