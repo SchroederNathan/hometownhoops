@@ -82,17 +82,17 @@ const EditLeagueDetails = () => {
       const updateRef = doc(db, "rec-leagues", `${eventID}`);
       const batch = writeBatch(db);
 
-      const upload = uploadImage(image!);
+      //Promise
+      const imageURL = await uploadImage(image!);
 
-      console.log(upload);
 
       batch.update(updateRef, {
         name: name,
+        imgUrl: imageURL,
         location: location,
         deadline: deadline,
         startDate: startDate,
         endDate: endDate,
-        imgUrl: "none",
         rules: rules,
       });
 
