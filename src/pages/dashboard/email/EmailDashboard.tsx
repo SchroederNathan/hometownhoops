@@ -3,21 +3,12 @@ import { createRoot } from "react-dom/client";
 import { AgGridReact } from "@ag-grid-community/react";
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
-// import "./styles.css";
+
 import {
-  CheckboxSelectionCallbackParams,
   ColDef,
-  ColGroupDef,
-  GridApi,
-  GridOptions,
-  GridReadyEvent,
-  HeaderCheckboxSelectionCallbackParams,
   ModuleRegistry,
-  createGrid,
 } from "@ag-grid-community/core";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../../config/firebase";
 import {
   Email,
   fetchEmails,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Email } from "../EmailFunctions";
 import { set } from "date-fns";
 import EditorComponent from "../../../../components/helpers/EditorComponent";
@@ -28,6 +28,7 @@ const CreateEmailDashboard = () => {
   // Get selected emails from state
   const { state } = useLocation();
 
+  // Set selected emails from state
   useEffect(() => {
     if (state) {
       setSelectedEmails(state.selectedEmails);
@@ -35,6 +36,7 @@ const CreateEmailDashboard = () => {
     }
   });
 
+  // Set editor
   const editor = useEditor({
     extensions: [
       Document,
@@ -91,23 +93,30 @@ const CreateEmailDashboard = () => {
 
         <p className="form-label fs-5">Rules</p>
         <EditorComponent editor={editor} />
-        <br />
-        <div className="mt-3">
-          <p className="float-start mt-1c text-black-50">
-            # of recipents: {selectedEmails.length}
-          </p>
 
-          <button
-            type="button"
-            className="btn btn-labeled-1 btn-primary float-end create-button"
-            onClick={() => sendEmail(title, message, image!)}
-          >
-            Create
-            <span className="btn-label-1">
-              <i className="bi bi-check"></i>
+        <p className="float-end text-black-50">
+          # of recipents: {selectedEmails.length}
+        </p>
+        <br />
+        <Link to="../emailgit ">
+          <button type="button" className="btn btn-labeled btn-danger mt-3">
+            <span className="btn-label">
+              <i className="bi bi-x"></i>
             </span>
+            Cancel
           </button>
-        </div>
+        </Link>
+
+        <button
+          type="button"
+          className="btn btn-labeled-1 btn-primary create-button mt-3 float-end"
+          onClick={() => sendEmail(title, message, image!)}
+        >
+          Create
+          <span className="btn-label-1">
+            <i className="bi bi-check"></i>
+          </span>
+        </button>
       </form>
     </div>
   );
