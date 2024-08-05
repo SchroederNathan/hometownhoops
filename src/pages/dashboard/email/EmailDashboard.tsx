@@ -4,10 +4,8 @@ import { AgGridReact } from "@ag-grid-community/react";
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
 
-import {
-  ColDef,
-  ModuleRegistry,
-} from "@ag-grid-community/core";
+
+import { ColDef, ModuleRegistry } from "@ag-grid-community/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Email,
@@ -16,12 +14,11 @@ import {
   onSelectionChanged,
   removeEmails,
 } from "./EmailFunctions";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 const EmailDashboard = () => {
-
   // Set grid ref
   const gridRef = useRef<AgGridReact<Email>>(null);
 
@@ -32,9 +29,18 @@ const EmailDashboard = () => {
   const [rowData, setRowData] = useState<Email[]>([]);
   const [selectedEmails, setSelectedEmails] = useState<Email[]>([]);
 
+  const { state } = useLocation();
+
   // fetch emails on component mount
   useEffect(() => {
-    fetchEmails(setRowData);
+    if (state) {
+      if (state.rowData.length > 0) {
+        console.log(state.rowData);
+        setRowData(state.rowData);
+      } 
+    } else {
+      fetchEmails(setRowData);
+    }
   }, []);
 
   // Set column definitions
@@ -56,7 +62,7 @@ const EmailDashboard = () => {
   const navigate = useNavigate();
   const handleCreateEmail = () => {
     // Send state of selected emails to create email page
-    navigate("create", { state: { selectedEmails } });
+    navigate("create", { state: { selectedEmails, rowData } });
   };
 
   return (
@@ -69,7 +75,9 @@ const EmailDashboard = () => {
           >
             Remove Selected
           </button>
-          <button className="btn btn-primary" onClick={handleCreateEmail}>Send Email</button>
+          <button className="btn btn-primary" onClick={handleCreateEmail}>
+            Send Email
+          </button>
         </div>
         <div className={"ag-theme-quartz w-100"}>
           <AgGridReact<Email>
@@ -79,7 +87,9 @@ const EmailDashboard = () => {
             domLayout="autoHeight"
             defaultColDef={defaultColDef}
             suppressRowClickSelection={true}
-            onSelectionChanged={() => onSelectionChanged(setSelectedEmails, gridRef)}
+            onSelectionChanged={() =>
+              onSelectionChanged(setSelectedEmails, gridRef)
+            }
             rowSelection={"multiple"}
           />
         </div>

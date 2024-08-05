@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Email } from "../EmailFunctions";
 import { set } from "date-fns";
 import EditorComponent from "../../../../components/helpers/EditorComponent";
@@ -25,14 +25,25 @@ const CreateEmailDashboard = () => {
   const [image, setImage] = useState<File | null>(null);
   const [message, setMessage] = useState("Something");
 
+  const [rowData, setRowData] = useState<Email[]>();
+
   // Get selected emails from state
   const { state } = useLocation();
+
+  // inialize navigator
+  const  navigator  = useNavigate();
+  
+  const cancel = () => {
+    // Go back to email dashboard and send selected emails and row data
+    navigator("/dashboard/email", { state: { selectedEmails, rowData } });
+    
+  };
 
   // Set selected emails from state
   useEffect(() => {
     if (state) {
       setSelectedEmails(state.selectedEmails);
-      console.log(state.selectedEmails);
+      setRowData(state.rowData);
     }
   });
 
@@ -98,14 +109,12 @@ const CreateEmailDashboard = () => {
           # of recipents: {selectedEmails.length}
         </p>
         <br />
-        <Link to="../emailgit ">
-          <button type="button" className="btn btn-labeled btn-danger mt-3">
+          <button type="button" className="btn btn-labeled btn-danger mt-3" onClick={cancel}>
             <span className="btn-label">
               <i className="bi bi-x"></i>
             </span>
             Cancel
           </button>
-        </Link>
 
         <button
           type="button"
