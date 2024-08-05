@@ -22,6 +22,7 @@ import EditLeagueDetails from './pages/dashboard/rec-leagues-dashboard/edit/Edit
 import TeamsCreateRecLeague from './pages/dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague'
 import NavBar from './components/header/Nav'
 import EmailDashboard from './pages/dashboard/email/EmailDashboard'
+import CreateEmailDashboard from './pages/dashboard/email/create-email/CreateEmailDashboard'
 
 
 
@@ -60,6 +61,8 @@ const App = () => {
           <Route path="tournaments/create/preview" element={<PreviewCreateTournament />} />
 
           <Route path="email" element={<EmailDashboard />} />
+          <Route path="email/create" element={<CreateEmailDashboard />} />
+
 
         </Route>
       </Routes>

@@ -25,6 +25,7 @@ import {
   onSelectionChanged,
   removeEmails,
 } from "./EmailFunctions";
+import { useNavigate } from "react-router-dom";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -60,6 +61,13 @@ const EmailDashboard = () => {
     };
   }, []);
 
+  // Navigate to create email page
+  const navigate = useNavigate();
+  const handleCreateEmail = () => {
+    // Send state of selected emails to create email page
+    navigate("create", { state: { selectedEmails } });
+  };
+
   return (
     <div style={containerStyle}>
       <div className="example-wrapper d-flex flex-column align-items-end">
@@ -70,7 +78,7 @@ const EmailDashboard = () => {
           >
             Remove Selected
           </button>
-          <button className="btn btn-primary">Send Email</button>
+          <button className="btn btn-primary" onClick={handleCreateEmail}>Send Email</button>
         </div>
         <div className={"ag-theme-quartz w-100"}>
           <AgGridReact<Email>
