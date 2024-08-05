@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Card, Carousel, Col, Row } from "react-bootstrap";
 import "./Home.css";
 import { Link } from "react-router-dom";
+import EmailList from "./EmailList";
 
 interface Features {
   title: string;
@@ -46,22 +47,7 @@ const Home = () => {
               A local organization bringing basketball to people of all ages and
               skill levels. 
             </p>
-            <div className="input-group newsletter">
-              <input
-                type="email"
-                className="form-control"
-                placeholder="email@example.com"
-                aria-label="User's Email"
-                aria-describedby="email"
-              />
-              <button
-                className="btn btn-primary newsletter-button"
-                type="button"
-                id="email"
-              >
-                Subscribe For Updates
-              </button>
-            </div>
+            <EmailList />
           </div>
         </div>
       </div>
