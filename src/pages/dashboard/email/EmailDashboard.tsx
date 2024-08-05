@@ -18,49 +18,39 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import {
+  Email,
+  fetchEmails,
+  isFirstColumn,
+  onSelectionChanged,
+  removeEmails,
+} from "./EmailFunctions";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
-function isFirstColumn(
-  params:
-    | CheckboxSelectionCallbackParams
-    | HeaderCheckboxSelectionCallbackParams
-) {
-  var displayedColumns = params.api.getAllDisplayedColumns();
-  var thisIsFirstColumn = displayedColumns[0] === params.column;
-  return thisIsFirstColumn;
-}
-
-interface Email {
-  email: string;
-}
-
 const EmailDashboard = () => {
+
+  // Set grid ref
   const gridRef = useRef<AgGridReact<Email>>(null);
+
+  // Set container style
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
 
   // set row data to emails from firestore
   const [rowData, setRowData] = useState<Email[]>([]);
-
-  const fetchEmails = async () => {
-    const emails = await getDocs(collection(db, "email-list"));
-    const filteredData = emails.docs.map((doc: any) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    setRowData(filteredData);
-  };
+  const [selectedEmails, setSelectedEmails] = useState<Email[]>([]);
 
   // fetch emails on component mount
   useEffect(() => {
-    fetchEmails();
+    fetchEmails(setRowData);
   }, []);
 
+  // Set column definitions
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     { field: "email", minWidth: 180, sortable: true },
   ]);
 
+  // Set default column definitions
   const defaultColDef = useMemo<ColDef>(() => {
     return {
       flex: 1,
@@ -73,7 +63,15 @@ const EmailDashboard = () => {
   return (
     <div style={containerStyle}>
       <div className="example-wrapper d-flex flex-column align-items-end">
-        <button className="btn btn-primary float-end mb-4">Send Email</button>
+        <div className="mb-4 float-end">
+          <button
+            className="btn btn-danger me-1"
+            onClick={() => removeEmails(selectedEmails)}
+          >
+            Remove Selected
+          </button>
+          <button className="btn btn-primary">Send Email</button>
+        </div>
         <div className={"ag-theme-quartz w-100"}>
           <AgGridReact<Email>
             ref={gridRef}
@@ -82,6 +80,7 @@ const EmailDashboard = () => {
             domLayout="autoHeight"
             defaultColDef={defaultColDef}
             suppressRowClickSelection={true}
+            onSelectionChanged={() => onSelectionChanged(setSelectedEmails, gridRef)}
             rowSelection={"multiple"}
           />
         </div>
