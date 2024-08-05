@@ -3,6 +3,7 @@ import { Button, Card, Carousel, Col, Row } from "react-bootstrap";
 import "./Home.css";
 import { Link } from "react-router-dom";
 import EmailList from "./EmailList";
+import { Toaster } from "react-hot-toast";
 
 interface Features {
   title: string;
@@ -192,6 +193,7 @@ const Home = () => {
           style={{ padding: "10px" }}
         />
       </div>
+      <Toaster />
     </div>
   );
 };
