@@ -45,7 +45,7 @@ const TeamStats = ({ teams, games }) => {
   const [colDefs, setColDefs] = useState<ColDef<Team>[]>([
     { field: "name", flex: 2 },
     { field: "wins", flex: 1 },
-    { field: "losses", flex: 1 },
+    { field: "losses", flex: 1,},
   ]);
   const defaultColDef = { flex: 1 };
 
