@@ -66,7 +66,7 @@ const EmailDashboard = () => {
         <div className="mb-4 float-end">
           <button
             className="btn btn-danger me-1"
-            onClick={() => removeEmails(selectedEmails)}
+            onClick={() => removeEmails(selectedEmails, setRowData, rowData)}
           >
             Remove Selected
           </button>

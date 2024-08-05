@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, writeBatch } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import {
   CheckboxSelectionCallbackParams,
@@ -21,9 +21,31 @@ export const fetchEmails = async (setRowData: any) => {
   setRowData(filteredData);
 };
 
-// Remove selected emails
-export const removeEmails = (emails: Email[]) => {
-  console.log("removed emails: ", emails);
+// Remove selected emails from firestore
+export const removeEmails = async (
+  emails: Email[],
+  setRowData: any,
+  rowData: any
+) => {
+  const batch = writeBatch(db); // Use writeBatch to create a batch of writes
+
+  emails.forEach((email) => {
+    // Use the email string as the document ID
+    const emailRef = doc(db, "email-list", email.email);
+
+    // Delete the document
+    batch.delete(emailRef);
+
+    // Remove the email from the row data
+    setRowData(rowData.filter((row: any) => row.email !== email.email));
+  });
+
+  try {
+    await batch.commit(); // Use await to handle the promise
+    console.log("Removed emails: ", emails);
+  } catch (error) {
+    console.error("Error removing emails: ", error);
+  }
 };
 
 // Handle selection change
