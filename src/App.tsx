@@ -1,5 +1,5 @@
 import Footer from './components/footer/Footer'
-import { Navigate, Route, Routes, redirect } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Home from './pages/home/Home'
 import SingUp from './auth/SingUp'
 import Login from './auth/Login'
@@ -21,6 +21,7 @@ import LeagueDetails from './pages/rec-leagues/details/LeagueDetails'
 import EditLeagueDetails from './pages/dashboard/rec-leagues-dashboard/edit/EditLeagueDetails'
 import TeamsCreateRecLeague from './pages/dashboard/rec-leagues-dashboard/create-rec-league/teams/TeamsCreateRecLeague'
 import NavBar from './components/header/Nav'
+import EmailDashboard from './pages/dashboard/email/EmailDashboard'
 
 
 
@@ -28,8 +29,9 @@ const App = () => {
   return (
     <div >
       <NavBar />
+
       <Routes>
-        <Route path='/' element={<Home />} errorElement={<NotFound />} />
+        <Route path='/' element={<Home />} errorElement={<NotFound />} /> 
         <Route path='/login' element={<Login />} errorElement={<NotFound />} />
         <Route path='/signup' element={<SingUp />} errorElement={<NotFound />} />
         <Route path='/tournaments' element={<Tournaments />} errorElement={<NotFound />} />
@@ -50,18 +52,18 @@ const App = () => {
 
 
           <Route path="rec-leagues/create" element={<CreateRecLeague />} />
-          <Route path="rec-leagues/create/teams" element={<TeamsCreateRecLeague />} />
+          <Route path="rec-leagues/create/teams" element={<TeamsCreateRecLeague isEditing={false} />} />
           <Route path="rec-leagues/create/preview" element={<PreviewCreateRecLeague />} />
 
           <Route path="tournaments" element={<TournamentsDashboard />} />
           <Route path="tournaments/create" element={<CreateTournament />} />
           <Route path="tournaments/create/preview" element={<PreviewCreateTournament />} />
 
-          <Route path="users" element={<NotFound />} />
+          <Route path="email" element={<EmailDashboard />} />
 
         </Route>
-
       </Routes>
+
       <Footer />
     </div>
   )
